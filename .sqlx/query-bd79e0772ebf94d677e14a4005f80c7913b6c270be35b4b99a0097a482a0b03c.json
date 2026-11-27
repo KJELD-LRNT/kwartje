@@ -1,0 +1,21 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT COUNT(*) FROM saved_routes\n         WHERE company_id = ? AND archived_at IS NULL AND name = ? COLLATE NOCASE AND id != ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "COUNT(*)",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": "Expression"
+      }
+    ],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "bd79e0772ebf94d677e14a4005f80c7913b6c270be35b4b99a0097a482a0b03c"
+}

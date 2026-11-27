@@ -265,7 +265,7 @@ pub const TABLES: &[ExportTable] = &[
     },
     ExportTable {
         name: "saved_routes",
-        label: "Vaste ritten",
+        label: "Favoriete ritten",
         company_col: Some("company_id"),
         date_col: "created_at",
         columns: &[
@@ -275,6 +275,7 @@ pub const TABLES: &[ExportTable] = &[
             col("from_address", "Van", Text),
             col("to_address", "Naar", Text),
             col("km", "Kilometers", Int),
+            col("round_trip", "Heen en terug", Bool),
             col("archived_at", "Gearchiveerd op", Timestamp),
             col("created_at", "Aangemaakt op", Timestamp),
             col("updated_at", "Gewijzigd op", Timestamp),
@@ -303,7 +304,7 @@ pub const TABLES: &[ExportTable] = &[
             col("tariff_id", "Tarief (ID)", Int),
             col("price_cents", "Prijs per km", Money),
             col("vat_bp", "Btw", Bp),
-            col("route_id", "Vaste rit (ID)", Int),
+            col("route_id", "Favoriete rit (ID)", Int),
             col("invoice_line_id", "Factuurregel (ID)", Int),
             col("archived_at", "Gearchiveerd op", Timestamp),
             col("created_at", "Aangemaakt op", Timestamp),

@@ -4,6 +4,7 @@ use serde::Serialize;
 use sqlx::{SqliteConnection, SqlitePool};
 
 use crate::mileage::{self, Leg};
+use crate::modules::routes;
 use crate::modules::vehicles::{self, Vehicle};
 use crate::web::{AppError, AppResult};
 use crate::{audit, db, format};
@@ -206,8 +207,9 @@ pub(super) async fn insert_one(
     Ok(id)
 }
 
-/// Save one trip (or two for "heen en terug") in one transaction; the
-/// continuity check is repeated inside the transaction.
+/// Save one trip (or two for "heen en terug") in one transaction, plus the
+/// new favourite when "bewaar als favoriet" was ticked; the continuity check
+/// is repeated inside the transaction.
 pub async fn insert(
     pool: &SqlitePool,
     company_id: i64,
@@ -215,6 +217,18 @@ pub async fn insert(
     by: Option<i64>,
 ) -> AppResult<Vec<i64>> {
     let mut tx = pool.begin().await?;
+    let with_route;
+    let p = match &p.favorite {
+        Some(d) => {
+            let route_id = routes::insert_in(&mut tx, company_id, d, by).await?;
+            with_route = Prepared {
+                route_id: Some(route_id),
+                ..p.clone()
+            };
+            &with_route
+        }
+        None => p,
+    };
     let others = legs(&mut tx, p.vehicle_id).await?;
     if let Some((s, e)) = p.readings {
         if let Some(c) = mileage::check(company_id, &p.date, s, e, None, &others) {

@@ -76,7 +76,7 @@ src/
   auth/                users, argon2, TOTP, rate limiter, login routes
   modules/             one module per feature: routes + queries + page structs
     dashboard, companies, clients, projects, tasks, tariffs, hours, unbilled,
-    vehicles, routes (vaste ritten), mileage_rates, hours/ and trips/ (km)
+    vehicles, routes (favoriete ritten), mileage_rates, hours/ and trips/ (km)
     (each model.rs + form.rs + pages.rs), invoices/,
     quotes, recurring, documents, btw, audit_view, export_view
   — pure logic, no I/O, unit-tested —

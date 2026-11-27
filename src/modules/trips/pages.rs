@@ -394,10 +394,14 @@ pub(super) async fn create(
         Ok(ids) => {
             let km: i64 = p.km * ids.len() as i64;
             let date = format::parse_iso_date(&p.date).expect("normalised");
+            let favorite = match &p.favorite {
+                Some(d) => format!(" Bewaard als favoriete rit {}.", d.name),
+                None => String::new(),
+            };
             flash::ok(
                 &session,
                 &format!(
-                    "{} opgeslagen: {km} km op {}.",
+                    "{} opgeslagen: {km} km op {}.{favorite}",
                     if ids.len() == 2 {
                         "Heen- en terugrit"
                     } else {
@@ -445,7 +449,12 @@ pub(super) async fn suggestion(
     deps.errors.retain(|k, _| {
         matches!(
             *k,
-            "odometer_start" | "odometer_end" | "tariff" | "client_id" | "return_trip"
+            "odometer_start"
+                | "odometer_end"
+                | "tariff"
+                | "client_id"
+                | "return_trip"
+                | "favorite_name"
         )
     });
     if deps.odometer_end.is_empty() {

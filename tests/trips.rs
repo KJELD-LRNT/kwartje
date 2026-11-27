@@ -166,6 +166,163 @@ async fn prefill_fragment_uses_last_reading_and_route() {
 }
 
 #[tokio::test]
+async fn picking_a_round_trip_favourite_ticks_heen_en_terug() {
+    let mut x = fx().await;
+    x.app.get("/routes/nieuw").await;
+    let r = x
+        .app
+        .post(
+            "/routes",
+            &[
+                ("name", "Naar Arnhem en terug"),
+                ("from_address", "Thuis"),
+                ("to_address", "Arnhem"),
+                ("km", "64"),
+                ("kind", "retour"),
+            ],
+        )
+        .await;
+    assert_eq!(r.status, StatusCode::SEE_OTHER, "{}", r.body);
+    let round = x.app.last_id("saved_routes").await;
+    x.app.get("/routes/nieuw").await;
+    x.app
+        .post(
+            "/routes",
+            &[
+                ("name", "Naar Utrecht"),
+                ("from_address", "Thuis"),
+                ("to_address", "Utrecht"),
+                ("km", "20"),
+                ("kind", "enkel"),
+            ],
+        )
+        .await;
+    let one_way = x.app.last_id("saved_routes").await;
+    assert!(x.app.get("/routes").await.body.contains("heen en terug"));
+
+    // the chooser lists both favourites
+    let page = x.app.get("/kilometers?maand=2026-11").await;
+    assert!(page.body.contains("Naar Arnhem en terug") && page.body.contains("2 × 64 km"));
+    assert!(page
+        .body
+        .contains(&format!("name=\"route_id\" value=\"{one_way}\"")));
+
+    let pick = |route: i64, extra: &str| {
+        Request::get(format!(
+            "/kilometers/voorstel?date=2026-11-12&vehicle_id={}&route_id={route}&odometer_start=1000{extra}",
+            x.vehicle
+        ))
+        .header("hx-trigger-name", "route_id")
+        .body(Body::empty())
+        .unwrap()
+    };
+    let r = x.app.send(pick(round, "")).await;
+    assert!(r.body.contains("value=\"Arnhem\""), "{}", r.body);
+    assert!(r.body.contains("name=\"return_trip\" value=\"1\" checked"));
+    assert!(
+        !r.body.contains("save_favorite"),
+        "a picked favourite is not saved again"
+    );
+    // a one-way favourite unticks it again
+    let r = x.app.send(pick(one_way, "&return_trip=1")).await;
+    assert!(r.body.contains("value=\"Utrecht\""));
+    assert!(!r.body.contains("name=\"return_trip\" value=\"1\" checked"));
+
+    // saving with the round-trip favourite gives two linked legs
+    let route = round.to_string();
+    let r = x
+        .trip(&[
+            ("route_id", &route),
+            ("from_address", "Thuis"),
+            ("to_address", "Arnhem"),
+            ("odometer_start", "1000"),
+            ("km", "64"),
+            ("return_trip", "1"),
+        ])
+        .await;
+    assert_eq!(r.status, StatusCode::SEE_OTHER, "{}", r.body);
+    assert_eq!(
+        x.app
+            .count(&format!(
+                "SELECT COUNT(*) FROM mileage_entries WHERE route_id = {round}"
+            ))
+            .await,
+        2
+    );
+}
+
+#[tokio::test]
+async fn a_trip_can_be_saved_as_a_new_favourite() {
+    let mut x = fx().await;
+    let r = x
+        .trip(&[
+            ("odometer_start", "2000"),
+            ("km", "30"),
+            ("return_trip", "1"),
+            ("save_favorite", "1"),
+            ("favorite_name", "Stadion Arnhem"),
+        ])
+        .await;
+    assert_eq!(r.status, StatusCode::SEE_OTHER, "{}", r.body);
+    let (name, km, round): (String, i64, bool) =
+        sqlx::query_as("SELECT name, km, round_trip FROM saved_routes ORDER BY id DESC LIMIT 1")
+            .fetch_one(&x.app.pool)
+            .await
+            .unwrap();
+    assert_eq!((name.as_str(), km, round), ("Stadion Arnhem", 30, true));
+    let route = x.app.last_id("saved_routes").await;
+    assert_eq!(
+        x.app
+            .count(&format!(
+                "SELECT COUNT(*) FROM mileage_entries WHERE route_id = {route}"
+            ))
+            .await,
+        2,
+        "both legs point at the new favourite"
+    );
+    assert_eq!(
+        x.app
+            .count("SELECT COUNT(*) FROM audit_log WHERE table_name = 'saved_routes'")
+            .await,
+        1
+    );
+
+    // one way, no name: named after the addresses
+    let r = x
+        .trip(&[
+            ("date", "2026-11-11"),
+            ("odometer_start", "2060"),
+            ("km", "10"),
+            ("to_address", "Bakkerij, Zeist"),
+            ("save_favorite", "1"),
+        ])
+        .await;
+    assert_eq!(r.status, StatusCode::SEE_OTHER, "{}", r.body);
+    let (name, round): (String, bool) =
+        sqlx::query_as("SELECT name, round_trip FROM saved_routes ORDER BY id DESC LIMIT 1")
+            .fetch_one(&x.app.pool)
+            .await
+            .unwrap();
+    assert_eq!(name, "Kantoorweg 1, Utrecht → Bakkerij, Zeist");
+    assert!(!round);
+
+    // a name that is taken is refused, and nothing is saved
+    let r = x
+        .trip(&[
+            ("date", "2026-11-12"),
+            ("odometer_start", "2070"),
+            ("km", "10"),
+            ("save_favorite", "1"),
+            ("favorite_name", "stadion arnhem"),
+        ])
+        .await;
+    assert_eq!(r.status, StatusCode::UNPROCESSABLE_ENTITY);
+    assert!(r.body.contains("Er is al een favoriete rit met deze naam."));
+    assert_eq!(x.app.count("SELECT COUNT(*) FROM saved_routes").await, 2);
+    assert_eq!(x.app.count("SELECT COUNT(*) FROM mileage_entries").await, 3);
+}
+
+#[tokio::test]
 async fn overlap_with_another_companys_trip_is_refused_without_details() {
     let mut x = fx().await;
     x.trip(&[("odometer_start", "1000"), ("km", "50")]).await;

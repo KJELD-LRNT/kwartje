@@ -1,4 +1,4 @@
-//! The trip form: parsing, validation, saved routes and 'heen en terug', and working out the legs and tariff snapshot (`work_out`).
+//! The trip form: parsing, validation, favourite rides (picking one, or saving the trip as a new one) and 'heen en terug', and working out the legs and tariff snapshot (`work_out`).
 
 use serde::Deserialize;
 use sqlx::SqlitePool;
@@ -7,7 +7,7 @@ use crate::auth::users;
 use crate::format;
 use crate::mileage::{self, Leg};
 use crate::modules::clients::{self, ClientOption};
-use crate::modules::routes::{self, Route};
+use crate::modules::routes::{self, Route, RouteData};
 use crate::modules::vehicles;
 use crate::tariff;
 use crate::web::form::{self, checked, opt_id, Errors};
@@ -50,6 +50,12 @@ pub struct TripForm {
     pub tariff: String,
     #[serde(default)]
     pub return_trip: Option<String>,
+    /// "Bewaar als favoriet" (new trips only).
+    #[serde(default)]
+    pub save_favorite: Option<String>,
+    /// Name for the new favourite; empty means "van → naar".
+    #[serde(default)]
+    pub favorite_name: String,
     #[serde(default)]
     pub entry: String,
 }
@@ -60,6 +66,9 @@ impl TripForm {
     }
     pub fn is_return(&self) -> bool {
         checked(&self.return_trip)
+    }
+    pub fn is_save_favorite(&self) -> bool {
+        checked(&self.save_favorite)
     }
 }
 
@@ -79,6 +88,14 @@ pub struct Deps {
     pub tariff: String,
     pub tariffs: Vec<(String, String)>,
     pub hint: String,
+    /// A new trip (not an edit): offers "heen en terug" and "bewaar als favoriet".
+    pub is_new: bool,
+    /// "Heen en terug" ticked (or set by picking a round-trip favourite).
+    pub return_trip: bool,
+    /// A favourite is picked, so there is nothing to save as one.
+    pub route_chosen: bool,
+    pub save_favorite: bool,
+    pub favorite_name: String,
     pub errors: Errors,
 }
 
@@ -104,6 +121,8 @@ pub struct Prepared {
     pub tariff: Option<(i64, i64, i64)>,
     pub route_id: Option<i64>,
     pub return_trip: bool,
+    /// Save the trip as a new favourite too (in the same transaction).
+    pub favorite: Option<RouteData>,
 }
 
 pub(super) fn parse_km(s: &str) -> Option<i64> {
@@ -184,12 +203,15 @@ pub(super) async fn work_out(
             }
         }
     }
+    let mut return_trip = f.is_return() && existing.is_none();
     if trigger == "route_id" {
         if let Some(r) = &route {
             from_address = r.from_address.clone();
             to_address = r.to_address.clone();
             km_s = r.km.to_string();
             end_s.clear();
+            // The favourite decides: one way or there and back.
+            return_trip = r.round_trip && existing.is_none();
         }
     }
 
@@ -324,7 +346,7 @@ pub(super) async fn work_out(
         let exclude = existing.map(|t| t.id);
         if let Some(c) = mileage::check(company_id, &date_s, s, en, exclude, &others) {
             e.insert("odometer_start", c.message());
-        } else if f.is_return() && existing.is_none() {
+        } else if return_trip {
             let mut with_first = others.clone();
             with_first.push(Leg {
                 id: -1,
@@ -342,6 +364,28 @@ pub(super) async fn work_out(
             }
         }
         let _ = v;
+    }
+
+    // "Bewaar als favoriet": a new favourite from this trip.
+    let save_favorite = f.is_save_favorite() && existing.is_none() && route.is_none();
+    let favorite_name = f.favorite_name.trim().to_string();
+    let mut favorite = None;
+    if save_favorite {
+        let name = if favorite_name.is_empty() {
+            format!("{from_address} → {to_address}")
+        } else {
+            favorite_name.clone()
+        };
+        if routes::name_taken(&mut conn, company_id, &name, None).await? {
+            e.insert("favorite_name", routes::NAME_TAKEN.into());
+        }
+        favorite = Some(RouteData {
+            name,
+            from_address: from_address.clone(),
+            to_address: to_address.clone(),
+            km: km.unwrap_or(0),
+            round_trip: return_trip,
+        });
     }
 
     drop(conn);
@@ -368,6 +412,11 @@ pub(super) async fn work_out(
         tariff: tariff_id.map(|t| t.to_string()).unwrap_or_default(),
         tariffs,
         hint,
+        is_new: existing.is_none(),
+        return_trip,
+        route_chosen: route.is_some(),
+        save_favorite,
+        favorite_name,
         errors: e.clone(),
     };
     let prepared = match (e.is_empty(), vehicle, user_id, km) {
@@ -384,7 +433,8 @@ pub(super) async fn work_out(
             business,
             tariff: chosen,
             route_id: route.map(|r| r.id),
-            return_trip: f.is_return() && existing.is_none(),
+            return_trip,
+            favorite,
         }),
         _ => None,
     };
@@ -409,6 +459,8 @@ pub(super) fn form_of(t: &Trip) -> TripForm {
         client_id: s(t.client_id),
         tariff: s(t.tariff_id),
         return_trip: None,
+        save_favorite: None,
+        favorite_name: String::new(),
         entry: t.id.to_string(),
     }
 }

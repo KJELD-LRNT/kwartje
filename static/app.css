@@ -630,3 +630,14 @@ dialog::backdrop { background: rgb(15 20 28 / .45); }
 .filters .inline-check { display: flex; align-items: center; gap: .4rem; }
 .nowrap { white-space: nowrap; }
 .security-log code { font-size: .8rem; }
+
+/* favourite rides chooser in the trip form */
+.fav-chooser { margin-bottom: var(--pico-spacing); }
+.fav-chooser legend { font-weight: 600; }
+.fav-manage { font-weight: 400; font-size: .85rem; margin-left: .4rem; }
+.fav-list { display: flex; flex-wrap: wrap; gap: .4rem; }
+.fav-chip { display: inline-flex; align-items: center; margin: 0; padding: .3rem .7rem; border: 1px solid var(--pico-muted-border-color); border-radius: 999px; background: var(--k-surface); cursor: pointer; font-size: .9rem; }
+.fav-chip input[type=radio] { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
+.fav-chip:has(input:checked) { border-color: var(--pico-primary); background: var(--pico-primary-focus); font-weight: 600; }
+.fav-chip:has(input:focus-visible) { outline: 2px solid var(--pico-primary); outline-offset: 2px; }
+.fav-save { margin-top: .5rem; }

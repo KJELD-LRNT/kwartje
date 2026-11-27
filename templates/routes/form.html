@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% block title %}{% if let Some(r) = route %}{{ r.name }}{% else %}Nieuwe vaste rit{% endif %}{% endblock %}
+{% block title %}{% if let Some(r) = route %}{{ r.name }}{% else %}Nieuwe favoriete rit{% endif %}{% endblock %}
 {% block content %}
 {% if let Some(r) = route %}
 <h1>{{ r.name }}</h1>
 <form method="post" action="/routes/{{ r.id }}">
 {% else %}
-<h1>Nieuwe vaste rit</h1>
+<h1>Nieuwe favoriete rit</h1>
 <form method="post" action="/routes">
 {% endif %}
   <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
@@ -27,12 +27,19 @@
       {% if !err("to_address").is_empty() %}<small class="field-error">{{ err("to_address") }}</small>{% endif %}
     </div>
     <div>
-      <label>Kilometers (enkele reis) *
+      <label>Kilometers (één kant op) *
         <input type="number" name="km" value="{{ f.km }}" min="1" max="2000" required inputmode="numeric"{% if !err("km").is_empty() %} aria-invalid="true"{% endif %}>
       </label>
       {% if !err("km").is_empty() %}<small class="field-error">{{ err("km") }}</small>{% endif %}
     </div>
   </div>
+  <fieldset>
+    <legend>Soort rit</legend>
+    <label><input type="radio" name="kind" value="enkel"{% if !f.is_round_trip() %} checked{% endif %}> Enkele reis</label>
+    <label><input type="radio" name="kind" value="retour"{% if f.is_round_trip() %} checked{% endif %}> Heen en terug</label>
+    <small class="muted">Bij heen en terug slaat het ritformulier de terugrit direct erachter op.</small>
+  </fieldset>
+  {% if !err("kind").is_empty() %}<small class="field-error">{{ err("kind") }}</small>{% endif %}
   <div class="actions">
     <button type="submit">Opslaan</button>
     <a href="/routes" role="button" class="secondary outline">Annuleren</a>

@@ -28,22 +28,20 @@
       {% if !err("user_id").is_empty() %}<small class="field-error">{{ err("user_id") }}</small>{% endif %}
     </div>
   </div>
-  {% if !routes.is_empty() %}
-  <label>Vaste rit
-    <select name="route_id" hx-get="/kilometers/voorstel" hx-include="closest form" hx-params="not csrf_token" hx-target="#trip-deps" hx-swap="outerHTML">
-      <option value="">Geen (zelf invullen)</option>
-      {% for r in routes %}<option value="{{ r.id }}"{% if r.id.to_string() == f.route_id %} selected{% endif %}>{{ r.name }} ({{ r.km }} km)</option>{% endfor %}
-    </select>
-  </label>
-  {% endif %}
+  <fieldset class="fav-chooser">
+    <legend>Favoriete rit <a href="/routes" class="muted fav-manage">beheren</a></legend>
+    {% if routes.is_empty() %}
+    <small class="muted">Nog geen favorieten. Vul de rit in en vink onderaan <em>Bewaar als favoriet</em> aan.</small>
+    {% else %}
+    <div class="fav-list">
+      <label class="fav-chip"><input type="radio" name="route_id" value=""{% if f.route_id.is_empty() %} checked{% endif %} hx-get="/kilometers/voorstel" hx-include="closest form" hx-params="not csrf_token" hx-target="#trip-deps" hx-swap="outerHTML"> <span>Zelf invullen</span></label>
+      {% for r in routes %}
+      <label class="fav-chip"><input type="radio" name="route_id" value="{{ r.id }}"{% if r.id.to_string() == f.route_id %} checked{% endif %} hx-get="/kilometers/voorstel" hx-include="closest form" hx-params="not csrf_token" hx-target="#trip-deps" hx-swap="outerHTML"> <span>{{ r.name }} <small class="muted">{% if r.round_trip %}⇄ 2 × {{ r.km }} km{% else %}→ {{ r.km }} km{% endif %}</small></span></label>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </fieldset>
   {% include "trips/_deps.html" %}
-  {% if !is_edit() %}
-  <label>
-    <input type="checkbox" name="return_trip" value="1"{% if f.is_return() %} checked{% endif %}>
-    Heen en terug (terugrit wordt direct erachter opgeslagen)
-  </label>
-  {% if !err("return_trip").is_empty() %}<small class="field-error">{{ err("return_trip") }}</small>{% endif %}
-  {% endif %}
   <div class="form-actions">
     {% if !is_edit() %}<button type="button" class="secondary js-only" data-dialog-close>Annuleren</button>{% endif %}
     <button type="submit">Rit opslaan</button>

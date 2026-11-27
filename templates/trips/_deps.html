@@ -83,4 +83,25 @@
       {% if !deps.err("tariff").is_empty() %}<small class="field-error">{{ deps.err("tariff") }}</small>{% endif %}
     </div>
   </div>
+  {% if deps.is_new %}
+  <label>
+    <input type="checkbox" name="return_trip" value="1"{% if deps.return_trip %} checked{% endif %}>
+    Heen en terug (terugrit wordt direct erachter opgeslagen)
+  </label>
+  {% if !deps.err("return_trip").is_empty() %}<small class="field-error">{{ deps.err("return_trip") }}</small>{% endif %}
+  {% if !deps.route_chosen %}
+  <details class="fav-save"{% if deps.save_favorite %} open{% endif %}>
+    <summary>Bewaar als favoriet</summary>
+    <label>
+      <input type="checkbox" name="save_favorite" value="1"{% if deps.save_favorite %} checked{% endif %}>
+      Bewaar deze rit als favoriet
+    </label>
+    <small class="muted">Staat <em>Heen en terug</em> aan, dan wordt het een favoriet heen en terug; anders een enkele reis.</small>
+    <label>Naam van de favoriet
+      <input type="text" name="favorite_name" value="{{ deps.favorite_name }}" placeholder="Leeg = van → naar"{% if !deps.err("favorite_name").is_empty() %} aria-invalid="true"{% endif %}>
+    </label>
+    {% if !deps.err("favorite_name").is_empty() %}<small class="field-error">{{ deps.err("favorite_name") }}</small>{% endif %}
+  </details>
+  {% endif %}
+  {% endif %}
 </div>

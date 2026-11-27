@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE saved_routes SET name = ?, from_address = ?, to_address = ?, km = ?, round_trip = ?,\n                                 updated_at = ?\n         WHERE id = ? AND company_id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 8
+    },
+    "nullable": []
+  },
+  "hash": "3b91c724c5305b933ddc589e3b46c5e2823de6395b03fb733e211f3905bcab5f"
+}
