@@ -383,7 +383,9 @@ async fn csrf_edge_cases() {
     // missing or wrong token
     assert_eq!(login_post(&mut app, None, &[], "form").await, no);
     assert_eq!(login_post(&mut app, Some("0000"), &[], "form").await, no);
-    let almost = format!("{}0", &token[..token.len() - 1]);
+    // change the last character, whatever it is (a token can end in '0')
+    let last = if token.ends_with('0') { '1' } else { '0' };
+    let almost = format!("{}{last}", &token[..token.len() - 1]);
     assert_eq!(login_post(&mut app, Some(&almost), &[], "header").await, no);
     // a valid token from another site's page is still refused
     assert_eq!(
