@@ -1,6 +1,6 @@
 {
   "db_name": "SQLite",
-  "query": "SELECT id AS \"id!\", company_id, name, from_address, to_address, km, archived_at,\n                  created_at, updated_at, created_by\n           FROM saved_routes WHERE company_id = ? AND (? OR archived_at IS NULL)\n           ORDER BY archived_at IS NOT NULL, name COLLATE NOCASE",
+  "query": "SELECT id AS \"id!\", company_id, name, from_address, to_address, km,\n                  round_trip AS \"round_trip: bool\", archived_at,\n                  created_at, updated_at, created_by\n           FROM saved_routes WHERE company_id = ? AND (? OR archived_at IS NULL)\n           ORDER BY archived_at IS NOT NULL, name COLLATE NOCASE",
   "describe": {
     "columns": [
       {
@@ -70,8 +70,19 @@
         }
       },
       {
-        "name": "archived_at",
+        "name": "round_trip: bool",
         "ordinal": 6,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "saved_routes",
+            "name": "round_trip"
+          }
+        }
+      },
+      {
+        "name": "archived_at",
+        "ordinal": 7,
         "type_info": "Text",
         "origin": {
           "Table": {
@@ -82,7 +93,7 @@
       },
       {
         "name": "created_at",
-        "ordinal": 7,
+        "ordinal": 8,
         "type_info": "Text",
         "origin": {
           "Table": {
@@ -93,7 +104,7 @@
       },
       {
         "name": "updated_at",
-        "ordinal": 8,
+        "ordinal": 9,
         "type_info": "Text",
         "origin": {
           "Table": {
@@ -104,7 +115,7 @@
       },
       {
         "name": "created_by",
-        "ordinal": 9,
+        "ordinal": 10,
         "type_info": "Integer",
         "origin": {
           "Table": {
@@ -124,11 +135,12 @@
       false,
       false,
       false,
+      false,
       true,
       false,
       false,
       true
     ]
   },
-  "hash": "054816cef1c72a4fdf988f73067ab6ebc9a3efbf5c21315728dfa13e42ad8769"
+  "hash": "12a141c3138de7a784a43a416c52bac2240e18bfa5055a50c0999a566ac45b45"
 }

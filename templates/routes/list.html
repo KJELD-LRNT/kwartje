@@ -1,21 +1,21 @@
 {% extends "base.html" %}
-{% block title %}Vaste ritten{% endblock %}
+{% block title %}Favoriete ritten{% endblock %}
 {% block content %}
 <div class="actions page-head">
-  <h1>Vaste ritten</h1>
-  <a href="/routes/nieuw" role="button">Nieuwe vaste rit</a>
+  <h1>Favoriete ritten</h1>
+  <a href="/routes/nieuw" role="button">Nieuwe favoriete rit</a>
 </div>
-<p class="muted">Ritten die je vaak rijdt. Bij het invoeren van een rit vult de app dan van, naar en kilometers in.</p>
+<p class="muted">Ritten die je vaak rijdt, enkele reis of heen en terug. Kies ze bij het invoeren van een rit, dan vult de app van, naar en kilometers in. Je kunt een rit ook direct vanuit het ritformulier als favoriet bewaren.</p>
 <p>{% if show_archived %}<a href="/routes">Verberg gearchiveerde ritten</a>{% else %}<a href="/routes?archief=1">Toon ook gearchiveerde ritten</a>{% endif %}</p>
-{% if routes.is_empty() %}<p>Nog geen vaste ritten.</p>{% else %}
+{% if routes.is_empty() %}<p>Nog geen favoriete ritten.</p>{% else %}
 <div class="table-wrap">
 <table>
-  <thead><tr><th>Naam</th><th>Van</th><th>Naar</th><th class="num">Km</th></tr></thead>
+  <thead><tr><th>Naam</th><th>Van</th><th>Naar</th><th>Soort</th><th class="num">Km</th></tr></thead>
   <tbody>
   {% for r in routes %}
     <tr{% if r.archived_at.is_some() %} class="archived"{% endif %}>
       <td><a href="/routes/{{ r.id }}">{{ r.name }}</a>{% if r.archived_at.is_some() %} <small>(gearchiveerd)</small>{% endif %}</td>
-      <td>{{ r.from_address }}</td><td>{{ r.to_address }}</td><td class="num">{{ r.km }}</td>
+      <td>{{ r.from_address }}</td><td>{{ r.to_address }}</td><td>{{ r.kind_label() }}</td><td class="num">{% if r.round_trip %}2 × {% endif %}{{ r.km }}</td>
     </tr>
   {% endfor %}
   </tbody>

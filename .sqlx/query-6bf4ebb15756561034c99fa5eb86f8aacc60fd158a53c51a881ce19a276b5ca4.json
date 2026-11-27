@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO saved_routes (company_id, name, from_address, to_address, km, round_trip,\n                                   created_at, updated_at, created_by)\n         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 9
+    },
+    "nullable": []
+  },
+  "hash": "6bf4ebb15756561034c99fa5eb86f8aacc60fd158a53c51a881ce19a276b5ca4"
+}

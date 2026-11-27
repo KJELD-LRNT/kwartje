@@ -342,7 +342,7 @@ async fn seed_business(pool: &SqlitePool, company_id: i64) -> Result<usize> {
     Ok(count)
 }
 
-/// A test car, two saved routes, last month's trips (with private gaps) and
+/// A test car, two favourite rides (heen en terug), last month's trips (with private gaps) and
 /// km allowance rates (development data only; check the real rate per year).
 async fn seed_trips(pool: &SqlitePool, company_id: i64) -> Result<usize> {
     use crate::modules::{mileage_rates, routes, trips, vehicles};
@@ -389,6 +389,7 @@ async fn seed_trips(pool: &SqlitePool, company_id: i64) -> Result<usize> {
             from_address: office.into(),
             to_address: stadium.into(),
             km: 12,
+            round_trip: true,
         },
         None,
     )
@@ -402,6 +403,7 @@ async fn seed_trips(pool: &SqlitePool, company_id: i64) -> Result<usize> {
             from_address: office.into(),
             to_address: track.into(),
             km: 18,
+            round_trip: true,
         },
         None,
     )
@@ -451,6 +453,7 @@ async fn seed_trips(pool: &SqlitePool, company_id: i64) -> Result<usize> {
             tariff: None,
             route_id: Some(route),
             return_trip: true,
+            favorite: None,
         };
         trips::insert(pool, company_id, &p, None)
             .await

@@ -1,6 +1,6 @@
 {
   "db_name": "SQLite",
-  "query": "SELECT id AS \"id!\", company_id, name, from_address, to_address, km, archived_at,\n                  created_at, updated_at, created_by\n           FROM saved_routes WHERE id = ? AND company_id = ?",
+  "query": "SELECT id AS \"id!\", company_id, name, from_address, to_address, km,\n                  round_trip AS \"round_trip: bool\", archived_at,\n                  created_at, updated_at, created_by\n           FROM saved_routes WHERE id = ? AND company_id = ?",
   "describe": {
     "columns": [
       {
@@ -70,8 +70,19 @@
         }
       },
       {
-        "name": "archived_at",
+        "name": "round_trip: bool",
         "ordinal": 6,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "saved_routes",
+            "name": "round_trip"
+          }
+        }
+      },
+      {
+        "name": "archived_at",
+        "ordinal": 7,
         "type_info": "Text",
         "origin": {
           "Table": {
@@ -82,7 +93,7 @@
       },
       {
         "name": "created_at",
-        "ordinal": 7,
+        "ordinal": 8,
         "type_info": "Text",
         "origin": {
           "Table": {
@@ -93,7 +104,7 @@
       },
       {
         "name": "updated_at",
-        "ordinal": 8,
+        "ordinal": 9,
         "type_info": "Text",
         "origin": {
           "Table": {
@@ -104,7 +115,7 @@
       },
       {
         "name": "created_by",
-        "ordinal": 9,
+        "ordinal": 10,
         "type_info": "Integer",
         "origin": {
           "Table": {
@@ -124,11 +135,12 @@
       false,
       false,
       false,
+      false,
       true,
       false,
       false,
       true
     ]
   },
-  "hash": "0716fc179b7a44db9cf06d69e1898789cb3ef410d816ea790f60b95f460b8d52"
+  "hash": "5e123bd75acc1e46fc67f14eb870b4a6ee913b82360811d107db1ae4576da292"
 }
