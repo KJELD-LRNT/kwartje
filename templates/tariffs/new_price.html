@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Nieuwe prijs: {{ t.name }}{% endblock %}
+{% block content %}
+<article class="narrow">
+  <h1>Nieuwe prijs voor {{ t.name }}</h1>
+  <p>Huidige prijs: <strong>{{ t.price_cents|amount }}</strong>. De huidige prijs blijft gelden tot de dag vóór de ingangsdatum; daarna geldt de nieuwe prijs. Al opgeslagen uren veranderen niet.</p>
+  {% if let Some(e) = error %}<p class="flash flash-error" role="alert">{{ e }}</p>{% endif %}
+  <form method="post" action="/tarieven/{{ t.id }}/nieuwe-prijs">
+    <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+    <label>Nieuwe prijs (excl. btw)
+      <input type="text" name="price" value="{{ price }}" inputmode="decimal" required>
+    </label>
+    <label>Geldig vanaf
+      <input type="date" name="from" value="{{ from }}" required>
+    </label>
+    <div class="actions">
+      <button type="submit">Nieuwe prijs vastleggen</button>
+      <a href="/tarieven/{{ t.id }}" role="button" class="secondary outline">Annuleren</a>
+    </div>
+  </form>
+</article>
+{% endblock %}

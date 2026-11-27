@@ -1,0 +1,74 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id AS \"id!\", date, amount_cents, method, note FROM payments\n           WHERE invoice_id = ? AND archived_at IS NULL ORDER BY date, id",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "payments",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "date",
+        "ordinal": 1,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "payments",
+            "name": "date"
+          }
+        }
+      },
+      {
+        "name": "amount_cents",
+        "ordinal": 2,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "payments",
+            "name": "amount_cents"
+          }
+        }
+      },
+      {
+        "name": "method",
+        "ordinal": 3,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "payments",
+            "name": "method"
+          }
+        }
+      },
+      {
+        "name": "note",
+        "ordinal": 4,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "payments",
+            "name": "note"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "bbce46fe6efc4b932a5d26048fc86acf14f3f6e5c39b78b1dfa8dac129204b36"
+}

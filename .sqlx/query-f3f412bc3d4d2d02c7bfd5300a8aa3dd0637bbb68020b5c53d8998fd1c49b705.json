@@ -1,0 +1,26 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT DISTINCT supplier AS \"s!\" FROM documents\n           WHERE company_id = ? AND supplier IS NOT NULL AND supplier <> ''\n           ORDER BY supplier COLLATE NOCASE",
+  "describe": {
+    "columns": [
+      {
+        "name": "s!",
+        "ordinal": 0,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "documents",
+            "name": "supplier"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      true
+    ]
+  },
+  "hash": "f3f412bc3d4d2d02c7bfd5300a8aa3dd0637bbb68020b5c53d8998fd1c49b705"
+}

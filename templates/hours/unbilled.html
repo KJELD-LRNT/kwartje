@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Te factureren{% endblock %}
+{% block content %}
+<h1>Te factureren</h1>
+<p class="muted">Uren met een tarief en doorbelaste kilometers die nog niet op een factuur staan. Uren zonder tarief (intern) staan hier nooit; uren met een tarief van € 0,00 wel.
+{% if rounding_minutes > 0 %} Bij het maken van de factuur wordt elke regel naar boven afgerond op {{ rounding_minutes }} minuten; de bedragen hieronder zijn nog onafgerond.{% endif %}</p>
+<form method="get" action="/te-factureren" class="grid">
+  <label>Vanaf <input type="date" name="from" value="{{ from }}"></label>
+  <label>Tot en met <input type="date" name="to" value="{{ to }}"></label>
+  <div><label>&nbsp;<button type="submit" class="secondary">Filter</button></label></div>
+</form>
+{% if groups.is_empty() %}
+<p>Niets te factureren{% if !from.is_empty() || !to.is_empty() %} in deze periode{% endif %}.</p>
+{% else %}
+<article>
+  <strong>Totaal: {{ total_minutes|duration }} uur{% if total_km > 0 %} · {{ total_km }} km{% endif %} · {{ total_cents|amount }}</strong> <small class="muted">excl. btw</small>
+</article>
+{% for g in groups %}
+<section>
+  <div class="actions page-head">
+    <h2><a href="/klanten/{{ g.client_id }}">{{ g.client_name }}</a> <small class="muted">{{ g.period() }}</small></h2>
+    <a href="/facturen/nieuw?klant={{ g.client_id }}&amp;from={{ from }}&amp;to={{ to }}" role="button">Factuur maken</a>
+  </div>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Taak</th><th>Tarief</th><th class="num">Hoeveelheid</th><th class="num">Regels</th><th class="num">Bedrag</th></tr></thead>
+    <tbody>
+    {% for line in g.lines %}
+      <tr>
+        <td>{{ line.task_name }}</td>
+        <td>{{ line.tariff_name }} · {{ line.price_cents|amount }}/u</td>
+        <td class="num">{{ line.minutes|duration }}</td>
+        <td class="num">{{ line.entries }}</td>
+        <td class="num">{{ line.amount_cents|amount }}</td>
+      </tr>
+    {% endfor %}
+    {% for k in g.km_lines %}
+      <tr>
+        <td>Kilometers</td>
+        <td>{{ k.tariff_name }} · {{ k.price_cents|amount }}/km</td>
+        <td class="num">{{ k.km }} km</td>
+        <td class="num">{{ k.trips }}</td>
+        <td class="num">{{ k.amount_cents|amount }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot><tr><th colspan="2">Totaal {{ g.client_name }}</th><th class="num">{{ g.minutes|duration }}{% if g.km > 0 %} · {{ g.km }} km{% endif %}</th><th></th><th class="num">{{ g.amount_cents|amount }}</th></tr></tfoot>
+  </table>
+  </div>
+</section>
+{% endfor %}
+{% endif %}
+{% endblock %}

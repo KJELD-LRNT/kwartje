@@ -1,0 +1,242 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id AS \"id!\", company_id, kind, file_path, sha256, original_name, mime, size,\n                  doc_date, supplier, description, amount_cents, vat_cents, invoice_id, client_id,\n                  archived_at, created_at, updated_at, created_by\n           FROM documents\n           WHERE company_id = ?\n             AND (? IS NULL OR doc_date >= ?) AND (? IS NULL OR doc_date <= ?)\n             AND (? IS NULL OR kind = ?)\n             AND (? IS NULL OR client_id = ?)\n             AND (? OR archived_at IS NULL)\n             AND (COALESCE(supplier, '') LIKE ? OR description LIKE ? OR original_name LIKE ?)\n           ORDER BY doc_date DESC, id DESC",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "documents",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "company_id",
+        "ordinal": 1,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "documents",
+            "name": "company_id"
+          }
+        }
+      },
+      {
+        "name": "kind",
+        "ordinal": 2,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "documents",
+            "name": "kind"
+          }
+        }
+      },
+      {
+        "name": "file_path",
+        "ordinal": 3,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "documents",
+            "name": "file_path"
+          }
+        }
+      },
+      {
+        "name": "sha256",
+        "ordinal": 4,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "documents",
+            "name": "sha256"
+          }
+        }
+      },
+      {
+        "name": "original_name",
+        "ordinal": 5,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "documents",
+            "name": "original_name"
+          }
+        }
+      },
+      {
+        "name": "mime",
+        "ordinal": 6,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "documents",
+            "name": "mime"
+          }
+        }
+      },
+      {
+        "name": "size",
+        "ordinal": 7,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "documents",
+            "name": "size"
+          }
+        }
+      },
+      {
+        "name": "doc_date",
+        "ordinal": 8,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "documents",
+            "name": "doc_date"
+          }
+        }
+      },
+      {
+        "name": "supplier",
+        "ordinal": 9,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "documents",
+            "name": "supplier"
+          }
+        }
+      },
+      {
+        "name": "description",
+        "ordinal": 10,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "documents",
+            "name": "description"
+          }
+        }
+      },
+      {
+        "name": "amount_cents",
+        "ordinal": 11,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "documents",
+            "name": "amount_cents"
+          }
+        }
+      },
+      {
+        "name": "vat_cents",
+        "ordinal": 12,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "documents",
+            "name": "vat_cents"
+          }
+        }
+      },
+      {
+        "name": "invoice_id",
+        "ordinal": 13,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "documents",
+            "name": "invoice_id"
+          }
+        }
+      },
+      {
+        "name": "client_id",
+        "ordinal": 14,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "documents",
+            "name": "client_id"
+          }
+        }
+      },
+      {
+        "name": "archived_at",
+        "ordinal": 15,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "documents",
+            "name": "archived_at"
+          }
+        }
+      },
+      {
+        "name": "created_at",
+        "ordinal": 16,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "documents",
+            "name": "created_at"
+          }
+        }
+      },
+      {
+        "name": "updated_at",
+        "ordinal": 17,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "documents",
+            "name": "updated_at"
+          }
+        }
+      },
+      {
+        "name": "created_by",
+        "ordinal": 18,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "documents",
+            "name": "created_by"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 13
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "14e4f3c60591de04bd0d1cee919dd5e14e4fbe042fc4a72315c021da692e4973"
+}

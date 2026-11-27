@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE documents SET file_path = ? WHERE id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "c2a57aadc82d1c0094dd61ff8a478ad17aa1850cd8132e5088b4f9617bfad957"
+}

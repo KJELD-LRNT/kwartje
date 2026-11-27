@@ -1,0 +1,98 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT t.id AS \"id!\", t.name, t.price_cents, t.client_id, t.project_id,\n                  c.name AS \"client_name?\", p.name AS \"project_name?\"\n           FROM tariffs t\n           LEFT JOIN clients c ON c.id = t.client_id\n           LEFT JOIN projects p ON p.id = t.project_id\n           WHERE t.company_id = ? AND t.unit = 'hour' AND t.archived_at IS NULL\n             AND (t.valid_to IS NULL OR t.valid_to >= ?)\n             AND NOT EXISTS (SELECT 1 FROM tariffs n WHERE n.lineage_id = t.lineage_id\n                             AND n.valid_from > t.valid_from AND n.valid_from <= ?)\n           ORDER BY t.client_id IS NOT NULL, c.name, t.name COLLATE NOCASE",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "name",
+        "ordinal": 1,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "price_cents",
+        "ordinal": 2,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "price_cents"
+          }
+        }
+      },
+      {
+        "name": "client_id",
+        "ordinal": 3,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "client_id"
+          }
+        }
+      },
+      {
+        "name": "project_id",
+        "ordinal": 4,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "project_id"
+          }
+        }
+      },
+      {
+        "name": "client_name?",
+        "ordinal": 5,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "clients",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "project_name?",
+        "ordinal": 6,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "projects",
+            "name": "name"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "e359c256b34a207f0e558e62ff9f961da36ca62311a2a71dce6d53057c206eaf"
+}

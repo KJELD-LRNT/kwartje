@@ -1,0 +1,29 @@
+<div class="table-wrap">
+<table class="invoice-lines">
+  <thead><tr><th>Omschrijving</th><th class="num">Aantal</th><th class="num">Prijs</th><th class="num">Btw</th><th class="num">Bedrag</th>{% if inv.is_draft() %}<th></th>{% endif %}</tr></thead>
+  <tbody>
+  {% for line in lines %}
+    <tr{% if line.is_zero && inv.hide_zero_lines %} class="archived"{% endif %}>
+      <td>{% if inv.is_draft() %}<input type="text" name="desc_{{ line.id }}" value="{{ line.description }}" form="draft-form" aria-label="Omschrijving">{% else %}{{ line.description }}{% endif %}
+        {% if line.is_zero && inv.hide_zero_lines %}<br><small class="muted">verborgen op de factuur (€ 0,00)</small>{% endif %}</td>
+      <td class="num">{{ line.quantity_label() }} {{ line.unit }}</td>
+      <td class="num">{{ line.unit_price_cents|amount }}</td>
+      <td class="num">{{ line.vat_bp|vat }}</td>
+      <td class="num">{{ line.line_total_cents|amount }}</td>
+      {% if inv.is_draft() %}<td>
+        <form method="post" action="/facturen/{{ inv.id }}/regels/{{ line.id }}/verwijderen" class="inline-form">
+          <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+          <button type="submit" class="icon-btn" aria-label="Regel verwijderen">✕</button>
+        </form></td>{% endif %}
+    </tr>
+  {% endfor %}
+  </tbody>
+  <tfoot>
+    <tr><td colspan="4">Subtotaal</td><td class="num">{{ totals.subtotal_cents|amount }}</td>{% if inv.is_draft() %}<td></td>{% endif %}</tr>
+    {% for (bp, g) in totals.per_rate %}
+    <tr><td colspan="4">Btw {{ bp|vat }} over {{ g.base_cents|amount }}</td><td class="num">{{ g.vat_cents|amount }}</td>{% if inv.is_draft() %}<td></td>{% endif %}</tr>
+    {% endfor %}
+    <tr><th colspan="4">Totaal</th><th class="num">{{ totals.total_cents|amount }}</th>{% if inv.is_draft() %}<th></th>{% endif %}</tr>
+  </tfoot>
+</table>
+</div>

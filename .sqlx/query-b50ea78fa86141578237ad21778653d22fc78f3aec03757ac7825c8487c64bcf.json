@@ -1,0 +1,98 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT e.client_id AS \"client_id!\", c.name AS client_name, k.name AS task_name,\n                  t.name AS tariff_name, e.price_cents AS \"price_cents!\", e.minutes, e.date\n           FROM time_entries e\n           JOIN clients c ON c.id = e.client_id\n           JOIN tasks k ON k.id = e.task_id\n           JOIN tariffs t ON t.id = e.tariff_id\n           WHERE e.company_id = ? AND e.tariff_id IS NOT NULL AND e.invoice_line_id IS NULL\n             AND e.archived_at IS NULL\n             AND (? IS NULL OR e.client_id = ?)\n             AND (? IS NULL OR e.date >= ?)\n             AND (? IS NULL OR e.date <= ?)\n           ORDER BY c.name COLLATE NOCASE, k.name COLLATE NOCASE, t.name, e.date",
+  "describe": {
+    "columns": [
+      {
+        "name": "client_id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "time_entries",
+            "name": "client_id"
+          }
+        }
+      },
+      {
+        "name": "client_name",
+        "ordinal": 1,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "clients",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "task_name",
+        "ordinal": 2,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tasks",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "tariff_name",
+        "ordinal": 3,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "price_cents!",
+        "ordinal": 4,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "time_entries",
+            "name": "price_cents"
+          }
+        }
+      },
+      {
+        "name": "minutes",
+        "ordinal": 5,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "time_entries",
+            "name": "minutes"
+          }
+        }
+      },
+      {
+        "name": "date",
+        "ordinal": 6,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "time_entries",
+            "name": "date"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 7
+    },
+    "nullable": [
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "b50ea78fa86141578237ad21778653d22fc78f3aec03757ac7825c8487c64bcf"
+}

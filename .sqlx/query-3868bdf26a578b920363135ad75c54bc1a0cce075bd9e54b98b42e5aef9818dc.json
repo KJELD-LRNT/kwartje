@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE quotes SET valid_until = ?, intro_text = ?, footer_text = ?, updated_at = ?\n         WHERE id = ? AND company_id = ? AND number IS NULL",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 6
+    },
+    "nullable": []
+  },
+  "hash": "3868bdf26a578b920363135ad75c54bc1a0cce075bd9e54b98b42e5aef9818dc"
+}

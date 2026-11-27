@@ -1,0 +1,86 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id AS \"id!\", year, rate_cents_per_km, created_at, updated_at, created_by\n           FROM mileage_rates ORDER BY year DESC",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_rates",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "year",
+        "ordinal": 1,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_rates",
+            "name": "year"
+          }
+        }
+      },
+      {
+        "name": "rate_cents_per_km",
+        "ordinal": 2,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_rates",
+            "name": "rate_cents_per_km"
+          }
+        }
+      },
+      {
+        "name": "created_at",
+        "ordinal": 3,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "mileage_rates",
+            "name": "created_at"
+          }
+        }
+      },
+      {
+        "name": "updated_at",
+        "ordinal": 4,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "mileage_rates",
+            "name": "updated_at"
+          }
+        }
+      },
+      {
+        "name": "created_by",
+        "ordinal": 5,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_rates",
+            "name": "created_by"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "25e55d7b396a498cf31b25b0a52b32c7abaa71a76c4329ab197baa3138341961"
+}

@@ -1,0 +1,134 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT s.id AS \"id!\", s.at, s.event, s.user_id, u.name AS \"user_name?\", s.email, s.ip,\n                  s.via, s.user_agent, s.detail_json\n           FROM security_events s LEFT JOIN users u ON u.id = s.user_id\n           WHERE (? IS NULL OR s.user_id = ?)\n             AND (? IS NULL OR s.event = ?)\n             AND (? IS NULL OR s.at >= ?)\n             AND (? IS NULL OR s.at <= ?)\n             AND (NOT ? OR s.event IN (SELECT value FROM json_each(?)))\n           ORDER BY s.id DESC LIMIT ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "security_events",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "at",
+        "ordinal": 1,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "security_events",
+            "name": "at"
+          }
+        }
+      },
+      {
+        "name": "event",
+        "ordinal": 2,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "security_events",
+            "name": "event"
+          }
+        }
+      },
+      {
+        "name": "user_id",
+        "ordinal": 3,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "security_events",
+            "name": "user_id"
+          }
+        }
+      },
+      {
+        "name": "user_name?",
+        "ordinal": 4,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "users",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "email",
+        "ordinal": 5,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "security_events",
+            "name": "email"
+          }
+        }
+      },
+      {
+        "name": "ip",
+        "ordinal": 6,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "security_events",
+            "name": "ip"
+          }
+        }
+      },
+      {
+        "name": "via",
+        "ordinal": 7,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "security_events",
+            "name": "via"
+          }
+        }
+      },
+      {
+        "name": "user_agent",
+        "ordinal": 8,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "security_events",
+            "name": "user_agent"
+          }
+        }
+      },
+      {
+        "name": "detail_json",
+        "ordinal": 9,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "security_events",
+            "name": "detail_json"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 11
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "4627dc278ef821c971cccc496b20a67197c50ef6b21899756d32f611baf44f3e"
+}

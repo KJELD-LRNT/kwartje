@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE vehicles SET name = ?, plate = ?, kind = ?, odometer_mode = ?, updated_at = ?\n         WHERE id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 6
+    },
+    "nullable": []
+  },
+  "hash": "9964cfd656f81be94030c0d776dcf55780522366fdfb7a5cf87d070ed525deb4"
+}

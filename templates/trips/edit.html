@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Rit wijzigen{% endblock %}
+{% block content %}
+<h1>Rit wijzigen</h1>
+<article>
+  {% include "trips/_form.html" %}
+</article>
+<div class="actions">
+  <a href="{{ back }}" role="button" class="secondary outline">Terug</a>
+  <form method="post" action="/kilometers/{{ trip.id }}/verwijderen" class="inline-form" data-confirm="Deze rit verwijderen?">
+    <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+    <button type="submit" class="quiet">Verwijderen</button>
+  </form>
+</div>
+{% endblock %}

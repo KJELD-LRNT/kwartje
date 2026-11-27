@@ -1,0 +1,21 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT COALESCE(MAX(position), 0) AS \"p!: i64\" FROM invoice_lines WHERE invoice_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "p!: i64",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": "Expression"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "ca5f3810936224e23eed07e559c8168b9814c09393ccdca152db7a4057ac0f8b"
+}

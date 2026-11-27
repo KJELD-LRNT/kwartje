@@ -1,0 +1,44 @@
+name: 💡 Feature request
+description: An idea to make Kwartje better.
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Ideas are very welcome. Kwartje deliberately stays small: it records hours and trips, makes invoices and hands clean records to an accountant. It is **not** bookkeeping software (no ledger, bank import or VAT filing). Requests in that direction will probably be declined, but tell us about your use case anyway.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Describe the situation, not the solution yet. "Every month I have to …"
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would you like to see?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Uren (hours)
+        - Ritten (trips)
+        - Facturen / offertes (invoices, quotes)
+        - Documenten / btw-overzicht
+        - Klanten, taken, tarieven
+        - Login, gebruikers, beveiliging
+        - Installation, updates, backups
+        - Other
+  - type: checkboxes
+    id: help
+    attributes:
+      label: Contributing
+      options:
+        - label: I'd like to help build this.

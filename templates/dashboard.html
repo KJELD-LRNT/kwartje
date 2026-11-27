@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Overzicht{% endblock %}
+{% block content %}
+{% if let Some(c) = company %}
+<div class="actions page-head">
+  <hgroup>
+    <h1>{{ c.name }}</h1>
+    <p>Overzicht · <a href="/bedrijven/{{ c.id }}">bedrijfsgegevens</a></p>
+  </hgroup>
+  <div class="actions">
+    <a href="/uren" role="button">Uren schrijven</a>
+    <a href="/kilometers" role="button" class="secondary outline">Rit toevoegen</a>
+  </div>
+</div>
+{% if let Some(st) = stats %}
+<p class="section-title">Aandacht nodig</p>
+<div class="grid totals">
+  <article class="{% if st.invoices.overdue_count > 0 %}alarm{% else %}good{% endif %}">
+    <small class="muted">Vervallen facturen</small>
+    <p class="big{% if st.invoices.overdue_count > 0 %} bad{% endif %}">{{ st.invoices.overdue_cents|amount }}</p>
+    <small>{{ st.invoices.overdue_count }} factuur/facturen · <a href="/facturen?status=vervallen">bekijken</a></small>
+  </article>
+  <article{% if st.invoices.drafts > 0 %} class="attention"{% endif %}>
+    <small class="muted">Concepten</small>
+    <p class="big">{{ st.invoices.drafts }}</p>
+    <small>{% if st.recurring_drafts > 0 %}{{ st.recurring_drafts }} uit terugkerende facturen, klaar om te controleren · {% endif %}<a href="/facturen?status=concept">bekijken</a></small>
+  </article>
+  <article{% if st.quarter_missing > 0 %} class="attention"{% endif %}>
+    <small class="muted">Documenten {{ st.quarter_label }}</small>
+    <p class="big">{{ st.quarter_docs }}</p>
+    <small>{% if st.quarter_missing > 0 %}<span class="bad">{{ st.quarter_missing }} zonder bedrag</span> · {% endif %}<a href="/documenten/nieuw">uploaden</a></small>
+  </article>
+  <article{% if st.open_quotes > 0 %} class="attention"{% endif %}>
+    <small class="muted">Offertes zonder antwoord</small>
+    <p class="big">{{ st.open_quotes }}</p>
+    <small><a href="/offertes">offertes</a></small>
+  </article>
+</div>
+
+<p class="section-title">Werk</p>
+<div class="grid totals">
+  <article><small class="muted">Jouw uren deze week</small><p class="big">{{ st.week_minutes|duration }}</p><a href="/uren">weekoverzicht</a></article>
+  <article><small class="muted">Uren {{ st.month_name }}</small><p class="big">{{ st.month_minutes|duration }}</p><small>iedereen · <a href="/uren/jaar">jaaroverzicht</a></small></article>
+  <article><small class="muted">Zakelijke km {{ st.month_name }}</small><p class="big">{{ st.month_business_km }} km</p><a href="/kilometers">kilometers</a></article>
+  <article><small class="muted">Uren {{ st.year }} per persoon</small>
+    {% if st.year_per_user.is_empty() %}<p class="big">0:00</p>{% else %}
+    <div class="person-hours">{% for (name, m) in st.year_per_user %}<span>{{ name }}</span><strong>{{ m|duration }}</strong>{% endfor %}</div>
+    {% endif %}
+  </article>
+</div>
+
+<p class="section-title">Geld</p>
+<div class="grid totals">
+  <article><small class="muted">Te factureren</small><p class="big">{{ st.unbilled_cents|amount }}</p><small>{{ st.unbilled_minutes|duration }} uur bij {{ st.unbilled_clients }} klant(en) · <a href="/te-factureren">factuur maken</a></small></article>
+  <article><small class="muted">Openstaande facturen</small><p class="big">{{ st.invoices.open_cents|amount }}</p><small>{{ st.invoices.open_count }} factuur/facturen · <a href="/facturen?status=open">bekijken</a></small></article>
+  <article><small class="muted">Btw Q{{ st.btw_quarter }} {{ st.year }} (schatting)</small><p class="big">{{ st.btw_balance_cents.abs()|amount }}</p><small>{% if st.btw_balance_cents < 0 %}terug te vragen{% else %}te betalen{% endif %} · <a href="/btw">btw-overzicht</a></small></article>
+</div>
+{% endif %}
+{% else %}
+<article class="narrow">
+  <h1>Welkom</h1>
+  <p>Er is nog geen bedrijf. Maak eerst een bedrijf aan om te beginnen.</p>
+  <a href="/bedrijven/nieuw" role="button">Bedrijf aanmaken</a>
+</article>
+{% endif %}
+{% endblock %}

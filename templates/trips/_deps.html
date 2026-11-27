@@ -1,0 +1,86 @@
+<div id="trip-deps">
+  <div class="grid">
+    <div>
+      <label>Van *
+        <input type="text" name="from_address" value="{{ deps.from_address }}" required{% if !deps.err("from_address").is_empty() %} aria-invalid="true"{% endif %}>
+      </label>
+      {% if !deps.err("from_address").is_empty() %}<small class="field-error">{{ deps.err("from_address") }}</small>{% endif %}
+    </div>
+    <div>
+      <label>Naar *
+        <input type="text" name="to_address" value="{{ deps.to_address }}" required{% if !deps.err("to_address").is_empty() %} aria-invalid="true"{% endif %}>
+      </label>
+      {% if !deps.err("to_address").is_empty() %}<small class="field-error">{{ deps.err("to_address") }}</small>{% endif %}
+    </div>
+  </div>
+  {% if deps.km_only %}
+  <div class="grid odo">
+    <div>
+      <label>Aantal km *
+        <input type="text" name="km" value="{{ deps.km }}" inputmode="numeric" required{% if !deps.err("km").is_empty() %} aria-invalid="true"{% endif %}>
+      </label>
+    </div>
+    <div>
+      <label>Beginstand <small class="muted">(optioneel)</small>
+        <input type="text" name="odometer_start" value="{{ deps.odometer_start }}" inputmode="numeric"{% if !deps.err("odometer_start").is_empty() %} aria-invalid="true"{% endif %}>
+      </label>
+    </div>
+    <input type="hidden" name="odometer_end" value="">
+  </div>
+  {% if !deps.err("km").is_empty() %}<small class="field-error">{{ deps.err("km") }}</small>{% endif %}
+  {% else %}
+  <div class="grid odo">
+    <div>
+      <label>Beginstand *
+        <input type="text" name="odometer_start" value="{{ deps.odometer_start }}" inputmode="numeric" required{% if !deps.err("odometer_start").is_empty() %} aria-invalid="true"{% endif %}>
+      </label>
+    </div>
+    <div>
+      <label>Eindstand
+        <input type="text" name="odometer_end" value="{{ deps.odometer_end }}" inputmode="numeric"{% if !deps.err("odometer_end").is_empty() %} aria-invalid="true"{% endif %}>
+      </label>
+    </div>
+    <div>
+      <label>of km
+        <input type="text" name="km" value="{{ deps.km }}" inputmode="numeric">
+      </label>
+    </div>
+  </div>
+  {% endif %}
+  {% if !deps.err("odometer_start").is_empty() %}<small class="field-error">{{ deps.err("odometer_start") }}</small>{% endif %}
+  {% if !deps.err("odometer_end").is_empty() %}<small class="field-error">{{ deps.err("odometer_end") }}</small>{% endif %}
+  {% if !deps.hint.is_empty() %}<small class="muted hint">{{ deps.hint }}</small>{% endif %}
+  <input type="hidden" name="business_present" value="1">
+  <label>
+    <input type="checkbox" name="business" value="1" role="switch"{% if deps.business %} checked{% endif %}>
+    Zakelijke rit
+  </label>
+  <label>Doel van de rit{% if deps.business %} *{% endif %}
+    <input type="text" name="purpose" value="{{ deps.purpose }}" placeholder="Wedstrijd bekijken, gesprek met club…"{% if !deps.err("purpose").is_empty() %} aria-invalid="true"{% endif %}>
+  </label>
+  {% if !deps.err("purpose").is_empty() %}<small class="field-error">{{ deps.err("purpose") }}</small>{% endif %}
+  <div class="grid">
+    <div>
+      <label>Klant
+        <select name="client_id" hx-get="/kilometers/voorstel" hx-include="closest form" hx-params="not csrf_token" hx-target="#trip-deps" hx-swap="outerHTML"{% if !deps.err("client_id").is_empty() %} aria-invalid="true"{% endif %}>
+          <option value="">Geen klant</option>
+          {% for c in deps.clients %}
+          <option value="{{ c.id }}"{% if c.id.to_string() == deps.client_id %} selected{% endif %}>{{ c.name }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      {% if !deps.err("client_id").is_empty() %}<small class="field-error">{{ deps.err("client_id") }}</small>{% endif %}
+    </div>
+    <div>
+      <label>Doorbelasten
+        <select name="tariff"{% if !deps.err("tariff").is_empty() %} aria-invalid="true"{% endif %}>
+          <option value="">Niet doorbelasten</option>
+          {% for (value, label) in deps.tariffs %}
+          <option value="{{ value }}"{% if *value == deps.tariff %} selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      {% if !deps.err("tariff").is_empty() %}<small class="field-error">{{ deps.err("tariff") }}</small>{% endif %}
+    </div>
+  </div>
+</div>

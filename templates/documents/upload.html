@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Document uploaden{% endblock %}
+{% block content %}
+<h1>Document uploaden</h1>
+<form method="post" action="/documenten/nieuw?csrf_token={{ l.csrf }}" enctype="multipart/form-data" class="upload">
+  <fieldset class="file-pick{% if !err("file").is_empty() %} invalid{% endif %}">
+    <label class="file-button">📷 Foto maken
+      <input type="file" name="photo" accept="image/jpeg,image/png" capture="environment">
+    </label>
+    <label class="file-button secondary">📄 Bestand kiezen
+      <input type="file" name="file" accept="application/pdf,image/jpeg,image/png">
+    </label>
+    <small class="muted">PDF, JPG of PNG, maximaal 20 MB.</small>
+    {% if !err("file").is_empty() %}<small class="field-error">{{ err("file") }}{% if let Some((id, archived)) = duplicate %} <a href="/documenten/{{ id }}">Bekijk het bestaande document{% if *archived %} (gearchiveerd; je kunt het terugzetten){% endif %}</a>{% endif %}</small>{% endif %}
+    {% if !errors.is_empty() && err("file").is_empty() %}<small class="muted">Kies het bestand opnieuw; het wordt na een fout niet onthouden.</small>{% endif %}
+  </fieldset>
+  {% include "documents/_fields.html" %}
+  <button type="submit">Opslaan</button>
+</form>
+<p><a href="/documenten">Naar alle documenten</a></p>
+{% endblock %}

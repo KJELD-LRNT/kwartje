@@ -1,0 +1,26 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT rate_cents_per_km FROM mileage_rates WHERE year = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "rate_cents_per_km",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_rates",
+            "name": "rate_cents_per_km"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "ebbd732dc328520540177d07ade095d97dd2c9b58376430e3393fe7bf7bb44a2"
+}

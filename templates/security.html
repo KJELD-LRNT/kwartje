@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Beveiliging{% endblock %}
+{% block content %}
+<div class="actions page-head">
+  <hgroup><h1>Beveiliging</h1><p>Aanmeldingen en andere beveiligingsgebeurtenissen, 1 jaar bewaard</p></hgroup>
+  <a href="{{ csv_href }}" role="button" class="secondary outline">Exporteer CSV</a>
+</div>
+
+<div class="grid tiles">
+  <article class="tile"><small>Mislukte pogingen (24 uur)</small><strong>{{ summary.failed_24h }}</strong></article>
+  <article class="tile"><small>Gelukte aanmeldingen (24 uur)</small><strong>{{ summary.logins_24h }}</strong></article>
+  <article class="tile"><small>Verschillende IP-adressen (24 uur)</small><strong>{{ summary.ips_24h }}</strong></article>
+</div>
+
+<details>
+  <summary>Laatst ingelogd per gebruiker</summary>
+  <table>
+    <tbody>
+      {% for (name, at) in last_logins %}<tr><td>{{ name }}</td><td>{{ at }}</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</details>
+
+<form method="get" action="/beveiliging" class="grid filters">
+  <label>Gebruiker
+    <select name="gebruiker">
+      <option value="">Iedereen</option>
+      {% for (id, name) in users %}<option value="{{ id }}"{% if id.to_string() == q.gebruiker %} selected{% endif %}>{{ name }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Gebeurtenis
+    <select name="gebeurtenis">
+      <option value="">Alle</option>
+      {% for (value, label) in events %}<option value="{{ value }}"{% if *value == q.gebeurtenis.as_str() %} selected{% endif %}>{{ label }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Vanaf <input type="text" name="van" value="{{ q.van }}" placeholder="dd-mm-jjjj"></label>
+  <label>Tot en met <input type="text" name="tot" value="{{ q.tot }}" placeholder="dd-mm-jjjj"></label>
+  <label class="inline-check"><input type="checkbox" name="mislukt" value="1"{% if !q.mislukt.is_empty() %} checked{% endif %}> Alleen mislukt en opvallend</label>
+  <button type="submit" class="secondary">Filter</button>
+</form>
+
+<p class="muted">De laatste {{ limit }} gebeurtenissen, nieuwste eerst. Route: <em>Tailscale</em> (via het tailnet), <em>internet</em> (via de reverse proxy, bijvoorbeeld Pangolin), <em>cli</em> (opdrachtregel op de server).</p>
+{% if rows.is_empty() %}
+<p class="empty-state">Geen gebeurtenissen gevonden.</p>
+{% else %}
+<div class="table-wrap">
+<table class="security-log">
+  <thead><tr><th>Tijdstip</th><th>Gebeurtenis</th><th>Gebruiker</th><th>Vanaf</th></tr></thead>
+  <tbody>
+    {% for r in rows %}
+    <tr{% if r.is_warning() %} class="warn"{% endif %}>
+      <td data-label="Tijdstip" class="nowrap">{{ r.when() }}</td>
+      <td data-label="Gebeurtenis">{{ r.label() }}{% if !r.detail().is_empty() %}<br><small class="muted">{{ r.detail() }}</small>{% endif %}</td>
+      <td data-label="Gebruiker">{{ r.who() }}</td>
+      <td data-label="Vanaf">{% if !r.ip.is_empty() %}<code>{{ r.ip }}</code> {% endif %}<span class="status info">{{ r.via }}</span><br><small class="muted">{{ r.user_agent }}</small></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+{% endblock %}

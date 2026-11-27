@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE quotes SET number = ?, issue_date = ?, subtotal_cents = ?, vat_cents = ?, total_cents = ?,\n                    company_snapshot_json = ?, client_snapshot_json = ?, issued_at = ?, pdf_document_id = ?,\n                    updated_at = ?\n             WHERE id = ? AND number IS NULL",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 11
+    },
+    "nullable": []
+  },
+  "hash": "658d4076d7f7ca62c69edb6ed03721525a88509270ce87a192da690b15839374"
+}

@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "DELETE FROM invoices WHERE id = ? AND company_id = ? AND number IS NULL",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "395fe8902135dba8c3470659e29ae4427268ca2072963c896882af93bcf600f8"
+}

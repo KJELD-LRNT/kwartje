@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Uren wijzigen{% endblock %}
+{% block content %}
+<h1>Uren wijzigen</h1>
+<p class="muted">De prijs op deze uren is vastgelegd bij het opslaan. Hij wordt alleen opnieuw bepaald als je het tarief of de datum wijzigt.</p>
+<article>
+  {% include "hours/_form.html" %}
+</article>
+<div class="actions">
+  <a href="{{ back }}" role="button" class="secondary outline">Terug naar de week</a>
+  <form method="post" action="/uren/{{ entry.id }}/verwijderen" class="inline-form" data-confirm="Deze uren verwijderen?">
+    <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+    <button type="submit" class="quiet">Verwijderen</button>
+  </form>
+</div>
+{% endblock %}

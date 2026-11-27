@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE tasks SET name = ?, client_id = ?, project_id = ?, tariff_id = ?, billable = ?,\n                    updated_at = ?\n             WHERE id = ? AND company_id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 8
+    },
+    "nullable": []
+  },
+  "hash": "2c81ce08e6a6fe67c3b4480d79777e148e6bd1aefc55bdb084a538db2580716d"
+}

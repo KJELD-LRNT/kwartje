@@ -1,0 +1,10 @@
+[Unit]
+Description=Run the kwartje backup every night at 02:00
+
+[Timer]
+OnCalendar=*-*-* 02:00:00
+Persistent=true
+RandomizedDelaySec=0
+
+[Install]
+WantedBy=timers.target

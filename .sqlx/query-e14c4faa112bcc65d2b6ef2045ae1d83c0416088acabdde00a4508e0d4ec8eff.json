@@ -1,0 +1,26 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT e.id AS \"id!\" FROM time_entries e JOIN invoice_lines l ON l.id = e.invoice_line_id\n           WHERE l.invoice_id = ? AND e.company_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "time_entries",
+            "name": "id"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "e14c4faa112bcc65d2b6ef2045ae1d83c0416088acabdde00a4508e0d4ec8eff"
+}

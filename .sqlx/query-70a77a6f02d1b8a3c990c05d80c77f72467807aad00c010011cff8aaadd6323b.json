@@ -1,0 +1,26 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT number FROM invoices WHERE id = ? AND company_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "number",
+        "ordinal": 0,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "invoices",
+            "name": "number"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      true
+    ]
+  },
+  "hash": "70a77a6f02d1b8a3c990c05d80c77f72467807aad00c010011cff8aaadd6323b"
+}

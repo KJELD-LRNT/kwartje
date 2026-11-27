@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "DELETE FROM recurring_lines WHERE id = ? AND recurring_id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "16e085f820d96c37de88b03bfb722f487fc1dc5291b7adb68c41d8b87c2fa03b"
+}

@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO recurring_lines (recurring_id, position, description, quantity_milli, unit,\n                                      unit_price_cents, vat_bp, created_at, updated_at, created_by)\n         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 10
+    },
+    "nullable": []
+  },
+  "hash": "5b2be2b9519d387fc65881c645a35858c51c2c2ce382e16b78a6a644a9c60228"
+}

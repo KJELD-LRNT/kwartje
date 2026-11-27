@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO invoices (company_id, client_id, kind, credit_for_invoice_id, release_entries,\n                               period_from, period_to, line_style, hide_zero_lines, include_hours_spec,\n                               intro_text, created_at, updated_at, created_by)\n         VALUES (?, ?, 'credit', ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 12
+    },
+    "nullable": []
+  },
+  "hash": "6e8ca6053973f4f3e2c4a34eee831fb57c0d0f21b6b749193b0e2cd1f62cdc6f"
+}

@@ -1,0 +1,42 @@
+<div class="grid">
+  <label>Soort
+    <select name="kind">
+      {% for (value, label) in kinds %}<option value="{{ value }}"{% if *value == f.kind.as_str() %} selected{% endif %}>{{ label }}</option>{% endfor %}
+    </select>
+  </label>
+  <div>
+    <label>Datum op het document *
+      <input type="date" name="doc_date" value="{{ f.doc_date }}" required{% if !err("doc_date").is_empty() %} aria-invalid="true"{% endif %}>
+    </label>
+    {% if !err("doc_date").is_empty() %}<small class="field-error">{{ err("doc_date") }}</small>{% endif %}
+  </div>
+</div>
+<label>Leverancier, winkel of wederpartij{% if f.kind == "purchase_invoice" || f.kind == "receipt" %} *{% endif %}
+  <input type="text" name="supplier" value="{{ f.supplier }}" list="suppliers" autocomplete="off" placeholder="KPN, Albert Heijn, NS…"{% if !err("supplier").is_empty() %} aria-invalid="true"{% endif %}>
+</label>
+<datalist id="suppliers">{% for s in suppliers %}<option value="{{ s }}">{% endfor %}</datalist>
+{% if !err("supplier").is_empty() %}<small class="field-error">{{ err("supplier") }}</small>{% endif %}
+<div class="grid">
+  <div>
+    <label>Totaal incl. btw
+      <input type="text" name="amount" value="{{ f.amount }}" inputmode="decimal" placeholder="121,00"{% if !err("amount").is_empty() %} aria-invalid="true"{% endif %}>
+    </label>
+    {% if !err("amount").is_empty() %}<small class="field-error">{{ err("amount") }}</small>{% endif %}
+  </div>
+  <div>
+    <label>Waarvan btw
+      <input type="text" name="vat" value="{{ f.vat }}" inputmode="decimal" placeholder="21,00"{% if !err("vat").is_empty() %} aria-invalid="true"{% endif %}>
+    </label>
+    {% if !err("vat").is_empty() %}<small class="field-error">{{ err("vat") }}</small>{% endif %}
+  </div>
+</div>
+<small class="muted">Bedragen mogen later worden aangevuld; ze zijn nodig voor het btw-overzicht.</small>
+<label>Omschrijving
+  <input type="text" name="description" value="{{ f.description }}" placeholder="Telefoonabonnement oktober">
+</label>
+<label>Klant (optioneel)
+  <select name="client_id">
+    <option value="">Geen klant</option>
+    {% for c in clients %}<option value="{{ c.id }}"{% if c.id.to_string() == f.client_id %} selected{% endif %}>{{ c.name }}</option>{% endfor %}
+  </select>
+</label>

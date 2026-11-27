@@ -1,0 +1,81 @@
+# Release build: a ready-to-install package for the Debian 12 LXC.
+#
+# Runs when a version tag is pushed (e.g. `git tag v0.1.0 && git push origin
+# v0.1.0`) or by hand from the Actions tab. Builds inside rust:1-bookworm, so
+# the binary links against Debian 12's glibc (2.36) and runs on the LXC, runs
+# the tests, and publishes a GitHub Release with:
+#   kwartje-<version>-x86_64-debian12.tar.gz   binary + deploy/ files
+#   kwartje-<version>-x86_64-debian12.tar.gz.sha256
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing tag to (re)build, e.g. v0.1.0"
+        required: true
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+  SQLX_OFFLINE: "true"
+
+jobs:
+  build:
+    name: Build for Debian 12
+    runs-on: ubuntu-latest
+    container: rust:1-bookworm
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+      - name: Version
+        id: v
+        run: |
+          tag="${{ inputs.tag || github.ref_name }}"
+          crate="v$(grep -m1 '^version' Cargo.toml | cut -d'"' -f2)"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "Tag $tag, Cargo.toml $crate"
+      - name: Tests
+        # No Typst here; the real-PDF tests skip themselves.
+        run: cargo test --locked
+      - name: Build
+        run: cargo build --release --locked && strip target/release/kwartje
+      - name: Check it runs
+        run: target/release/kwartje --version
+      - name: Package
+        run: |
+          name="kwartje-${{ steps.v.outputs.tag }}-x86_64-debian12"
+          mkdir -p "dist/$name"
+          cp target/release/kwartje "dist/$name/"
+          cp -r deploy "dist/$name/deploy"
+          cp install.sh dist/install.sh
+          cd dist
+          tar czf "$name.tar.gz" "$name"
+          sha256sum "$name.tar.gz" > "$name.tar.gz.sha256"
+          ls -l
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.v.outputs.tag }}
+          name: Kwartje ${{ steps.v.outputs.tag }}
+          files: |
+            dist/*.tar.gz
+            dist/*.tar.gz.sha256
+            dist/install.sh
+          body: |
+            Debian 12 (x86_64) build of Kwartje ${{ steps.v.outputs.tag }}, for the LXC described in `deploy/INSTALL.md`.
+
+            The archive holds the `kwartje` binary and the `deploy/` files (systemd units, scripts, example config). Check it with `sha256sum -c` before installing.
+
+            **Install or update** on Debian 12 or newer (x86-64):
+
+            ```sh
+            curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/main/install.sh | sudo bash
+            ```
+
+            This exact version: `… | sudo bash -s -- --version ${{ steps.v.outputs.tag }}`. The script verifies the SHA-256 before installing.

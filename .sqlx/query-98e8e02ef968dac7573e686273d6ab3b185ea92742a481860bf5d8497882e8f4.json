@@ -1,0 +1,38 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT r.id AS \"id!\", r.company_id FROM recurring_invoices r\n           JOIN clients c ON c.id = r.client_id AND c.company_id = r.company_id\n           JOIN companies co ON co.id = r.company_id\n           WHERE r.archived_at IS NULL AND c.archived_at IS NULL AND co.archived_at IS NULL\n             AND r.next_date <= ? AND (r.end_date IS NULL OR r.next_date <= r.end_date)\n           ORDER BY r.id",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "recurring_invoices",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "company_id",
+        "ordinal": 1,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "recurring_invoices",
+            "name": "company_id"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "98e8e02ef968dac7573e686273d6ab3b185ea92742a481860bf5d8497882e8f4"
+}

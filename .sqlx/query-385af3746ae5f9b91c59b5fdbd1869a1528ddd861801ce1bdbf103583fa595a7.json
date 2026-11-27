@@ -1,0 +1,47 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT e.user_id, CAST(substr(e.date, 6, 2) AS INTEGER) AS \"month!: i64\",\n                  SUM(e.minutes) AS \"minutes!: i64\",\n                  SUM(CASE WHEN e.tariff_id IS NOT NULL THEN e.minutes ELSE 0 END) AS \"billable!: i64\"\n           FROM time_entries e\n           WHERE e.company_id = ? AND e.archived_at IS NULL AND e.date BETWEEN ? AND ?\n           GROUP BY e.user_id, substr(e.date, 6, 2)",
+  "describe": {
+    "columns": [
+      {
+        "name": "user_id",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "time_entries",
+            "name": "user_id"
+          }
+        }
+      },
+      {
+        "name": "month!: i64",
+        "ordinal": 1,
+        "type_info": "Null",
+        "origin": "Expression"
+      },
+      {
+        "name": "minutes!: i64",
+        "ordinal": 2,
+        "type_info": "Integer",
+        "origin": "Expression"
+      },
+      {
+        "name": "billable!: i64",
+        "ordinal": 3,
+        "type_info": "Integer",
+        "origin": "Expression"
+      }
+    ],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": [
+      false,
+      null,
+      false,
+      false
+    ]
+  },
+  "hash": "385af3746ae5f9b91c59b5fdbd1869a1528ddd861801ce1bdbf103583fa595a7"
+}

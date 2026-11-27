@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE time_entries SET user_id = ?, task_id = ?, client_id = ?, project_id = ?,\n                tariff_id = ?, date = ?, minutes = ?, description = ?, price_cents = ?, vat_bp = ?,\n                updated_at = ?\n         WHERE id = ? AND company_id = ? AND invoice_line_id IS NULL",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 13
+    },
+    "nullable": []
+  },
+  "hash": "dd8df3a8ab6cae374bafe7e18287b1c4e3c9eb9adf9870c9c34e6a5f9daec54a"
+}

@@ -1,0 +1,218 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id AS \"id!\", company_id, name, contact_name, email, phone, street, postal_code,\n                  city, kvk, btw_id, notes, invoice_prefix, archived_at, created_at, updated_at, created_by\n           FROM clients WHERE id = ? AND company_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "clients",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "company_id",
+        "ordinal": 1,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "clients",
+            "name": "company_id"
+          }
+        }
+      },
+      {
+        "name": "name",
+        "ordinal": 2,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "clients",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "contact_name",
+        "ordinal": 3,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "clients",
+            "name": "contact_name"
+          }
+        }
+      },
+      {
+        "name": "email",
+        "ordinal": 4,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "clients",
+            "name": "email"
+          }
+        }
+      },
+      {
+        "name": "phone",
+        "ordinal": 5,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "clients",
+            "name": "phone"
+          }
+        }
+      },
+      {
+        "name": "street",
+        "ordinal": 6,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "clients",
+            "name": "street"
+          }
+        }
+      },
+      {
+        "name": "postal_code",
+        "ordinal": 7,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "clients",
+            "name": "postal_code"
+          }
+        }
+      },
+      {
+        "name": "city",
+        "ordinal": 8,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "clients",
+            "name": "city"
+          }
+        }
+      },
+      {
+        "name": "kvk",
+        "ordinal": 9,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "clients",
+            "name": "kvk"
+          }
+        }
+      },
+      {
+        "name": "btw_id",
+        "ordinal": 10,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "clients",
+            "name": "btw_id"
+          }
+        }
+      },
+      {
+        "name": "notes",
+        "ordinal": 11,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "clients",
+            "name": "notes"
+          }
+        }
+      },
+      {
+        "name": "invoice_prefix",
+        "ordinal": 12,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "clients",
+            "name": "invoice_prefix"
+          }
+        }
+      },
+      {
+        "name": "archived_at",
+        "ordinal": 13,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "clients",
+            "name": "archived_at"
+          }
+        }
+      },
+      {
+        "name": "created_at",
+        "ordinal": 14,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "clients",
+            "name": "created_at"
+          }
+        }
+      },
+      {
+        "name": "updated_at",
+        "ordinal": 15,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "clients",
+            "name": "updated_at"
+          }
+        }
+      },
+      {
+        "name": "created_by",
+        "ordinal": 16,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "clients",
+            "name": "created_by"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "4b16cb6800d2d5787b6854b56d4e0498a887185be88af693c84f2d82c016ba2b"
+}

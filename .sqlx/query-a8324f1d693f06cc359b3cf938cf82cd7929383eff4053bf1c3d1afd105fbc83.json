@@ -1,0 +1,177 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT t.id AS \"id!\", t.lineage_id AS \"lineage_id!\", t.name, t.unit, t.price_cents,\n                  t.vat_bp, t.client_id, c.name AS \"client_name?\", p.name AS \"project_name?\",\n                  t.is_default AS \"is_default: bool\", t.valid_from, t.valid_to, t.archived_at,\n                  EXISTS (SELECT 1 FROM tariffs n\n                          WHERE n.lineage_id = t.lineage_id AND n.valid_from > t.valid_from)\n                    AS \"superseded!: bool\"\n           FROM tariffs t\n           LEFT JOIN clients c ON c.id = t.client_id\n           LEFT JOIN projects p ON p.id = t.project_id\n           WHERE t.company_id = ?\n             AND (? IS NULL OR t.client_id = ?)\n             AND (? OR t.archived_at IS NULL)\n           ORDER BY t.client_id IS NOT NULL, c.name COLLATE NOCASE, t.project_id IS NOT NULL,\n                    p.name COLLATE NOCASE, t.unit, t.name COLLATE NOCASE, t.valid_from DESC",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "lineage_id!",
+        "ordinal": 1,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "lineage_id"
+          }
+        }
+      },
+      {
+        "name": "name",
+        "ordinal": 2,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "unit",
+        "ordinal": 3,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "unit"
+          }
+        }
+      },
+      {
+        "name": "price_cents",
+        "ordinal": 4,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "price_cents"
+          }
+        }
+      },
+      {
+        "name": "vat_bp",
+        "ordinal": 5,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "vat_bp"
+          }
+        }
+      },
+      {
+        "name": "client_id",
+        "ordinal": 6,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "client_id"
+          }
+        }
+      },
+      {
+        "name": "client_name?",
+        "ordinal": 7,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "clients",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "project_name?",
+        "ordinal": 8,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "projects",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "is_default: bool",
+        "ordinal": 9,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "is_default"
+          }
+        }
+      },
+      {
+        "name": "valid_from",
+        "ordinal": 10,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "valid_from"
+          }
+        }
+      },
+      {
+        "name": "valid_to",
+        "ordinal": 11,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "valid_to"
+          }
+        }
+      },
+      {
+        "name": "archived_at",
+        "ordinal": 12,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "archived_at"
+          }
+        }
+      },
+      {
+        "name": "superseded!: bool",
+        "ordinal": 13,
+        "type_info": "Integer",
+        "origin": "Expression"
+      }
+    ],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      false,
+      false,
+      true,
+      true,
+      false
+    ]
+  },
+  "hash": "a8324f1d693f06cc359b3cf938cf82cd7929383eff4053bf1c3d1afd105fbc83"
+}

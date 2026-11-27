@@ -1,0 +1,110 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT k.id AS \"id!\", k.name, c.name AS \"client_name?\", p.name AS \"project_name?\",\n                  t.name AS \"tariff_name?\", t.price_cents AS \"tariff_price?\",\n                  k.billable AS \"billable: bool\", k.archived_at\n           FROM tasks k\n           LEFT JOIN clients c ON c.id = k.client_id\n           LEFT JOIN projects p ON p.id = k.project_id\n           LEFT JOIN tariffs t ON t.id = k.tariff_id\n           WHERE k.company_id = ? AND (? OR k.archived_at IS NULL)\n           ORDER BY k.archived_at IS NOT NULL, k.name COLLATE NOCASE",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tasks",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "name",
+        "ordinal": 1,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tasks",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "client_name?",
+        "ordinal": 2,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "clients",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "project_name?",
+        "ordinal": 3,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "projects",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "tariff_name?",
+        "ordinal": 4,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "tariff_price?",
+        "ordinal": 5,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "price_cents"
+          }
+        }
+      },
+      {
+        "name": "billable: bool",
+        "ordinal": 6,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tasks",
+            "name": "billable"
+          }
+        }
+      },
+      {
+        "name": "archived_at",
+        "ordinal": 7,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tasks",
+            "name": "archived_at"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      false,
+      true
+    ]
+  },
+  "hash": "bc141fbd17972846105edb37cb7ed51fa2c0590377200976a67aada63613f4a3"
+}

@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE tariffs SET archived_at = ?, updated_at = ? WHERE id = ? AND company_id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "2b706250263573a7b876e033a2a90242259f17388012929c00e8604c727845e3"
+}

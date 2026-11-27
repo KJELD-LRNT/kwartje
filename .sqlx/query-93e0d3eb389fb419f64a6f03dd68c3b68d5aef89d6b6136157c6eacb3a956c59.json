@@ -1,0 +1,122 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id AS \"id!\", name, plate, kind, odometer_mode, archived_at, created_at, updated_at, created_by\n           FROM vehicles WHERE ? OR archived_at IS NULL\n           ORDER BY archived_at IS NOT NULL, name COLLATE NOCASE",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "vehicles",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "name",
+        "ordinal": 1,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "vehicles",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "plate",
+        "ordinal": 2,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "vehicles",
+            "name": "plate"
+          }
+        }
+      },
+      {
+        "name": "kind",
+        "ordinal": 3,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "vehicles",
+            "name": "kind"
+          }
+        }
+      },
+      {
+        "name": "odometer_mode",
+        "ordinal": 4,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "vehicles",
+            "name": "odometer_mode"
+          }
+        }
+      },
+      {
+        "name": "archived_at",
+        "ordinal": 5,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "vehicles",
+            "name": "archived_at"
+          }
+        }
+      },
+      {
+        "name": "created_at",
+        "ordinal": 6,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "vehicles",
+            "name": "created_at"
+          }
+        }
+      },
+      {
+        "name": "updated_at",
+        "ordinal": 7,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "vehicles",
+            "name": "updated_at"
+          }
+        }
+      },
+      {
+        "name": "created_by",
+        "ordinal": 8,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "vehicles",
+            "name": "created_by"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "93e0d3eb389fb419f64a6f03dd68c3b68d5aef89d6b6136157c6eacb3a956c59"
+}

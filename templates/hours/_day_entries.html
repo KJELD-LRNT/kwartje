@@ -1,0 +1,11 @@
+<ul class="entries">
+  {% for e in d.entries %}
+  <li>
+    <span class="dur">{{ e.minutes|duration }}</span>
+    <span class="task"><strong>{{ e.task_name }}</strong>{% if let Some(c) = e.client_name %}<small>{{ c }}{% if let Some(p) = e.project_name %} — {{ p }}{% endif %}</small>{% endif %}</span>
+    <span class="desc">{{ e.description }}</span>
+    <span class="tariff">{{ e.tariff_label() }}</span>
+    <span class="act">{% if e.invoice_line_id.is_some() %}<span class="status ok">gefactureerd</span>{% else %}<a href="/uren/{{ e.id }}">Wijzigen</a>{% endif %}</span>
+  </li>
+  {% endfor %}
+</ul>

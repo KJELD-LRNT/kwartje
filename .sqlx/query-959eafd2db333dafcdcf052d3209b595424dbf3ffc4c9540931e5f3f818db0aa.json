@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO companies (name, kvk, btw_id, iban, street, postal_code, city, email, phone,\n                                invoice_prefix, payment_term_days, default_vat_bp, rounding_minutes,\n                                created_at, updated_at, created_by)\n         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 16
+    },
+    "nullable": []
+  },
+  "hash": "959eafd2db333dafcdcf052d3209b595424dbf3ffc4c9540931e5f3f818db0aa"
+}

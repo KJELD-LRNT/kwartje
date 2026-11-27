@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Tweestapsverificatie instellen{% endblock %}
+{% block content %}
+<article class="narrow">
+  <h1>Tweestapsverificatie instellen</h1>
+  <p>Tweestapsverificatie is verplicht. Scan de QR-code met een authenticator-app
+     (bijvoorbeeld Google Authenticator, Microsoft Authenticator of 1Password) en voer de code in.</p>
+  <div class="qr">{{ qr_svg|safe }}</div>
+  <details>
+    <summary>Lukt scannen niet? Voer de sleutel handmatig in</summary>
+    <p class="secret">{{ secret }}</p>
+    <p class="muted">Type: tijdgebaseerd (TOTP), 6 cijfers, 30 seconden.</p>
+  </details>
+  {% if let Some(e) = error %}<p class="flash flash-error" role="alert">{{ e }}</p>{% endif %}
+  <form method="post" action="/2fa/instellen">
+    <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+    <label>Code uit de app
+      <input type="text" name="code" inputmode="numeric" pattern="[0-9 ]{6,7}" autocomplete="one-time-code" required>
+    </label>
+    {% include "auth/_trust.html" %}
+    <button type="submit">Instellen en inloggen</button>
+  </form>
+</article>
+{% endblock %}

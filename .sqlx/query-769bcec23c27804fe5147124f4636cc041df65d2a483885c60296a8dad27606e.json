@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE projects SET archived_at = ?, updated_at = ? WHERE id = ? AND company_id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "769bcec23c27804fe5147124f4636cc041df65d2a483885c60296a8dad27606e"
+}

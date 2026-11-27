@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE mileage_entries SET invoice_line_id = ?, updated_at = ?\n             WHERE id = ? AND company_id = ? AND invoice_line_id IS NULL AND archived_at IS NULL\n               AND tariff_id IS NOT NULL",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "44840f0c49fe1fd051cc0a88bf7acfa9faef8e5b73c30ef9fe78cf4c6f6fc64a"
+}

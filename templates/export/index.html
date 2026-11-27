@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Export{% endblock %}
+{% block content %}
+<h1>Export</h1>
+<p>Download gegevens als CSV (puntkomma-gescheiden, geschikt voor Excel), of alles tegelijk als zip met een manifest.</p>
+<form method="get" action="/export">
+  <div class="grid">
+    <label>Bedrijf
+      <select name="company">
+        <option value="">Alle bedrijven</option>
+        {% for c in companies %}
+        <option value="{{ c.id }}"{% if c.id.to_string() == company %} selected{% endif %}>{{ c.name }}{% if c.archived_at.is_some() %} (gearchiveerd){% endif %}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Vanaf
+      <input type="text" name="from" value="{{ from }}" placeholder="dd-mm-jjjj">
+    </label>
+    <label>Tot en met
+      <input type="text" name="to" value="{{ to }}" placeholder="dd-mm-jjjj">
+    </label>
+  </div>
+  <button type="submit" class="secondary">Filter toepassen</button>
+</form>
+<table>
+  <thead><tr><th>Gegevens</th><th></th></tr></thead>
+  <tbody>
+    {% for t in tables %}
+    <tr>
+      <td>{{ t.label }}{% if t.global %} <small class="muted">(niet per bedrijf)</small>{% endif %}</td>
+      <td><a href="{{ t.href }}">CSV downloaden</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{{ zip_href }}" role="button">Alles downloaden (zip)</a>
+{% endblock %}

@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "DELETE FROM security_events WHERE at < ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": []
+  },
+  "hash": "4b4472657362e76663ce9a903d3cc867b7f13d3a2e64b26c9faa74b3d22b2c86"
+}

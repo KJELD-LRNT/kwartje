@@ -1,0 +1,45 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT p.id AS \"id!\", p.client_id, c.name || ' — ' || p.name AS \"label!: String\"\n           FROM projects p JOIN clients c ON c.id = p.client_id\n           WHERE p.company_id = ? AND p.archived_at IS NULL AND c.archived_at IS NULL\n           ORDER BY c.name COLLATE NOCASE, p.name COLLATE NOCASE",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "projects",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "client_id",
+        "ordinal": 1,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "projects",
+            "name": "client_id"
+          }
+        }
+      },
+      {
+        "name": "label!: String",
+        "ordinal": 2,
+        "type_info": "Text",
+        "origin": "Expression"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "29333076914c54589db13247f4f8e888b5c19ddd4fc0518a363ebedb4558bd2b"
+}

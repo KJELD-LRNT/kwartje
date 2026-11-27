@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}{% if let Some(v) = vehicle %}{{ v.plate }}{% else %}Nieuw voertuig{% endif %}{% endblock %}
+{% block content %}
+{% if let Some(v) = vehicle %}
+<h1>{{ v.label() }}</h1>
+<form method="post" action="/voertuigen/{{ v.id }}">
+{% else %}
+<h1>Nieuw voertuig</h1>
+<form method="post" action="/voertuigen">
+{% endif %}
+  <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+  <div class="grid">
+    <div>
+      <label>Naam *
+        <input type="text" name="name" value="{{ f.name }}" required placeholder="Volkswagen Golf"{% if !err("name").is_empty() %} aria-invalid="true"{% endif %}>
+      </label>
+      {% if !err("name").is_empty() %}<small class="field-error">{{ err("name") }}</small>{% endif %}
+    </div>
+    <div>
+      <label>Kenteken *
+        <input type="text" name="plate" value="{{ f.plate }}" required placeholder="AB-123-C"{% if !err("plate").is_empty() %} aria-invalid="true"{% endif %}>
+      </label>
+      {% if !err("plate").is_empty() %}<small class="field-error">{{ err("plate") }}</small>{% endif %}
+    </div>
+  </div>
+  <label>Soort
+    <select name="kind">
+      {% for (value, label) in kinds %}
+      <option value="{{ value }}"{% if *value == f.kind.as_str() %} selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  {% if !err("kind").is_empty() %}<small class="field-error">{{ err("kind") }}</small>{% endif %}
+  <fieldset>
+    <legend>Ritten invoeren (privéauto)</legend>
+    {% for (value, label) in modes %}
+    <label><input type="radio" name="odometer_mode" value="{{ value }}"{% if *value == f.odometer_mode.as_str() %} checked{% endif %}> {{ label }}</label>
+    {% endfor %}
+    <small class="muted">Voor de kilometervergoeding van een privéauto is het aantal zakelijke kilometers genoeg. Een auto van de zaak werkt altijd met begin- en eindstand (rittenregistratie).</small>
+  </fieldset>
+  {% if !err("odometer_mode").is_empty() %}<small class="field-error">{{ err("odometer_mode") }}</small>{% endif %}
+  <div class="actions">
+    <button type="submit">Opslaan</button>
+    <a href="/voertuigen" role="button" class="secondary outline">Annuleren</a>
+  </div>
+</form>
+{% if let Some(v) = vehicle %}
+<hr>
+{% if v.archived_at.is_some() %}
+<form method="post" action="/voertuigen/{{ v.id }}/terugzetten"><input type="hidden" name="csrf_token" value="{{ l.csrf }}"><button type="submit" class="secondary">Voertuig terugzetten</button></form>
+{% else %}
+<form method="post" action="/voertuigen/{{ v.id }}/archiveren" data-confirm="Voertuig {{ v.plate }} archiveren? De ritten blijven bewaard."><input type="hidden" name="csrf_token" value="{{ l.csrf }}"><button type="submit" class="quiet">Voertuig archiveren</button></form>
+{% endif %}
+{% endif %}
+{% endblock %}

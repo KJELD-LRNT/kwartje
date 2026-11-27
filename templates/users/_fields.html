@@ -1,0 +1,29 @@
+<div class="grid">
+  <div>
+    <label>Naam *
+      <input type="text" name="name" value="{{ f.name }}" required{% if !err("name").is_empty() %} aria-invalid="true"{% endif %}>
+    </label>
+    {% if !err("name").is_empty() %}<small class="field-error">{{ err("name") }}</small>{% endif %}
+  </div>
+  <div>
+    <label>E-mailadres *
+      <input type="email" name="email" value="{{ f.email }}" required{% if !err("email").is_empty() %} aria-invalid="true"{% endif %}>
+    </label>
+    {% if !err("email").is_empty() %}<small class="field-error">{{ err("email") }}</small>{% endif %}
+  </div>
+</div>
+<fieldset>
+  <legend>Rol</legend>
+  {% for (value, label, help) in roles %}
+  <label><input type="radio" name="role" value="{{ value }}"{% if *value == f.role.as_str() %} checked{% endif %}> <strong>{{ label }}</strong> <small class="muted">— {{ help }}</small></label>
+  {% endfor %}
+</fieldset>
+{% if !err("role").is_empty() %}<small class="field-error">{{ err("role") }}</small>{% endif %}
+<fieldset>
+  <legend>Bedrijven voor een boekhouder</legend>
+  {% for c in companies %}
+  <label><input type="checkbox" name="bedrijf" value="{{ c.id }}"{% if has_company(c.id) %} checked{% endif %}> {{ c.name }}</label>
+  {% endfor %}
+  <small class="muted">Alleen van toepassing op de rol Boekhouder; andere rollen zien alle bedrijven.</small>
+</fieldset>
+{% if !err("bedrijf").is_empty() %}<small class="field-error">{{ err("bedrijf") }}</small>{% endif %}

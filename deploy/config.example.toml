@@ -1,0 +1,53 @@
+# kwartje configuration. Production: /etc/kwartje/config.toml (mode 0640,
+# owner root:kwartje). Local development: ./config.toml (git-ignored).
+
+# Normally loopback only: `tailscale serve` (or a proxy on this machine)
+# provides HTTPS and proxies to this address. Behind a proxy elsewhere: this
+# machine's own address. Every interface needs allow_all_interfaces below.
+listen = "127.0.0.1:8080"
+
+# Holds app.db (SQLite, WAL) and documents/.
+data_dir = "/var/lib/kwartje"
+
+# `kwartje backup` writes backup_dir/YYYY-MM-DD/ here.
+backup_dir = "/var/backups/kwartje"
+
+# Signs session cookies. At least 64 characters. Generate with:
+#   openssl rand -base64 64 | tr -d '\n'
+# Changing it logs everyone out.
+session_secret = "CHANGE-ME-CHANGE-ME-CHANGE-ME-CHANGE-ME-CHANGE-ME-CHANGE-ME-CHANGE-ME"
+
+# Secure cookie flag. Keep true in production (HTTPS via tailscale serve);
+# set to false only for local development over plain http://127.0.0.1.
+cookie_secure = true
+
+# Reverse proxies on ANOTHER host whose X-Forwarded-For header is believed,
+# as exact IP addresses. Loopback (tailscale serve) is always trusted. Only
+# needed behind a proxy/SSO gate elsewhere (see INSTALL.md, section 9).
+# trusted_proxies = ["10.0.0.5"]
+
+# Allow listening on every network interface (listen on 0.0.0.0). Off by
+# default. Danger: anyone who can reach this machine reaches the login page,
+# and over plain http:// (cookie_secure off) passwords cross the network
+# unencrypted. Only for a trusted home/office network; prefer Tailscale or a
+# reverse proxy with HTTPS. install.sh asks before setting this.
+# allow_all_interfaces = false
+
+# Typst CLI for invoice PDFs (see INSTALL.md). Default: "typst" on the PATH.
+typst_path = "/usr/local/bin/typst"
+
+# Top-level settings go ABOVE this line: everything after a [section] header
+# belongs to that section.
+[backup]
+keep_daily = 30
+keep_monthly = 12
+
+# Outgoing mail for invoices and reminders. Optional: leave this section out
+# and you download the PDF, send it yourself and click "Markeer als verzonden".
+# [smtp]
+# host = "smtp.example.nl"
+# port = 587
+# security = "starttls"            # "starttls" (587), "tls" (465), "none" (local test only)
+# username = "facturen@example.nl"
+# password_file = "/etc/kwartje/smtp-password"   # mode 0640 root:kwartje
+# from = "facturen@example.nl"     # display name = company name; reply-to = company e-mail

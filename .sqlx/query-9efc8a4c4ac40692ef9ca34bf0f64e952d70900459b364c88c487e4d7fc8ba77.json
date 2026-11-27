@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE mileage_rates SET rate_cents_per_km = ?, updated_at = ? WHERE id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "9efc8a4c4ac40692ef9ca34bf0f64e952d70900459b364c88c487e4d7fc8ba77"
+}

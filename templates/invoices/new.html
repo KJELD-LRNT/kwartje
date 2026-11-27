@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Nieuwe factuur{% endblock %}
+{% block content %}
+<h1>Nieuwe factuur voor {{ client.name }}</h1>
+{% if hours.is_empty() && km.is_empty() %}
+<p>Er is niets te factureren voor deze klant.</p>
+<a href="/te-factureren" role="button" class="secondary">Terug naar Te factureren</a>
+{% else %}
+<form method="post" action="/facturen">
+  <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+  <input type="hidden" name="client_id" value="{{ client.id }}">
+  {% if !hours.is_empty() %}
+  <h2>Uren</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th></th><th>Datum</th><th>Omschrijving</th><th class="num">Duur</th><th class="num">Tarief</th></tr></thead>
+    <tbody>
+    {% for h in hours %}
+      <tr>
+        <td><input type="checkbox" name="uren" value="{{ h.id }}" checked aria-label="Meenemen"></td>
+        <td>{{ h.date|date }}</td><td>{{ h.label }}</td><td class="num">{{ h.quantity }}</td><td class="num">{{ h.price_cents|amount }}/u</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% endif %}
+  {% if !km.is_empty() %}
+  <h2>Kilometers</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th></th><th>Datum</th><th>Tarief</th><th class="num">Afstand</th><th class="num">Prijs</th></tr></thead>
+    <tbody>
+    {% for k in km %}
+      <tr>
+        <td><input type="checkbox" name="km" value="{{ k.id }}" checked aria-label="Meenemen"></td>
+        <td>{{ k.date|date }}</td><td>{{ k.label }}</td><td class="num">{{ k.quantity }}</td><td class="num">{{ k.price_cents|amount }}/km</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% endif %}
+  <fieldset>
+    <legend>Factuurregels</legend>
+    <select name="line_style" aria-label="Regels">
+      {% for (value, label) in styles %}<option value="{{ value }}">{{ label }}</option>{% endfor %}
+    </select>
+    <label><input type="checkbox" name="hide_zero_lines" value="1"> Regels van € 0,00 verbergen (alleen op de urenspecificatie)</label>
+    <label><input type="checkbox" name="include_hours_spec" value="1"> Urenspecificatie als bijlage (pagina 2)</label>
+    {% if rounding_minutes > 0 %}<small class="muted">Elke urenregel wordt naar boven afgerond op {{ rounding_minutes }} minuten (instelling van het bedrijf).</small>{% endif %}
+  </fieldset>
+  <button type="submit">Conceptfactuur maken</button>
+</form>
+{% endif %}
+{% endblock %}

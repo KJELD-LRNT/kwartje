@@ -1,0 +1,134 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id AS \"id!\", company_id, name, from_address, to_address, km, archived_at,\n                  created_at, updated_at, created_by\n           FROM saved_routes WHERE id = ? AND company_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "saved_routes",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "company_id",
+        "ordinal": 1,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "saved_routes",
+            "name": "company_id"
+          }
+        }
+      },
+      {
+        "name": "name",
+        "ordinal": 2,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "saved_routes",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "from_address",
+        "ordinal": 3,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "saved_routes",
+            "name": "from_address"
+          }
+        }
+      },
+      {
+        "name": "to_address",
+        "ordinal": 4,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "saved_routes",
+            "name": "to_address"
+          }
+        }
+      },
+      {
+        "name": "km",
+        "ordinal": 5,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "saved_routes",
+            "name": "km"
+          }
+        }
+      },
+      {
+        "name": "archived_at",
+        "ordinal": 6,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "saved_routes",
+            "name": "archived_at"
+          }
+        }
+      },
+      {
+        "name": "created_at",
+        "ordinal": 7,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "saved_routes",
+            "name": "created_at"
+          }
+        }
+      },
+      {
+        "name": "updated_at",
+        "ordinal": 8,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "saved_routes",
+            "name": "updated_at"
+          }
+        }
+      },
+      {
+        "name": "created_by",
+        "ordinal": 9,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "saved_routes",
+            "name": "created_by"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "0716fc179b7a44db9cf06d69e1898789cb3ef410d816ea790f60b95f460b8d52"
+}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Versturen: {{ inv.title() }}{% endblock %}
+{% block content %}
+<h1>{{ inv.title() }} versturen</h1>
+{% if let Some(e) = error %}<p class="flash flash-error" role="alert">{{ e }}</p>{% endif %}
+{% if can_email %}
+<form method="post" action="/facturen/{{ inv.id }}/versturen">
+  <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+  <label>Aan <input type="email" name="to" value="{{ to }}" required></label>
+  <label>Onderwerp <input type="text" name="subject" value="{{ subject }}" required></label>
+  <label>Bericht <textarea name="body" rows="12" required>{{ body }}</textarea></label>
+  <p class="muted">De PDF wordt als bijlage meegestuurd.</p>
+  <div class="actions">
+    <button type="submit">Versturen</button>
+    <a href="/facturen/{{ inv.id }}" role="button" class="secondary outline">Annuleren</a>
+  </div>
+</form>
+{% else %}
+<p>E-mail is nog niet ingesteld. Kopieer de tekst hieronder, voeg <a href="/facturen/{{ inv.id }}/pdf" target="_blank">de PDF</a> toe en verstuur hem vanuit je eigen mailprogramma{% if !to.is_empty() %} naar <strong>{{ to }}</strong>{% endif %}.</p>
+<label>Onderwerp <input type="text" value="{{ subject }}" readonly></label>
+<label>Bericht <textarea rows="12" readonly>{{ body }}</textarea></label>
+<div class="actions">
+  <form method="post" action="/facturen/{{ inv.id }}/verzonden" class="inline-form">
+    <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+    <button type="submit">Markeer als verzonden</button>
+  </form>
+  <a href="/facturen/{{ inv.id }}" role="button" class="secondary outline">Terug</a>
+</div>
+{% endif %}
+{% endblock %}

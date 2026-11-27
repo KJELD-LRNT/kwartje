@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE users SET totp_last_step = ? WHERE id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "2b2a3a7606141b870915c88938a1da14d7ebf044855265fd4b0b1ce1dc3be2dd"
+}

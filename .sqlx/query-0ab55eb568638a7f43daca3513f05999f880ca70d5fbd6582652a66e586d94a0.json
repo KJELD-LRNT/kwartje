@@ -1,0 +1,33 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id AS \"id!\", COALESCE(number, 'concept') AS \"n!: String\" FROM invoices\n           WHERE credit_for_invoice_id = ? AND company_id = ? ORDER BY id",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "invoices",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "n!: String",
+        "ordinal": 1,
+        "type_info": "Text",
+        "origin": "Expression"
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "0ab55eb568638a7f43daca3513f05999f880ca70d5fbd6582652a66e586d94a0"
+}

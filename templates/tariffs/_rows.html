@@ -1,0 +1,17 @@
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Naam</th><th>Niveau</th><th class="num">Prijs</th><th>Btw</th><th>Geldig</th><th>Status</th></tr></thead>
+  <tbody>
+  {% for t in tariffs %}
+    <tr{% if t.status() != "actief" %} class="archived"{% endif %}>
+      <td><a href="/tarieven/{{ t.id }}">{{ t.name }}</a>{% if t.is_default %} <mark>standaard</mark>{% endif %}</td>
+      <td>{{ t.level_label() }}</td>
+      <td class="num">{{ t.price_cents|amount }} <small class="muted">{{ t.unit_label() }}</small></td>
+      <td>{{ t.vat_bp|vat }}</td>
+      <td>{{ t.period() }}</td>
+      <td>{{ t.status() }}{% if t.superseded %} <small class="muted">(nieuwe prijs)</small>{% endif %}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>

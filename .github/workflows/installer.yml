@@ -1,0 +1,87 @@
+# The installer: shellcheck, and a real install + update + uninstall in
+# Debian 12 and 13 containers with a freshly built package. Runs when the
+# installer or the deploy files change.
+name: Installer
+
+on:
+  pull_request:
+    paths: [install.sh, deploy/**, .github/workflows/installer.yml]
+  push:
+    branches: [main]
+    paths: [install.sh, deploy/**, .github/workflows/installer.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: shellcheck --severity=warning install.sh deploy/*.sh
+
+  package:
+    runs-on: ubuntu-latest
+    container: rust:1-bookworm
+    timeout-minutes: 40
+    env:
+      SQLX_OFFLINE: "true"
+    steps:
+      - uses: actions/checkout@v4
+      - run: cargo build --release --locked && strip target/release/kwartje
+      - name: Package (as the release does)
+        run: |
+          v="v$(grep -m1 '^version' Cargo.toml | cut -d'"' -f2)"
+          name="kwartje-$v-x86_64-debian12"
+          mkdir -p "dist/$name"
+          cp target/release/kwartje "dist/$name/"
+          cp -r deploy "dist/$name/deploy"
+          cd dist && tar czf "$name.tar.gz" "$name" && sha256sum "$name.tar.gz" > "$name.tar.gz.sha256"
+          rm -rf "$name"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: package
+          path: dist/
+
+  install:
+    needs: package
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        debian: ["12", "13"]
+    container: debian:${{ matrix.debian }}
+    env:
+      KWARTJE_ADMIN_EMAIL: admin@example.test
+      KWARTJE_PASSWORD: ci-wachtwoord-123
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: package
+          path: dist
+      - name: Install (no questions)
+        run: bash install.sh --yes --archive dist/*.tar.gz
+      - name: Config and first admin
+        run: |
+          grep -q '^listen = "127.0.0.1:8080"' /etc/kwartje/config.toml
+          ! grep -q CHANGE-ME /etc/kwartje/config.toml
+          test "$(sqlite3 /var/lib/kwartje/app.db "SELECT role FROM users")" = admin
+      - name: It serves
+        run: |
+          runuser -u kwartje -- /usr/local/bin/kwartje --config /etc/kwartje/config.toml serve &
+          for i in $(seq 1 20); do curl -fsS -o /dev/null http://127.0.0.1:8080/inloggen && exit 0; sleep 1; done
+          exit 1
+      - name: Running it again recognises the version
+        run: |
+          printf 'n\n' > /tmp/answers
+          # prompts go to stderr when the answers come from a file
+          KWARTJE_TTY=/tmp/answers bash install.sh --archive dist/*.tar.gz 2>&1 | tee /tmp/out
+          grep -q "al geïnstalleerd" /tmp/out
+      - name: Uninstall asks twice and keeps data
+        run: |
+          bash install.sh --uninstall --yes && exit 1 || true
+          printf 'j\nverwijderen\n' > /tmp/answers
+          KWARTJE_TTY=/tmp/answers bash install.sh --uninstall
+          test ! -e /usr/local/bin/kwartje
+          test -f /var/lib/kwartje/app.db

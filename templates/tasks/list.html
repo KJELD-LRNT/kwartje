@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Taken{% endblock %}
+{% block content %}
+<div class="actions page-head">
+  <h1>Taken</h1>
+  <div class="actions">
+    <a href="/taken/nieuw" role="button">Nieuwe taak</a>
+    <a href="/export/tasks.csv?company={{ l.company_id }}" role="button" class="secondary outline">Exporteer CSV</a>
+  </div>
+</div>
+<p class="muted">Uren worden altijd op een taak geschreven. Een taak kan bij een klant of project horen en een eigen tarief hebben; interne taken (zoals Administratie) zijn niet declarabel.</p>
+<p>
+  {% if show_archived %}<a href="/taken">Verberg gearchiveerde taken</a>
+  {% else %}<a href="/taken?archief=1">Toon ook gearchiveerde taken</a>{% endif %}
+</p>
+{% if tasks.is_empty() %}<p>Nog geen taken.</p>{% else %}
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Taak</th><th>Klant / project</th><th>Tarief</th></tr></thead>
+  <tbody>
+  {% for t in tasks %}
+    <tr{% if t.archived_at.is_some() %} class="archived"{% endif %}>
+      <td><a href="/taken/{{ t.id }}">{{ t.name }}</a>{% if t.archived_at.is_some() %} <small>(gearchiveerd)</small>{% endif %}</td>
+      <td>{% if let Some(c) = t.client_name %}{{ c }}{% if let Some(p) = t.project_name %} — {{ p }}{% endif %}{% else %}<span class="muted">alle klanten</span>{% endif %}</td>
+      <td>{{ t.tariff_label() }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+{% endblock %}

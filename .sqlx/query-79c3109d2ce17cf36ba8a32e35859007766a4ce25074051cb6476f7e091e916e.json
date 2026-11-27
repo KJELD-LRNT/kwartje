@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE invoices SET intro_text = ?, footer_text = ?, hide_zero_lines = ?,\n                include_hours_spec = ?, line_style = ?, updated_at = ?\n         WHERE id = ? AND company_id = ? AND number IS NULL",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 8
+    },
+    "nullable": []
+  },
+  "hash": "79c3109d2ce17cf36ba8a32e35859007766a4ce25074051cb6476f7e091e916e"
+}

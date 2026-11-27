@@ -1,0 +1,158 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT e.id AS \"id!\", e.date, e.task_id, k.name AS task_name, e.project_id,\n                  p.name AS \"project_name?\", e.tariff_id AS \"tariff_id!\", t.name AS tariff_name,\n                  e.price_cents AS \"price_cents!\", e.vat_bp AS \"vat_bp!\", e.minutes, e.description\n           FROM time_entries e\n           JOIN tasks k ON k.id = e.task_id\n           JOIN tariffs t ON t.id = e.tariff_id\n           LEFT JOIN projects p ON p.id = e.project_id\n           WHERE e.company_id = ? AND e.client_id = ? AND e.tariff_id IS NOT NULL\n             AND e.invoice_line_id IS NULL AND e.archived_at IS NULL\n             AND (? IS NULL OR e.date >= ?) AND (? IS NULL OR e.date <= ?)\n           ORDER BY e.date, e.id",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "time_entries",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "date",
+        "ordinal": 1,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "time_entries",
+            "name": "date"
+          }
+        }
+      },
+      {
+        "name": "task_id",
+        "ordinal": 2,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "time_entries",
+            "name": "task_id"
+          }
+        }
+      },
+      {
+        "name": "task_name",
+        "ordinal": 3,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tasks",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "project_id",
+        "ordinal": 4,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "time_entries",
+            "name": "project_id"
+          }
+        }
+      },
+      {
+        "name": "project_name?",
+        "ordinal": 5,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "projects",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "tariff_id!",
+        "ordinal": 6,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "time_entries",
+            "name": "tariff_id"
+          }
+        }
+      },
+      {
+        "name": "tariff_name",
+        "ordinal": 7,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "price_cents!",
+        "ordinal": 8,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "time_entries",
+            "name": "price_cents"
+          }
+        }
+      },
+      {
+        "name": "vat_bp!",
+        "ordinal": 9,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "time_entries",
+            "name": "vat_bp"
+          }
+        }
+      },
+      {
+        "name": "minutes",
+        "ordinal": 10,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "time_entries",
+            "name": "minutes"
+          }
+        }
+      },
+      {
+        "name": "description",
+        "ordinal": 11,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "time_entries",
+            "name": "description"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 6
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      false,
+      true,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "bdfadc49621ad1ad279c105ca4fc159aaaf7145405223ed610233f252c0683e1"
+}

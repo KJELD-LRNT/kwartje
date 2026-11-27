@@ -1,0 +1,278 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id AS \"id!\", company_id, vehicle_id, user_id, date, from_address, to_address,\n                  purpose, client_id, odometer_start, odometer_end, km,\n                  business AS \"business: bool\", tariff_id, price_cents, vat_bp, route_id,\n                  invoice_line_id, archived_at, created_at, updated_at, created_by\n           FROM mileage_entries WHERE id = ? AND company_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "company_id",
+        "ordinal": 1,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "company_id"
+          }
+        }
+      },
+      {
+        "name": "vehicle_id",
+        "ordinal": 2,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "vehicle_id"
+          }
+        }
+      },
+      {
+        "name": "user_id",
+        "ordinal": 3,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "user_id"
+          }
+        }
+      },
+      {
+        "name": "date",
+        "ordinal": 4,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "date"
+          }
+        }
+      },
+      {
+        "name": "from_address",
+        "ordinal": 5,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "from_address"
+          }
+        }
+      },
+      {
+        "name": "to_address",
+        "ordinal": 6,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "to_address"
+          }
+        }
+      },
+      {
+        "name": "purpose",
+        "ordinal": 7,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "purpose"
+          }
+        }
+      },
+      {
+        "name": "client_id",
+        "ordinal": 8,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "client_id"
+          }
+        }
+      },
+      {
+        "name": "odometer_start",
+        "ordinal": 9,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "odometer_start"
+          }
+        }
+      },
+      {
+        "name": "odometer_end",
+        "ordinal": 10,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "odometer_end"
+          }
+        }
+      },
+      {
+        "name": "km",
+        "ordinal": 11,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "km"
+          }
+        }
+      },
+      {
+        "name": "business: bool",
+        "ordinal": 12,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "business"
+          }
+        }
+      },
+      {
+        "name": "tariff_id",
+        "ordinal": 13,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "tariff_id"
+          }
+        }
+      },
+      {
+        "name": "price_cents",
+        "ordinal": 14,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "price_cents"
+          }
+        }
+      },
+      {
+        "name": "vat_bp",
+        "ordinal": 15,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "vat_bp"
+          }
+        }
+      },
+      {
+        "name": "route_id",
+        "ordinal": 16,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "route_id"
+          }
+        }
+      },
+      {
+        "name": "invoice_line_id",
+        "ordinal": 17,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "invoice_line_id"
+          }
+        }
+      },
+      {
+        "name": "archived_at",
+        "ordinal": 18,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "archived_at"
+          }
+        }
+      },
+      {
+        "name": "created_at",
+        "ordinal": 19,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "created_at"
+          }
+        }
+      },
+      {
+        "name": "updated_at",
+        "ordinal": 20,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "updated_at"
+          }
+        }
+      },
+      {
+        "name": "created_by",
+        "ordinal": 21,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "created_by"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "1bcd5dd9f90a033c806e5ccabee5eba4b9655c8d31912a54876e9c44203b1ba5"
+}

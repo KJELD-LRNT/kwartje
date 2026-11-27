@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE mileage_entries SET archived_at = ?, updated_at = ? WHERE id = ? AND company_id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "554a3b773c82b66236d363ff9e3fbbaf54f8431b0c5686023f9c226d1458ed38"
+}

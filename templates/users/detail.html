@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}{{ u.name }}{% endblock %}
+{% block content %}
+<div class="title-row">
+  <h1>{{ u.name }}{% if u.archived_at.is_some() %} <small class="muted">(gearchiveerd)</small>{% endif %}</h1>
+  <a href="/beveiliging?gebruiker={{ u.id }}" role="button" class="secondary outline">Beveiligingslog</a>
+</div>
+<p class="muted">{{ u.role_label() }} · laatst ingelogd {{ u.last_login() }} · tweestapsverificatie {% if u.has_totp %}ingesteld{% else %}nog niet ingesteld{% endif %}{% if u.must_change_password %} · moet het tijdelijke wachtwoord nog wijzigen{% endif %}</p>
+
+<form method="post" action="/gebruikers/{{ u.id }}">
+  <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+  {% include "users/_fields.html" %}
+  <div class="form-actions">
+    <a href="/gebruikers" role="button" class="secondary outline">Terug</a>
+    <button type="submit">Opslaan</button>
+  </div>
+</form>
+
+<article>
+  <header><strong>Wachtwoord resetten</strong></header>
+  <form method="post" action="/gebruikers/{{ u.id }}/wachtwoord">
+    <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+    <label>Nieuw tijdelijk wachtwoord
+      <input type="text" name="password" value="{{ suggestion }}" autocomplete="off" required{% if !err("password").is_empty() %} aria-invalid="true"{% endif %}>
+    </label>
+    {% if !err("password").is_empty() %}<small class="field-error">{{ err("password") }}</small>{% endif %}
+    <small class="muted">De gebruiker moet het bij de volgende login wijzigen. Alle vertrouwde apparaten worden vergeten.</small>
+    <div class="form-actions"><button type="submit" class="secondary">Wachtwoord resetten</button></div>
+  </form>
+</article>
+
+<article>
+  <header><strong>Tweestapsverificatie en apparaten</strong></header>
+  {% if devices.is_empty() %}
+  <p class="muted">Geen vertrouwde apparaten.</p>
+  {% else %}
+  <table>
+    <thead><tr><th>Apparaat</th><th>Vertrouwd sinds</th><th>Laatst gebruikt</th><th>Verloopt</th></tr></thead>
+    <tbody>
+      {% for d in devices %}
+      <tr>
+        <td data-label="Apparaat">{{ d.label }}</td>
+        <td data-label="Vertrouwd sinds">{{ d.created() }}</td>
+        <td data-label="Laatst gebruikt">{{ d.last_used() }}{% if !d.last_place().is_empty() %}<br><small class="muted">{{ d.last_place() }}</small>{% endif %}</td>
+        <td data-label="Verloopt">{{ d.expires() }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+  <div class="actions">
+    {% if !devices.is_empty() %}
+    <form method="post" action="/gebruikers/{{ u.id }}/apparaten/intrekken"><input type="hidden" name="csrf_token" value="{{ l.csrf }}"><button type="submit" class="secondary outline">Alle apparaten vergeten</button></form>
+    {% endif %}
+    {% if u.has_totp %}
+    <form method="post" action="/gebruikers/{{ u.id }}/mfa-reset" data-confirm="Tweestapsverificatie van {{ u.name }} resetten? Bij de volgende login moet een nieuwe worden ingesteld."><input type="hidden" name="csrf_token" value="{{ l.csrf }}"><button type="submit" class="secondary outline">MFA resetten</button></form>
+    {% endif %}
+  </div>
+</article>
+
+{% if !is_self %}
+<hr>
+{% if u.archived_at.is_some() %}
+<form method="post" action="/gebruikers/{{ u.id }}/herstellen"><input type="hidden" name="csrf_token" value="{{ l.csrf }}"><button type="submit" class="secondary">Gebruiker herstellen</button></form>
+{% else %}
+<form method="post" action="/gebruikers/{{ u.id }}/archiveren" data-confirm="{{ u.name }} archiveren? De gebruiker kan dan niet meer inloggen; uren, ritten en het logboek blijven bewaard."><input type="hidden" name="csrf_token" value="{{ l.csrf }}"><button type="submit" class="quiet">Gebruiker archiveren</button></form>
+{% endif %}
+{% endif %}
+{% endblock %}

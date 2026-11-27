@@ -1,0 +1,33 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id AS \"id!\", archived_at IS NOT NULL AS \"archived!: bool\" FROM documents\n           WHERE company_id = ? AND sha256 = ? LIMIT 1",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "documents",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "archived!: bool",
+        "ordinal": 1,
+        "type_info": "Integer",
+        "origin": "Expression"
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "7433113634c9b61caa9df323db51a0513fc41077584a7f17d9dc1adb05324be4"
+}

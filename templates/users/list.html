@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Gebruikers{% endblock %}
+{% block content %}
+<div class="title-row">
+  <h1>Gebruikers</h1>
+  <a href="/gebruikers/nieuw" role="button">Nieuwe gebruiker</a>
+</div>
+<p class="muted">Beheerders schrijven uren en ritten namens medewerkers en staan zelf niet in de keuzelijsten. Een boekhouder kan alleen lezen en downloaden, voor de bedrijven die je kiest.</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Naam</th><th>Rol</th><th>MFA</th><th>Laatst ingelogd</th><th class="num">Apparaten</th></tr></thead>
+  <tbody>
+    {% for u in users %}
+    <tr{% if u.archived_at.is_some() %} class="archived"{% endif %}>
+      <td data-label="Naam"><a href="/gebruikers/{{ u.id }}">{{ u.name }}</a>{% if u.archived_at.is_some() %} <small>(gearchiveerd)</small>{% endif %}<br><small class="muted">{{ u.email }}</small></td>
+      <td data-label="Rol">{{ u.role_label() }}</td>
+      <td data-label="MFA">{% if u.has_totp %}<span class="status ok">ingesteld</span>{% else %}<span class="status warn">nog niet</span>{% endif %}{% if u.must_change_password %} <span class="status info">tijdelijk wachtwoord</span>{% endif %}</td>
+      <td data-label="Laatst ingelogd" class="nowrap">{{ u.last_login() }}</td>
+      <td data-label="Apparaten" class="num">{{ u.devices }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Uren{% endblock %}
+{% block content %}
+{% let v = l.version %}
+<div class="title-row">
+  <h1><svg class="icon" aria-hidden="true"><use href="/static/icons.svg?v={{ v }}#clock"/></svg>Uren – {{ title }}</h1>
+  <nav class="date-nav" aria-label="Datum kiezen">
+    <a href="/uren?week={{ prev }}&amp;gebruiker={{ user_id }}" class="nav-btn" title="Vorige week" aria-label="Vorige week"><svg class="icon"><use href="/static/icons.svg?v={{ v }}#prev2"/></svg></a>
+    <a href="/uren?dag={{ prev_day }}&amp;gebruiker={{ user_id }}" class="nav-btn" title="Vorige dag" aria-label="Vorige dag"><svg class="icon"><use href="/static/icons.svg?v={{ v }}#prev"/></svg></a>
+    <a href="/uren?dag={{ today }}&amp;gebruiker={{ user_id }}" class="nav-today">vandaag</a>
+    <a href="/uren?dag={{ next_day }}&amp;gebruiker={{ user_id }}" class="nav-btn" title="Volgende dag" aria-label="Volgende dag"><svg class="icon"><use href="/static/icons.svg?v={{ v }}#next"/></svg></a>
+    <a href="/uren?week={{ next }}&amp;gebruiker={{ user_id }}" class="nav-btn" title="Volgende week" aria-label="Volgende week"><svg class="icon"><use href="/static/icons.svg?v={{ v }}#next2"/></svg></a>
+  </nav>
+</div>
+
+<div class="toolbar">
+  <form method="get" action="/uren" class="toolbar-filter">
+    {% if selected.is_empty() %}<input type="hidden" name="week" value="{{ week }}">{% else %}<input type="hidden" name="dag" value="{{ selected }}">{% endif %}
+    <select name="gebruiker" aria-label="Uren van" data-autosubmit>
+      {% for u in users %}<option value="{{ u.id }}"{% if u.id == user_id %} selected{% endif %}>Uren van {{ u.name }}</option>{% endfor %}
+    </select>
+    <noscript><button type="submit" class="secondary">Toon</button></noscript>
+  </form>
+  <div class="actions">
+    <a href="/uren/jaar" role="button" class="secondary">Jaaroverzicht</a>
+    <a href="/uren?{% if selected.is_empty() %}week={{ week }}{% else %}dag={{ selected }}{% endif %}&amp;gebruiker={{ user_id }}&amp;nieuw=1" role="button" data-dialog-open="entry-dialog"><svg class="icon" aria-hidden="true"><use href="/static/icons.svg?v={{ v }}#plus"/></svg> Uren toevoegen…</a>
+  </div>
+</div>
+
+<div class="day-tabs" role="tablist" aria-label="{{ week_label }}">
+  <a href="/uren?week={{ week }}&amp;gebruiker={{ user_id }}" class="day-tab week-tab"{% if selected.is_empty() %} aria-current="page"{% endif %}>
+    <span class="dt-name">{{ week_label.split(" · ").next().unwrap_or("") }}</span>
+    <span class="dt-total">{{ totals.minutes|duration }}</span>
+  </a>
+  {% for d in days %}
+  <a href="/uren?dag={{ d.iso }}&amp;gebruiker={{ user_id }}" class="day-tab{% if d.is_today %} is-today{% endif %}{% if d.minutes == 0 %} is-empty{% endif %}"{% if d.iso == selected %} aria-current="page"{% endif %}>
+    <span class="dt-name">{{ d.short }}</span><span class="dt-num">{{ d.num }}</span>
+    <span class="dt-total">{{ d.minutes|duration }}</span>
+  </a>
+  {% endfor %}
+</div>
+
+<section class="day-panel">
+{% if let Some(d) = day_entries() %}
+  {% if d.entries.is_empty() %}
+  <div class="empty-state">
+    <svg class="icon" aria-hidden="true"><use href="/static/icons.svg?v={{ v }}#clock"/></svg>
+    <p><strong>Nog geen uren op {{ d.label }}.</strong></p>
+    <a href="/uren?dag={{ d.iso }}&amp;gebruiker={{ user_id }}&amp;nieuw=1" role="button" data-dialog-open="entry-dialog"><svg class="icon" aria-hidden="true"><use href="/static/icons.svg?v={{ v }}#plus"/></svg> Uren toevoegen…</a>
+  </div>
+  {% else %}
+  {% include "hours/_day_entries.html" %}
+  <p class="day-sum muted">Totaal {{ d.label }}: <strong>{{ d.minutes|duration }}</strong></p>
+  {% endif %}
+{% else %}
+  <div class="grid totals">
+    <article><small class="muted">Totaal week</small><p class="big">{{ totals.minutes|duration }}</p></article>
+    <article><small class="muted">Declarabel</small><p class="big">{{ totals.billable_minutes|duration }}</p><small>{{ totals.amount_cents|amount }}</small></article>
+    <article><small class="muted">Intern</small><p class="big">{{ totals.internal_minutes|duration }}</p></article>
+  </div>
+  {% for d in days %}
+  <section class="day{% if d.is_today %} today{% endif %}">
+    <h3><a href="/uren?dag={{ d.iso }}&amp;gebruiker={{ user_id }}">{{ d.label }}</a> <small class="muted">{{ d.minutes|duration }}</small></h3>
+    {% if d.entries.is_empty() %}<p class="day-empty">Geen uren</p>{% else %}{% include "hours/_day_entries.html" %}{% endif %}
+  </section>
+  {% endfor %}
+{% endif %}
+</section>
+
+<dialog id="entry-dialog" class="modal" aria-labelledby="entry-dialog-title"{% if open_form %} open data-open-modal{% endif %}>
+  <article>
+    <header>
+      <h2 id="entry-dialog-title">Uren toevoegen</h2>
+      <a href="/uren?{% if selected.is_empty() %}week={{ week }}{% else %}dag={{ selected }}{% endif %}&amp;gebruiker={{ user_id }}" class="modal-close" data-dialog-close aria-label="Sluiten"><svg class="icon"><use href="/static/icons.svg?v={{ v }}#close"/></svg></a>
+    </header>
+    {% include "hours/_form.html" %}
+  </article>
+</dialog>
+{% endblock %}

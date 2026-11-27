@@ -1,0 +1,26 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT last_number FROM invoice_sequences WHERE company_id = ? AND year = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "last_number",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "invoice_sequences",
+            "name": "last_number"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "34c45befa4b3809c5e0d6e958889b5c76160d61e3e6a67b7b239ab4ff4a25a63"
+}

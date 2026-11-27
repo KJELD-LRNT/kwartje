@@ -1,0 +1,21 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT COALESCE(MAX(position), 0) + 1 AS \"p!: i64\" FROM recurring_lines WHERE recurring_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "p!: i64",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": "Expression"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "df884df40ea470941d0c8a14696c9a6f1d69c5d1e5dffd0768a6edd4d9f1c87d"
+}

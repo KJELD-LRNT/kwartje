@@ -1,0 +1,110 @@
+{%- macro nav(href, here, icon, label, s, v) -%}
+<a href="{{ href }}"{% if s == here %} aria-current="page"{% endif %} title="{{ label }}"><svg class="icon" aria-hidden="true"><use href="/static/icons.svg?v={{ v }}#{{ icon }}"/></svg><span class="side-label">{{ label }}</span></a>
+{%- endmacro -%}
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#3a96dd">
+  <meta name="htmx-config" content='{"includeIndicatorStyles": false, "allowEval": false}'>
+  <title>{% block title %}Overzicht{% endblock %} · Kwartje</title>
+  <link rel="icon" href="/static/favicon.svg?v={{ l.version }}" type="image/svg+xml">
+  <link rel="preload" href="/static/manrope.woff2" as="font" type="font/woff2" crossorigin>
+  <script src="/static/theme.js?v={{ l.version }}"></script>
+  <link rel="stylesheet" href="/static/pico.min.css?v={{ l.version }}">
+  <link rel="stylesheet" href="/static/app.css?v={{ l.version }}">
+  <script src="/static/htmx.min.js?v={{ l.version }}" defer></script>
+  <script src="/static/app.js?v={{ l.version }}" defer></script>
+</head>
+{% let s = l.section() %}
+{% let v = l.version %}
+<body hx-headers='{"X-CSRF-Token": "{{ l.csrf }}"}' class="{% if l.logged_in %}app{% else %}anon{% endif %}{% if l.logged_in && !l.can_edit() %} read-only{% endif %}">
+{% if l.logged_in %}
+  <input type="checkbox" id="nav-open" class="nav-toggle" aria-hidden="true" tabindex="-1">
+  <aside class="sidebar" aria-label="Menu">
+    <div class="side-head">
+      <a href="/" class="brand" aria-label="Kwartje, naar het overzicht">
+        <svg class="coin" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="currentColor"/><circle cx="16" cy="16" r="11" fill="none" stroke="#fff" stroke-width="1.2" stroke-dasharray="2 1.6" opacity=".8"/><text x="16" y="21" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">25</text></svg>
+        <span>Kwartje</span>
+      </a>
+      <button type="button" class="side-btn" data-sidebar-toggle title="Menu in- of uitklappen" aria-label="Menu in- of uitklappen"><svg class="icon"><use href="/static/icons.svg?v={{ v }}#collapse"/></svg></button>
+    </div>
+    {% if !l.companies.is_empty() %}
+    <form class="company-switcher" method="post" action="/bedrijf/kiezen" data-keep>
+      <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+      <input type="hidden" name="back" value="{{ l.path }}">
+      <select name="company_id" aria-label="Bedrijf kiezen">
+        {% for c in l.companies %}
+        <option value="{{ c.id }}"{% if c.id == l.company_id %} selected{% endif %}>{{ c.name }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="secondary">Kies</button>
+    </form>
+    {% endif %}
+    <nav class="side-nav" aria-label="Hoofdmenu">
+      {% call nav("/", "overzicht", "home", "Overzicht", s, v) %}
+      <div class="side-group">Werk</div>
+      {% call nav("/uren", "uren", "clock", "Uren", s, v) %}
+      {% call nav("/kilometers", "kilometers", "car", "Ritten", s, v) %}
+      {% call nav("/klanten", "klanten", "users", "Klanten", s, v) %}
+      <div class="side-group">Verkoop</div>
+      {% call nav("/offertes", "offertes", "quote", "Offertes", s, v) %}
+      {% call nav("/te-factureren", "te-factureren", "unbilled", "Te factureren", s, v) %}
+      {% call nav("/facturen", "facturen", "invoice", "Facturen", s, v) %}
+      {% call nav("/terugkerend", "terugkerend", "repeat", "Terugkerend", s, v) %}
+      <div class="side-group">Boekhouding</div>
+      {% call nav("/documenten", "documenten", "folder", "Documenten", s, v) %}
+      {% call nav("/btw", "btw", "percent", "Btw-overzicht", s, v) %}
+    </nav>
+    <div class="side-foot">
+      <details class="menu user-menu">
+        <summary aria-label="Account" title="{{ l.user_name }}"><span class="avatar">{{ l.initials() }}</span></summary>
+        <div class="menu-panel">
+          <p class="menu-who">Ingelogd als <strong>{{ l.user_name }}</strong></p>
+          <a href="/account" class="menu-link">Mijn account</a>
+          <form method="post" action="/uitloggen" data-keep>
+            <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+            <button type="submit" class="secondary outline">Uitloggen</button>
+          </form>
+        </div>
+      </details>
+      <button type="button" class="side-btn" data-theme-toggle aria-label="Thema">
+        <svg class="icon i-system"><use href="/static/icons.svg?v={{ v }}#monitor"/></svg>
+        <svg class="icon i-light"><use href="/static/icons.svg?v={{ v }}#sun"/></svg>
+        <svg class="icon i-dark"><use href="/static/icons.svg?v={{ v }}#moon"/></svg>
+      </button>
+      <a href="/instellingen" class="side-btn"{% if s == "instellingen" %} aria-current="page"{% endif %} title="Instellingen" aria-label="Instellingen"><svg class="icon"><use href="/static/icons.svg?v={{ v }}#settings"/></svg></a>
+    </div>
+  </aside>
+  <label for="nav-open" class="scrim" aria-hidden="true"></label>
+  <div class="content">
+    <header class="mobile-bar">
+      <label for="nav-open" class="menu-button" aria-label="Menu openen"><svg class="icon"><use href="/static/icons.svg?v={{ v }}#menu"/></svg></label>
+      <a href="/" class="brand">Kwartje</a>
+      <span class="mobile-company">{{ l.company_name }}</span>
+    </header>
+{% else %}
+  <div class="content-anon">
+{% endif %}
+    <main class="container">
+      {% for f in l.flashes %}
+      <div class="flash {% if f.ok %}flash-ok{% else %}flash-error{% endif %}" role="status">{{ f.message }}</div>
+      {% endfor %}
+      {% if l.logged_in && !l.can_edit() %}<p class="read-only-note muted">Je account heeft alleen leesrechten: je kunt alles bekijken en downloaden, maar niets wijzigen.</p>{% endif %}
+      {% if s == "instellingen" && l.logged_in %}
+      <div class="settings">
+        <nav class="settings-nav" aria-label="Instellingen">{% include "_settings_nav.html" %}</nav>
+        <div class="settings-body">
+      {% endif %}
+      {% block content %}{% endblock %}
+      {% if s == "instellingen" && l.logged_in %}
+        </div>
+      </div>
+      {% endif %}
+    </main>
+    <footer class="container site-footer"><small class="muted">Kwartje {{ l.version }} · <a href="{{ l.source() }}" class="muted" rel="noopener">broncode</a> (AGPL-3.0)</small></footer>
+  </div>
+</body>
+</html>

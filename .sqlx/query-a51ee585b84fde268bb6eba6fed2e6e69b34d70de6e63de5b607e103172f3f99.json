@@ -1,0 +1,26 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT must_change_password AS \"m: bool\" FROM users WHERE id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "m: bool",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "users",
+            "name": "must_change_password"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "a51ee585b84fde268bb6eba6fed2e6e69b34d70de6e63de5b607e103172f3f99"
+}

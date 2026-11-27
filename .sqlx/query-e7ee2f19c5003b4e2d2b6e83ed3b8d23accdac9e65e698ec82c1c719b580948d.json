@@ -1,0 +1,33 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT u.name AS \"name!\", COALESCE(SUM(t.minutes), 0) AS \"m!: i64\" FROM time_entries t\n           JOIN users u ON u.id = t.user_id\n           WHERE t.company_id = ? AND t.archived_at IS NULL AND t.date BETWEEN ? AND ?\n           GROUP BY u.id ORDER BY u.name",
+  "describe": {
+    "columns": [
+      {
+        "name": "name!",
+        "ordinal": 0,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "users",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "m!: i64",
+        "ordinal": 1,
+        "type_info": "Integer",
+        "origin": "Expression"
+      }
+    ],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "e7ee2f19c5003b4e2d2b6e83ed3b8d23accdac9e65e698ec82c1c719b580948d"
+}

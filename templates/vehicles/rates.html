@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Kilometervergoeding{% endblock %}
+{% block content %}
+<h1>Kilometervergoeding</h1>
+<p class="muted">De onbelaste vergoeding per zakelijke kilometer met een privéauto, per jaar. Vul het bedrag in dat de Belastingdienst voor dat jaar noemt; de app rekent er de vergoeding in het jaaroverzicht mee uit.</p>
+{% if let Some(e) = error %}<p class="flash flash-error" role="alert">{{ e }}</p>{% endif %}
+<form method="post" action="/kilometervergoeding" class="grid">
+  <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+  <label>Jaar <input type="number" name="year" value="{{ year }}" min="2000" max="2100" required></label>
+  <label>Per km (€) <input type="text" name="rate" value="{{ rate }}" inputmode="decimal" placeholder="0,23" required></label>
+  <div><label>&nbsp;<button type="submit">Opslaan</button></label></div>
+</form>
+{% if rates.is_empty() %}<p>Nog geen tarieven ingevuld.</p>{% else %}
+<table>
+  <thead><tr><th>Jaar</th><th class="num">Per km</th></tr></thead>
+  <tbody>{% for r in rates %}<tr><td>{{ r.year }}</td><td class="num">{{ r.rate_cents_per_km|amount }}</td></tr>{% endfor %}</tbody>
+</table>
+{% endif %}
+{% endblock %}

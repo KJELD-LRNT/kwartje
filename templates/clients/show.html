@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}{{ c.name }}{% endblock %}
+{% block content %}
+<div class="actions page-head">
+  <hgroup>
+    <h1>{{ c.name }}</h1>
+    <p>{% if c.archived_at.is_some() %}Gearchiveerd{% else %}Klant{% endif %}</p>
+  </hgroup>
+  {% if c.archived_at.is_none() %}<a href="/klanten/{{ c.id }}/bewerken" role="button" class="secondary">Wijzigen</a>{% endif %}
+</div>
+
+<div class="grid">
+  <article>
+    <header>Contact</header>
+    <p>
+      {% if !c.contact_name.is_empty() %}{{ c.contact_name }}<br>{% endif %}
+      {% if !c.email.is_empty() %}<a href="mailto:{{ c.email }}">{{ c.email }}</a><br>{% endif %}
+      {% if !c.phone.is_empty() %}{{ c.phone }}<br>{% endif %}
+      {% if !c.street.is_empty() %}{{ c.street }}<br>{% endif %}
+      {% if !c.postal_code.is_empty() || !c.city.is_empty() %}{{ c.postal_code }} {{ c.city }}<br>{% endif %}
+      {% if !c.kvk.is_empty() %}KvK {{ c.kvk }}<br>{% endif %}
+      {% if !c.btw_id.is_empty() %}Btw-id {{ c.btw_id }}<br>{% endif %}
+      {% if let Some(p) = c.invoice_prefix %}Factuurprefix <strong>{{ p }}</strong>{% else %}<span class="bad">Nog geen factuurprefix</span> · <a href="/klanten/{{ c.id }}/bewerken">instellen</a>{% endif %}
+    </p>
+  </article>
+  <article>
+    <header>Notities</header>
+    {% if c.notes.is_empty() %}<p class="muted">Geen notities.</p>{% else %}<p class="notes">{{ c.notes }}</p>{% endif %}
+  </article>
+</div>
+
+<div class="grid totals">
+  <article><small class="muted">Uren {{ summary.year }}</small><p class="big">{{ summary.minutes_this_year|duration }}</p></article>
+  <article><small class="muted">Te factureren</small><p class="big">{{ summary.unbilled_minutes|duration }}</p><small>{{ summary.unbilled_cents|amount }} excl. btw</small></article>
+</div>
+
+<section>
+  <h2>Facturen</h2>
+  {% if invoices.is_empty() %}<p class="muted">Nog geen facturen.</p>{% else %}
+  {% let rows = invoices %}{% include "invoices/_rows.html" %}
+  {% endif %}
+</section>
+
+<section>
+  <h2>Documenten</h2>
+  {% if documents.is_empty() %}<p class="muted">Geen documenten gekoppeld.</p>{% else %}
+  <ul>{% for d in documents %}<li><a href="/documenten/{{ d.id }}">{{ d.doc_date|date }} · {{ d.kind_label() }}{% if !d.supplier_label().is_empty() %} · {{ d.supplier_label() }}{% endif %}</a> {{ d.description }}</li>{% endfor %}</ul>
+  {% endif %}
+</section>
+
+<section>
+  <h2>Recente uren</h2>
+  {% if recent.is_empty() %}<p class="muted">Nog geen uren op deze klant.</p>{% else %}
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Datum</th><th>Wie</th><th>Taak</th><th>Omschrijving</th><th class="num">Duur</th><th>Tarief</th></tr></thead>
+    <tbody>
+    {% for e in recent %}
+      <tr>
+        <td>{{ e.date|date }}</td>
+        <td>{{ e.user_name }}</td>
+        <td>{{ e.task_name }}{% if let Some(p) = e.project_name %} <small class="muted">({{ p }})</small>{% endif %}</td>
+        <td>{{ e.description }}</td>
+        <td class="num">{% if e.invoice_line_id.is_some() %}{{ e.minutes|duration }}{% else %}<a href="/uren/{{ e.id }}">{{ e.minutes|duration }}</a>{% endif %}</td>
+        <td><small>{{ e.tariff_label() }}</small></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% endif %}
+</section>
+
+<section>
+  <div class="actions page-head">
+    <h2>Tarieven voor deze klant</h2>
+    {% if c.archived_at.is_none() %}<a href="/tarieven/nieuw?klant={{ c.id }}" role="button" class="secondary outline">Tarief toevoegen</a>{% endif %}
+  </div>
+  {% if tariffs.is_empty() %}<p class="muted">Geen eigen tarieven; de standaardtarieven van het bedrijf gelden.</p>{% else %}{% include "tariffs/_rows.html" %}{% endif %}
+</section>
+
+<section>
+  <h2>Projecten</h2>
+  {% if projects.is_empty() %}<p class="muted">Nog geen projecten.</p>{% else %}
+  <table>
+    <tbody>
+    {% for p in projects %}
+      <tr{% if p.archived_at.is_some() %} class="archived"{% endif %}>
+        <td>
+          {% if p.archived_at.is_none() %}
+          <form method="post" action="/projecten/{{ p.id }}" class="actions">
+            <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+            <input type="text" name="name" value="{{ p.name }}" aria-label="Projectnaam" required>
+            <button type="submit" class="secondary outline">Opslaan</button>
+          </form>
+          {% else %}{{ p.name }} <small>(gearchiveerd)</small>{% endif %}
+        </td>
+        <td>
+          {% if p.archived_at.is_none() %}
+          <form method="post" action="/projecten/{{ p.id }}/archiveren" class="inline-form" data-confirm="Project {{ p.name }} archiveren?">
+            <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+            <button type="submit" class="quiet">Archiveren</button>
+          </form>
+          {% else %}
+          <form method="post" action="/projecten/{{ p.id }}/terugzetten" class="inline-form">
+            <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+            <button type="submit" class="secondary outline">Terugzetten</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+  {% if c.archived_at.is_none() %}
+  <form method="post" action="/klanten/{{ c.id }}/projecten" class="actions">
+    <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+    <input type="text" name="name" placeholder="Nieuw project" aria-label="Nieuw project" required>
+    <button type="submit">Project toevoegen</button>
+  </form>
+  {% endif %}
+</section>
+
+<hr>
+<section>
+  {% if c.archived_at.is_some() %}
+  <form method="post" action="/klanten/{{ c.id }}/terugzetten">
+    <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+    <button type="submit" class="secondary">Klant terugzetten</button>
+  </form>
+  {% else %}
+  <form method="post" action="/klanten/{{ c.id }}/archiveren" data-confirm="Weet je zeker dat je {{ c.name }} wilt archiveren?">
+    <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+    <button type="submit" class="quiet">Klant archiveren</button>
+  </form>
+  <small class="muted">Archiveren verbergt de klant; uren en facturen blijven bewaard.</small>
+  {% endif %}
+</section>
+{% endblock %}

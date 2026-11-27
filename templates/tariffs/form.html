@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}{% if let Some(t) = tariff %}{{ t.name }}{% else %}Nieuw tarief{% endif %}{% endblock %}
+{% block content %}
+{% if let Some(t) = tariff %}
+<div class="actions page-head">
+  <h1>{{ t.name }}</h1>
+  {% if t.archived_at.is_none() %}<a href="/tarieven/{{ t.id }}/nieuwe-prijs" role="button" class="secondary">Nieuwe prijs vanaf…</a>{% endif %}
+</div>
+{% if t.archived_at.is_some() %}<p class="flash flash-error">Dit tarief is gearchiveerd.</p>{% endif %}
+<p class="muted">Prijs wijzigen voor nieuwe uren? Gebruik <strong>Nieuwe prijs vanaf…</strong>: dan blijft de oude prijs gelden voor eerdere datums. Opgeslagen uren houden altijd hun eigen prijs.</p>
+<form method="post" action="/tarieven/{{ t.id }}">
+{% else %}
+<h1>Nieuw tarief</h1>
+<form method="post" action="/tarieven">
+{% endif %}
+  <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+  <label>Naam *
+    <input type="text" name="name" value="{{ f.name }}" required placeholder="Standaard uurtarief"{% if !err("name").is_empty() %} aria-invalid="true"{% endif %}>
+  </label>
+  {% if !err("name").is_empty() %}<small class="field-error">{{ err("name") }}</small>{% endif %}
+  <div class="grid">
+    <div>
+      <label>Prijs (excl. btw) *
+        <input type="text" name="price" value="{{ f.price }}" inputmode="decimal" placeholder="95,00" required{% if !err("price").is_empty() %} aria-invalid="true"{% endif %}>
+      </label>
+      {% if !err("price").is_empty() %}<small class="field-error">{{ err("price") }}</small>{% endif %}
+    </div>
+    <div>
+      <label>Eenheid
+        <select name="unit"{% if !err("unit").is_empty() %} aria-invalid="true"{% endif %}>
+          {% for (value, label) in units %}
+          <option value="{{ value }}"{% if *value == f.unit.as_str() %} selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      {% if !err("unit").is_empty() %}<small class="field-error">{{ err("unit") }}</small>{% endif %}
+    </div>
+    <div>
+      <label>Btw
+        <select name="vat_bp"{% if !err("vat_bp").is_empty() %} aria-invalid="true"{% endif %}>
+          {% for (value, label) in vat_choices %}
+          <option value="{{ value }}"{% if value.as_str() == f.vat_bp.as_str() %} selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </label>
+    </div>
+  </div>
+  <fieldset>
+    <legend>Niveau</legend>
+    <div class="grid">
+      <label>Klant
+        <select name="client_id"{% if !err("client_id").is_empty() %} aria-invalid="true"{% endif %}>
+          <option value="">Hele bedrijf (alle klanten)</option>
+          {% for c in clients %}
+          <option value="{{ c.id }}"{% if c.id.to_string() == f.client_id %} selected{% endif %}>{{ c.name }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <div>
+        <label>Project
+          <select name="project_id"{% if !err("project_id").is_empty() %} aria-invalid="true"{% endif %}>
+            <option value="">Geen specifiek project</option>
+            {% for p in projects %}
+            <option value="{{ p.id }}"{% if p.id.to_string() == f.project_id %} selected{% endif %}>{{ p.label }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        {% if !err("project_id").is_empty() %}<small class="field-error">{{ err("project_id") }}</small>{% endif %}
+      </div>
+    </div>
+    <label>
+      <input type="checkbox" name="is_default" value="1"{% if f.default_checked() %} checked{% endif %}{% if !err("is_default").is_empty() %} aria-invalid="true"{% endif %}>
+      Standaard voor dit niveau (wordt automatisch gekozen bij nieuwe uren)
+    </label>
+    {% if !err("is_default").is_empty() %}<small class="field-error">{{ err("is_default") }}</small>{% endif %}
+  </fieldset>
+  <div class="grid">
+    <div>
+      <label>Geldig vanaf *
+        <input type="date" name="valid_from" value="{{ f.valid_from }}" required{% if !err("valid_from").is_empty() %} aria-invalid="true"{% endif %}>
+      </label>
+      {% if !err("valid_from").is_empty() %}<small class="field-error">{{ err("valid_from") }}</small>{% endif %}
+    </div>
+    <div>
+      <label>Geldig tot en met (leeg = geen einddatum)
+        <input type="date" name="valid_to" value="{{ f.valid_to }}"{% if !err("valid_to").is_empty() %} aria-invalid="true"{% endif %}>
+      </label>
+      {% if !err("valid_to").is_empty() %}<small class="field-error">{{ err("valid_to") }}</small>{% endif %}
+    </div>
+  </div>
+  <div class="actions">
+    <button type="submit">Opslaan</button>
+    <a href="/tarieven" role="button" class="secondary outline">Annuleren</a>
+  </div>
+</form>
+{% if let Some(t) = tariff %}
+<hr>
+{% if t.archived_at.is_some() %}
+<form method="post" action="/tarieven/{{ t.id }}/terugzetten">
+  <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+  <button type="submit" class="secondary">Tarief terugzetten</button>
+</form>
+{% else %}
+<form method="post" action="/tarieven/{{ t.id }}/archiveren" data-confirm="Tarief {{ t.name }} archiveren? Bestaande uren houden hun prijs.">
+  <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+  <button type="submit" class="quiet">Tarief archiveren</button>
+</form>
+{% endif %}
+{% endif %}
+{% endblock %}

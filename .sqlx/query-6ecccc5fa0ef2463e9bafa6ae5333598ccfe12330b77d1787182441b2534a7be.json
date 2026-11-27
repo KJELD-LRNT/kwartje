@@ -1,0 +1,110 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id AS \"id!\", recurring_id, position, description, quantity_milli, unit,\n                  unit_price_cents, vat_bp\n           FROM recurring_lines WHERE id = ? AND recurring_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "recurring_lines",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "recurring_id",
+        "ordinal": 1,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "recurring_lines",
+            "name": "recurring_id"
+          }
+        }
+      },
+      {
+        "name": "position",
+        "ordinal": 2,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "recurring_lines",
+            "name": "position"
+          }
+        }
+      },
+      {
+        "name": "description",
+        "ordinal": 3,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "recurring_lines",
+            "name": "description"
+          }
+        }
+      },
+      {
+        "name": "quantity_milli",
+        "ordinal": 4,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "recurring_lines",
+            "name": "quantity_milli"
+          }
+        }
+      },
+      {
+        "name": "unit",
+        "ordinal": 5,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "recurring_lines",
+            "name": "unit"
+          }
+        }
+      },
+      {
+        "name": "unit_price_cents",
+        "ordinal": 6,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "recurring_lines",
+            "name": "unit_price_cents"
+          }
+        }
+      },
+      {
+        "name": "vat_bp",
+        "ordinal": 7,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "recurring_lines",
+            "name": "vat_bp"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "6ecccc5fa0ef2463e9bafa6ae5333598ccfe12330b77d1787182441b2534a7be"
+}

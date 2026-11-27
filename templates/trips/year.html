@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Kilometers {{ year }}{% endblock %}
+{% block content %}
+<div class="actions page-head">
+  <h1>Kilometers {{ year }}</h1>
+  <nav class="actions week-nav" aria-label="Jaar">
+    <a href="/kilometers/jaar?jaar={{ year - 1 }}" role="button" class="secondary outline">‹ {{ year - 1 }}</a>
+    <a href="/kilometers/jaar?jaar={{ year + 1 }}" role="button" class="secondary outline">{{ year + 1 }} ›</a>
+  </nav>
+</div>
+{% if rate_cents.is_none() %}<p class="flash flash-error">Er is nog geen kilometervergoeding voor {{ year }} ingevuld. <a href="/kilometervergoeding">Vul het bedrag per km in</a> om de vergoeding te berekenen.</p>{% endif %}
+{% if vehicles.is_empty() %}<p>Geen ritten in {{ year }}.</p>{% endif %}
+{% for v in vehicles %}
+<article>
+  <header class="actions page-head">
+    <strong>{{ v.vehicle.label() }}</strong>
+    <a href="/kilometers/rittenregistratie.csv?jaar={{ year }}&amp;voertuig={{ v.vehicle.id }}" role="button" class="secondary outline">Rittenregistratie (CSV)</a>
+  </header>
+  <table class="balance">
+    <tbody>
+      <tr><td>Zakelijk, dit bedrijf</td><td class="num">{{ v.balance.business_this }} km</td></tr>
+      <tr><td>Privé, ingevoerd</td><td class="num">{{ v.balance.private_this }} km</td></tr>
+      <tr><td>Voor andere bedrijven</td><td class="num">{{ v.balance.other_companies }} km</td></tr>
+      {% if v.balance.has_readings() %}
+      <tr><td>Niet geregistreerd (privé)</td><td class="num">{{ v.balance.unregistered }} km</td></tr>
+      {% if v.balance.km_only > 0 %}<tr><td>Waarvan zonder kilometerstand</td><td class="num">{{ v.balance.km_only }} km</td></tr>{% endif %}
+      <tr><th>Volgens kilometerteller{% if let Some(a) = v.balance.first_reading %} ({{ a }} → {% if let Some(b) = v.balance.last_reading %}{{ b }}{% endif %}){% endif %}</th>
+          <th class="num">{{ v.balance.odometer_km() }} km {% if v.balance.matches() %}<span class="ok" title="Alle kilometers verantwoord">✓</span>{% else %}<span class="bad">≠ {{ v.balance.accounted() }}</span>{% endif %}</th></tr>
+      {% else %}
+      <tr><th>Totaal ingevoerd <small class="muted">(aantal km, geen kilometerstanden)</small></th><th class="num">{{ v.balance.accounted() }} km</th></tr>
+      {% endif %}
+    </tbody>
+  </table>
+  {% if v.is_private_car() %}
+  <p>Onbelaste kilometervergoeding: <strong>{% if let Some(a) = v.allowance_cents %}{{ a|amount }}{% else %}onbekend{% endif %}</strong>
+    {% if let Some(r) = v.rate_cents %}<small class="muted">({{ v.balance.business_this }} km × {{ r|amount }})</small>{% endif %}</p>
+  {% else %}
+  <p>Privé kilometers totaal: <strong>{{ v.balance.private_total() }} km</strong>
+    {% if v.over_500() %}<mark>meer dan 500 km privé: bijtelling is waarschijnlijk van toepassing</mark>{% else %}<small class="muted">(grens 500 km)</small>{% endif %}</p>
+  {% endif %}
+  <div class="table-wrap">
+  <table class="months">
+    <thead><tr><th></th>{% for (m, _) in v.months %}<th class="num">{{ m }}</th>{% endfor %}</tr></thead>
+    <tbody><tr><th>Zakelijk</th>{% for (_, km) in v.months %}<td class="num">{% if *km > 0 %}{{ km }}{% else %}<span class="muted">–</span>{% endif %}</td>{% endfor %}</tr></tbody>
+  </table>
+  </div>
+</article>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Facturen{% endblock %}
+{% block content %}
+<div class="actions page-head">
+  <h1>Facturen</h1>
+  <div class="actions">
+    <a href="/te-factureren" role="button">Nieuwe factuur</a>
+    <a href="/facturen/ouderdom" role="button" class="secondary outline">Ouderdom</a>
+    <a href="/export/invoices.csv?company={{ l.company_id }}" role="button" class="secondary outline">Exporteer CSV</a>
+  </div>
+</div>
+<div class="grid totals">
+  <article><small class="muted">Openstaand</small><p class="big">{{ summary.open_cents|amount }}</p><small>{{ summary.open_count }} factuur/facturen</small></article>
+  <article><small class="muted">Vervallen</small><p class="big{% if summary.overdue_count > 0 %} bad{% endif %}">{{ summary.overdue_cents|amount }}</p><small>{{ summary.overdue_count }} factuur/facturen</small></article>
+  <article><small class="muted">Ontvangen {{ year }}</small><p class="big">{{ paid_this_year|amount }}</p></article>
+</div>
+<nav class="actions filters" aria-label="Filter">
+  {% for (key, label) in [("", "Alle"), ("open", "Openstaand"), ("vervallen", "Vervallen"), ("concept", "Concepten"), ("betaald", "Betaald")] %}
+  <a href="/facturen?status={{ key }}"{% if filter == *key %} aria-current="page"{% endif %}>{{ label }}</a>
+  {% endfor %}
+</nav>
+{% if rows.is_empty() %}<p>Geen facturen.</p>{% else %}{% include "invoices/_rows.html" %}{% endif %}
+{% endblock %}

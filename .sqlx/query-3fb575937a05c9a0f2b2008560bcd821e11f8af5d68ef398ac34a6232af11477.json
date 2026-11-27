@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE payments SET archived_at = ?, updated_at = ? WHERE id = ? AND invoice_id = ? AND archived_at IS NULL",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "3fb575937a05c9a0f2b2008560bcd821e11f8af5d68ef398ac34a6232af11477"
+}

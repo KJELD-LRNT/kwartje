@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE invoices SET sent_at = COALESCE(sent_at, ?), sent_to = ?, updated_at = ?\n         WHERE id = ? AND company_id = ? AND number IS NOT NULL",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 5
+    },
+    "nullable": []
+  },
+  "hash": "e564cba0e415c44a0d66b3652382eb9873c63b7b32233f5722a664f72ed3b1dd"
+}

@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE companies SET name = ?, kvk = ?, btw_id = ?, iban = ?, street = ?, postal_code = ?,\n                city = ?, email = ?, phone = ?, invoice_prefix = ?, payment_term_days = ?,\n                default_vat_bp = ?, rounding_minutes = ?, updated_at = ?\n         WHERE id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 15
+    },
+    "nullable": []
+  },
+  "hash": "1dacfdf537562196d251d6b772020a71b51989b2225cdc1c0701f387876fb179"
+}

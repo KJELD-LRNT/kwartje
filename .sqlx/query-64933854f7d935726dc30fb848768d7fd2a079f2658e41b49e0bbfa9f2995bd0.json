@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO quotes (company_id, client_id, valid_until, created_at, updated_at, created_by)\n         VALUES (?, ?, ?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 6
+    },
+    "nullable": []
+  },
+  "hash": "64933854f7d935726dc30fb848768d7fd2a079f2658e41b49e0bbfa9f2995bd0"
+}

@@ -1,0 +1,62 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT level, sent_at, sent_to, via_email AS \"via_email: bool\" FROM reminders\n           WHERE invoice_id = ? ORDER BY id",
+  "describe": {
+    "columns": [
+      {
+        "name": "level",
+        "ordinal": 0,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "reminders",
+            "name": "level"
+          }
+        }
+      },
+      {
+        "name": "sent_at",
+        "ordinal": 1,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "reminders",
+            "name": "sent_at"
+          }
+        }
+      },
+      {
+        "name": "sent_to",
+        "ordinal": 2,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "reminders",
+            "name": "sent_to"
+          }
+        }
+      },
+      {
+        "name": "via_email: bool",
+        "ordinal": 3,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "reminders",
+            "name": "via_email"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "2e234233989600c1531aef3afa74c55725a526f3acaa841849e2a39f08385f56"
+}

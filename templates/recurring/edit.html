@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}{{ r.name }}{% endblock %}
+{% block content %}
+<hgroup>
+  <h1>{{ r.name }}</h1>
+  <p>{{ client_name }} · {{ r.interval_label() }} ·
+    {% if r.archived_at.is_some() %}gearchiveerd{% elif r.finished() %}afgelopen{% else %}volgende concept op {{ r.next_date|date }} ({{ r.next_label() }}){% endif %}</p>
+</hgroup>
+
+<div class="overflow-auto">
+<table>
+  <thead><tr><th>Omschrijving</th><th class="num">Aantal</th><th class="num">Prijs</th><th class="num">Btw</th><th class="num">Bedrag</th><th></th></tr></thead>
+  <tbody>
+  {% for line in lines %}
+    <tr>
+      <td>{{ line.description }}</td>
+      <td class="num">{{ line.quantity_label() }} {{ line.unit }}</td>
+      <td class="num">{{ line.unit_price_cents|amount }}</td>
+      <td class="num">{{ line.vat_bp|vat }}</td>
+      <td class="num">{{ line.total_cents()|amount }}</td>
+      <td><form method="post" action="/terugkerend/{{ r.id }}/regels/{{ line.id }}/verwijderen" class="inline-form">
+        <input type="hidden" name="csrf_token" value="{{ l.csrf }}"><button type="submit" class="icon-btn" aria-label="Regel verwijderen">✕</button></form></td>
+    </tr>
+  {% else %}
+    <tr><td colspan="6" class="muted">Nog geen regels: de concepten worden dan leeg aangemaakt.</td></tr>
+  {% endfor %}
+  </tbody>
+  <tfoot><tr><th colspan="4">Totaal excl. btw per periode</th><th class="num">{{ total_excl_cents|amount }}</th><th></th></tr></tfoot>
+</table>
+</div>
+
+<details{% if lines.is_empty() %} open{% endif %}>
+  <summary>Regel toevoegen</summary>
+  <form method="post" action="/terugkerend/{{ r.id }}/regels">
+    <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+    <label>Omschrijving <input type="text" name="description" required placeholder="Hosting, onderhoudscontract, …"></label>
+    <div class="grid">
+      <label>Aantal <input type="text" name="quantity" value="1" inputmode="decimal" required></label>
+      <label>Eenheid
+        <select name="unit"><option value="stuk">stuk</option><option value="uur">uur</option><option value="km">km</option></select>
+      </label>
+      <label>Prijs (excl. btw) <input type="text" name="price" inputmode="decimal" required placeholder="0,00"></label>
+      <label>Btw
+        <select name="vat_bp">{% for (value, label) in vat_choices %}<option value="{{ value }}">{{ label }}</option>{% endfor %}</select>
+      </label>
+    </div>
+    <button type="submit" class="secondary">Regel toevoegen</button>
+  </form>
+</details>
+
+<details>
+  <summary>Instellingen wijzigen</summary>
+  <form method="post" action="/terugkerend/{{ r.id }}">
+    <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+    <input type="hidden" name="client_id" value="{{ r.client_id }}">
+    <label>Naam <input type="text" name="name" value="{{ r.name }}" required></label>
+    <div class="grid">
+      <label>Interval
+        <select name="interval">{% for (value, label) in intervals %}<option value="{{ value }}"{% if *value == r.interval.as_str() %} selected{% endif %}>{{ label }}</option>{% endfor %}</select>
+      </label>
+      <label>Volgende periode begint op <input type="date" name="next_date" value="{{ r.next_date }}" required></label>
+      <label>Einddatum (optioneel) <input type="date" name="end_date" value="{% if let Some(e) = r.end_date %}{{ e }}{% endif %}"></label>
+    </div>
+    <label>Inleiding <textarea name="intro_text" rows="2">{{ r.intro_text }}</textarea></label>
+    <small class="muted"><code>{periode}</code> wordt vervangen door de periode van het concept.</small>
+    <label>Voettekst (optioneel) <textarea name="footer_text" rows="2">{{ r.footer_text }}</textarea></label>
+    <button type="submit" class="secondary">Opslaan</button>
+  </form>
+</details>
+
+<section>
+  <h2>Gemaakte facturen</h2>
+  {% if generated.is_empty() %}<p class="muted">Nog geen.</p>{% else %}
+  <table>
+    <thead><tr><th>Factuur</th><th>Periode</th><th class="num">Totaal</th></tr></thead>
+    <tbody>
+    {% for g in generated %}
+      <tr>
+        <td><a href="/facturen/{{ g.id }}">{% if let Some(n) = g.number %}{{ n }}{% else %}concept{% endif %}</a></td>
+        <td>{{ g.period_from|date }} t/m {{ g.period_to|date }}</td>
+        <td class="num">{{ g.total_cents|amount }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</section>
+
+<form method="post" action="/terugkerend/{{ r.id }}/archiveren"{% if r.archived_at.is_none() %} data-confirm="Archiveren? Er worden dan geen concepten meer gemaakt."{% endif %}>
+  <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+  <button type="submit" class="quiet">{% if r.archived_at.is_some() %}Weer activeren{% else %}Archiveren{% endif %}</button>
+</form>
+{% endblock %}

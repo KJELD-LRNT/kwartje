@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE recurring_invoices SET next_date = ?, updated_at = ? WHERE id = ? AND company_id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "f41f96b81835baea1e0672de0f823e3c32685fc029fd66456ba499cc792231cb"
+}

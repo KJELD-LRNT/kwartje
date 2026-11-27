@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Klanten{% endblock %}
+{% block content %}
+<div class="actions page-head">
+  <h1>Klanten</h1>
+  <div class="actions">
+    <a href="/klanten/nieuw" role="button">Nieuwe klant</a>
+    <a href="/export/clients.csv?company={{ l.company_id }}" role="button" class="secondary outline">Exporteer CSV</a>
+  </div>
+</div>
+<form method="get" action="/klanten" role="search">
+  <input type="search" name="q" value="{{ q }}" placeholder="Zoek op naam, contactpersoon, e-mail of plaats" aria-label="Zoeken"
+         hx-get="/klanten" hx-trigger="input changed delay:300ms, search" hx-target="#klanten" hx-select="#klanten" hx-swap="outerHTML" hx-push-url="true"
+         hx-include="[name=archief]">
+  {% if show_archived %}<input type="hidden" name="archief" value="1">{% endif %}
+</form>
+<p>
+  {% if show_archived %}<a href="/klanten?q={{ q|urlencode }}">Verberg gearchiveerde klanten</a>
+  {% else %}<a href="/klanten?archief=1&amp;q={{ q|urlencode }}">Toon ook gearchiveerde klanten</a>{% endif %}
+</p>
+<div id="klanten" class="table-wrap">
+{% if clients.is_empty() %}
+<p>{% if q.is_empty() %}Nog geen klanten.{% else %}Geen klanten gevonden voor “{{ q }}”.{% endif %}</p>
+{% else %}
+<table>
+  <thead><tr><th>Naam</th><th>Contactpersoon</th><th>E-mail</th><th>Plaats</th></tr></thead>
+  <tbody>
+    {% for c in clients %}
+    <tr{% if c.archived_at.is_some() %} class="archived"{% endif %}>
+      <td><a href="/klanten/{{ c.id }}">{{ c.name }}</a>{% if c.archived_at.is_some() %} <small>(gearchiveerd)</small>{% endif %}</td>
+      <td>{{ c.contact_name }}</td>
+      <td>{{ c.email }}</td>
+      <td>{{ c.city }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+</div>
+{% endblock %}

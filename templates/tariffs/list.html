@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Tarieven{% endblock %}
+{% block content %}
+<div class="actions page-head">
+  <h1>Tarieven</h1>
+  <div class="actions">
+    <a href="/tarieven/nieuw" role="button">Nieuw tarief</a>
+    <a href="/export/tariffs.csv?company={{ l.company_id }}" role="button" class="secondary outline">Exporteer CSV</a>
+  </div>
+</div>
+<p class="muted">Uren krijgen automatisch een tarief: eerst dat van de taak, dan het standaardtarief van het project, de klant en ten slotte het bedrijf. Geen tarief = niet declarabel. Een tarief van € 0,00 is wél declarabel (gratis werk zichtbaar op de factuur).</p>
+<p>
+  {% if show_archived %}<a href="/tarieven">Verberg gearchiveerde tarieven</a>
+  {% else %}<a href="/tarieven?archief=1">Toon ook gearchiveerde tarieven</a>{% endif %}
+</p>
+{% if tariffs.is_empty() %}<p>Nog geen tarieven.</p>{% else %}{% include "tariffs/_rows.html" %}{% endif %}
+{% endblock %}

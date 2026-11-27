@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO mileage_rates (year, rate_cents_per_km, created_at, updated_at, created_by)\n                 VALUES (?, ?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 5
+    },
+    "nullable": []
+  },
+  "hash": "25906531e5d5245f4f5e69c946b854c73220ed5b4de3c8831e21b47e72b5e8c2"
+}

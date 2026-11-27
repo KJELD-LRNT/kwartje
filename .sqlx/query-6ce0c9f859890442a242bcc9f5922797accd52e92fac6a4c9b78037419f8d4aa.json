@@ -1,0 +1,170 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id AS \"id!\", company_id, client_id, name, interval, next_date, end_date,\n                  intro_text, footer_text, archived_at, created_at, updated_at, created_by\n           FROM recurring_invoices WHERE id = ? AND company_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "recurring_invoices",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "company_id",
+        "ordinal": 1,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "recurring_invoices",
+            "name": "company_id"
+          }
+        }
+      },
+      {
+        "name": "client_id",
+        "ordinal": 2,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "recurring_invoices",
+            "name": "client_id"
+          }
+        }
+      },
+      {
+        "name": "name",
+        "ordinal": 3,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "recurring_invoices",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "interval",
+        "ordinal": 4,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "recurring_invoices",
+            "name": "interval"
+          }
+        }
+      },
+      {
+        "name": "next_date",
+        "ordinal": 5,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "recurring_invoices",
+            "name": "next_date"
+          }
+        }
+      },
+      {
+        "name": "end_date",
+        "ordinal": 6,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "recurring_invoices",
+            "name": "end_date"
+          }
+        }
+      },
+      {
+        "name": "intro_text",
+        "ordinal": 7,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "recurring_invoices",
+            "name": "intro_text"
+          }
+        }
+      },
+      {
+        "name": "footer_text",
+        "ordinal": 8,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "recurring_invoices",
+            "name": "footer_text"
+          }
+        }
+      },
+      {
+        "name": "archived_at",
+        "ordinal": 9,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "recurring_invoices",
+            "name": "archived_at"
+          }
+        }
+      },
+      {
+        "name": "created_at",
+        "ordinal": 10,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "recurring_invoices",
+            "name": "created_at"
+          }
+        }
+      },
+      {
+        "name": "updated_at",
+        "ordinal": 11,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "recurring_invoices",
+            "name": "updated_at"
+          }
+        }
+      },
+      {
+        "name": "created_by",
+        "ordinal": 12,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "recurring_invoices",
+            "name": "created_by"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "6ce0c9f859890442a242bcc9f5922797accd52e92fac6a4c9b78037419f8d4aa"
+}

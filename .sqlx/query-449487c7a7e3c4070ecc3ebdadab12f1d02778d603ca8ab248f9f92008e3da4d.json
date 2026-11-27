@@ -1,0 +1,62 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT name, lineage_id AS \"lineage_id!\", valid_from, valid_to FROM tariffs\n           WHERE company_id = ? AND is_default = 1 AND archived_at IS NULL AND unit = ?\n             AND client_id IS ? AND project_id IS ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "name",
+        "ordinal": 0,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "lineage_id!",
+        "ordinal": 1,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "lineage_id"
+          }
+        }
+      },
+      {
+        "name": "valid_from",
+        "ordinal": 2,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "valid_from"
+          }
+        }
+      },
+      {
+        "name": "valid_to",
+        "ordinal": 3,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "valid_to"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": [
+      false,
+      true,
+      false,
+      true
+    ]
+  },
+  "hash": "449487c7a7e3c4070ecc3ebdadab12f1d02778d603ca8ab248f9f92008e3da4d"
+}

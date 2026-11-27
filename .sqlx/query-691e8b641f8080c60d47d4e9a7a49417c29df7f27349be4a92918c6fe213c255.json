@@ -1,0 +1,136 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT i.id AS \"id!\", i.number, i.kind, i.client_id, c.name AS client_name,\n                  i.issue_date, i.due_date, i.total_cents, i.sent_at,\n                  COALESCE((SELECT SUM(amount_cents) FROM payments p\n                            WHERE p.invoice_id = i.id AND p.archived_at IS NULL), 0) AS \"paid!: i64\",\n                  EXISTS (SELECT 1 FROM invoices cr WHERE cr.credit_for_invoice_id = i.id\n                          AND cr.number IS NOT NULL) AS \"credited!: bool\"\n           FROM invoices i JOIN clients c ON c.id = i.client_id\n           WHERE i.company_id = ? AND (? IS NULL OR i.client_id = ?)\n           ORDER BY i.number IS NOT NULL, i.issue_date DESC, i.number DESC, i.id DESC",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "invoices",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "number",
+        "ordinal": 1,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "invoices",
+            "name": "number"
+          }
+        }
+      },
+      {
+        "name": "kind",
+        "ordinal": 2,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "invoices",
+            "name": "kind"
+          }
+        }
+      },
+      {
+        "name": "client_id",
+        "ordinal": 3,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "invoices",
+            "name": "client_id"
+          }
+        }
+      },
+      {
+        "name": "client_name",
+        "ordinal": 4,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "clients",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "issue_date",
+        "ordinal": 5,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "invoices",
+            "name": "issue_date"
+          }
+        }
+      },
+      {
+        "name": "due_date",
+        "ordinal": 6,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "invoices",
+            "name": "due_date"
+          }
+        }
+      },
+      {
+        "name": "total_cents",
+        "ordinal": 7,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "invoices",
+            "name": "total_cents"
+          }
+        }
+      },
+      {
+        "name": "sent_at",
+        "ordinal": 8,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "invoices",
+            "name": "sent_at"
+          }
+        }
+      },
+      {
+        "name": "paid!: i64",
+        "ordinal": 9,
+        "type_info": "Integer",
+        "origin": "Expression"
+      },
+      {
+        "name": "credited!: bool",
+        "ordinal": 10,
+        "type_info": "Integer",
+        "origin": "Expression"
+      }
+    ],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "691e8b641f8080c60d47d4e9a7a49417c29df7f27349be4a92918c6fe213c255"
+}

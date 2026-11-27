@@ -1,0 +1,26 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT last_number FROM quote_sequences WHERE company_id = ? AND year = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "last_number",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "quote_sequences",
+            "name": "last_number"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "9b267bd9c7c7f3c692ce01e617b1549456ba03172f26f1e3922ee3212d9ada35"
+}

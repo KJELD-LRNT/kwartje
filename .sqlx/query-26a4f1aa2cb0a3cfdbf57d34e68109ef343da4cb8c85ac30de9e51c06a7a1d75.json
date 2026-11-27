@@ -1,0 +1,242 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id AS \"id!\", name, kvk, btw_id, iban, street, postal_code, city, email, phone,\n                  invoice_prefix, payment_term_days, default_vat_bp, rounding_minutes, logo_path,\n                  archived_at, created_at, updated_at, created_by\n           FROM companies WHERE id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "companies",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "name",
+        "ordinal": 1,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "companies",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "kvk",
+        "ordinal": 2,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "companies",
+            "name": "kvk"
+          }
+        }
+      },
+      {
+        "name": "btw_id",
+        "ordinal": 3,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "companies",
+            "name": "btw_id"
+          }
+        }
+      },
+      {
+        "name": "iban",
+        "ordinal": 4,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "companies",
+            "name": "iban"
+          }
+        }
+      },
+      {
+        "name": "street",
+        "ordinal": 5,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "companies",
+            "name": "street"
+          }
+        }
+      },
+      {
+        "name": "postal_code",
+        "ordinal": 6,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "companies",
+            "name": "postal_code"
+          }
+        }
+      },
+      {
+        "name": "city",
+        "ordinal": 7,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "companies",
+            "name": "city"
+          }
+        }
+      },
+      {
+        "name": "email",
+        "ordinal": 8,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "companies",
+            "name": "email"
+          }
+        }
+      },
+      {
+        "name": "phone",
+        "ordinal": 9,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "companies",
+            "name": "phone"
+          }
+        }
+      },
+      {
+        "name": "invoice_prefix",
+        "ordinal": 10,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "companies",
+            "name": "invoice_prefix"
+          }
+        }
+      },
+      {
+        "name": "payment_term_days",
+        "ordinal": 11,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "companies",
+            "name": "payment_term_days"
+          }
+        }
+      },
+      {
+        "name": "default_vat_bp",
+        "ordinal": 12,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "companies",
+            "name": "default_vat_bp"
+          }
+        }
+      },
+      {
+        "name": "rounding_minutes",
+        "ordinal": 13,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "companies",
+            "name": "rounding_minutes"
+          }
+        }
+      },
+      {
+        "name": "logo_path",
+        "ordinal": 14,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "companies",
+            "name": "logo_path"
+          }
+        }
+      },
+      {
+        "name": "archived_at",
+        "ordinal": 15,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "companies",
+            "name": "archived_at"
+          }
+        }
+      },
+      {
+        "name": "created_at",
+        "ordinal": 16,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "companies",
+            "name": "created_at"
+          }
+        }
+      },
+      {
+        "name": "updated_at",
+        "ordinal": 17,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "companies",
+            "name": "updated_at"
+          }
+        }
+      },
+      {
+        "name": "created_by",
+        "ordinal": 18,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "companies",
+            "name": "created_by"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "26a4f1aa2cb0a3cfdbf57d34e68109ef343da4cb8c85ac30de9e51c06a7a1d75"
+}

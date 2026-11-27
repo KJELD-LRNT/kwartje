@@ -1,0 +1,21 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT COALESCE(SUM(p.amount_cents), 0) AS \"s!: i64\" FROM payments p\n           JOIN invoices i ON i.id = p.invoice_id\n           WHERE i.company_id = ? AND p.archived_at IS NULL AND p.date BETWEEN ? AND ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "s!: i64",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": "Expression"
+      }
+    ],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "8ea5f948310c00f1514b2eb51a96e1feb51694368f2f554b3ece9230958b1c95"
+}

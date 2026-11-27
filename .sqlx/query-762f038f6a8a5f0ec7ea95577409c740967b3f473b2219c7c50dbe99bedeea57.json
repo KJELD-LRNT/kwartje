@@ -1,0 +1,21 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT COALESCE(MAX(position), 0) + 1 AS \"p!: i64\" FROM quote_lines WHERE quote_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "p!: i64",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": "Expression"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "762f038f6a8a5f0ec7ea95577409c740967b3f473b2219c7c50dbe99bedeea57"
+}

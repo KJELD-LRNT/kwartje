@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Nieuwe gebruiker{% endblock %}
+{% block content %}
+<h1>Nieuwe gebruiker</h1>
+<form method="post" action="/gebruikers">
+  <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+  {% include "users/_fields.html" %}
+  <label>Tijdelijk wachtwoord *
+    <input type="text" name="password" value="{{ f.password }}" autocomplete="off" required{% if !err("password").is_empty() %} aria-invalid="true"{% endif %}>
+  </label>
+  {% if !err("password").is_empty() %}<small class="field-error">{{ err("password") }}</small>{% else %}<small class="muted">Een voorstel; je mag het aanpassen (minstens 12 tekens). Geef het door aan de gebruiker: bij de eerste login kiest die een eigen wachtwoord en stelt tweestapsverificatie in.</small>{% endif %}
+  <div class="form-actions">
+    <a href="/gebruikers" role="button" class="secondary outline">Annuleren</a>
+    <button type="submit">Gebruiker aanmaken</button>
+  </div>
+</form>
+{% endblock %}

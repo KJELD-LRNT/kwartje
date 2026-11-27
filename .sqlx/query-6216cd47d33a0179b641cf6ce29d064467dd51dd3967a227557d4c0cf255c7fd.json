@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "DELETE FROM quotes WHERE id = ? AND number IS NULL",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": []
+  },
+  "hash": "6216cd47d33a0179b641cf6ce29d064467dd51dd3967a227557d4c0cf255c7fd"
+}

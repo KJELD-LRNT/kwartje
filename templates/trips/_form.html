@@ -1,0 +1,51 @@
+<form method="post" action="{{ form_action() }}" class="entry-form" hx-sync="this:replace">
+  <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+  {% if !f.entry.is_empty() %}<input type="hidden" name="entry" value="{{ f.entry }}">{% endif %}
+  <div class="grid">
+    <div>
+      <label>Datum
+        <input type="date" name="date" value="{{ f.date }}" required hx-get="/kilometers/voorstel" hx-include="closest form" hx-params="not csrf_token" hx-target="#trip-deps" hx-swap="outerHTML"{% if !err("date").is_empty() %} aria-invalid="true"{% endif %}>
+      </label>
+      {% if !err("date").is_empty() %}<small class="field-error">{{ err("date") }}</small>{% endif %}
+    </div>
+    <div>
+      <label>Voertuig *
+        <select name="vehicle_id" required hx-get="/kilometers/voorstel" hx-include="closest form" hx-params="not csrf_token" hx-target="#trip-deps" hx-swap="outerHTML"{% if !err("vehicle_id").is_empty() %} aria-invalid="true"{% endif %}>
+          <option value="">Kies een voertuig…</option>
+          {% for v in vehicles %}
+          <option value="{{ v.id }}"{% if v.id.to_string() == f.vehicle_id %} selected{% endif %}>{{ v.label() }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      {% if !err("vehicle_id").is_empty() %}<small class="field-error">{{ err("vehicle_id") }}</small>{% endif %}
+    </div>
+    <div>
+      <label>Bestuurder
+        <select name="user_id">
+          {% for u in users %}<option value="{{ u.id }}"{% if u.id.to_string() == f.user_id %} selected{% endif %}>{{ u.name }}</option>{% endfor %}
+        </select>
+      </label>
+      {% if !err("user_id").is_empty() %}<small class="field-error">{{ err("user_id") }}</small>{% endif %}
+    </div>
+  </div>
+  {% if !routes.is_empty() %}
+  <label>Vaste rit
+    <select name="route_id" hx-get="/kilometers/voorstel" hx-include="closest form" hx-params="not csrf_token" hx-target="#trip-deps" hx-swap="outerHTML">
+      <option value="">Geen (zelf invullen)</option>
+      {% for r in routes %}<option value="{{ r.id }}"{% if r.id.to_string() == f.route_id %} selected{% endif %}>{{ r.name }} ({{ r.km }} km)</option>{% endfor %}
+    </select>
+  </label>
+  {% endif %}
+  {% include "trips/_deps.html" %}
+  {% if !is_edit() %}
+  <label>
+    <input type="checkbox" name="return_trip" value="1"{% if f.is_return() %} checked{% endif %}>
+    Heen en terug (terugrit wordt direct erachter opgeslagen)
+  </label>
+  {% if !err("return_trip").is_empty() %}<small class="field-error">{{ err("return_trip") }}</small>{% endif %}
+  {% endif %}
+  <div class="form-actions">
+    {% if !is_edit() %}<button type="button" class="secondary js-only" data-dialog-close>Annuleren</button>{% endif %}
+    <button type="submit">Rit opslaan</button>
+  </div>
+</form>

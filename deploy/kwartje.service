@@ -1,0 +1,36 @@
+[Unit]
+Description=kwartje (business administration)
+Documentation=file:///usr/local/share/doc/kwartje/INSTALL.md
+After=network-online.target tailscaled.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=kwartje
+Group=kwartje
+ExecStart=/usr/local/bin/kwartje --config /etc/kwartje/config.toml serve
+Restart=on-failure
+RestartSec=5s
+Environment=RUST_LOG=info,sqlx=warn,tower_sessions=warn
+UMask=0027
+
+# Hardening
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+RestrictNamespaces=yes
+LockPersonality=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+CapabilityBoundingSet=
+ReadWritePaths=/var/lib/kwartje
+ReadOnlyPaths=/etc/kwartje
+MemoryMax=300M
+
+[Install]
+WantedBy=multi-user.target

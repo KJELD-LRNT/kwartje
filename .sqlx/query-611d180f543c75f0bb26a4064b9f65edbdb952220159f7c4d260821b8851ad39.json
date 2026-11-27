@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE time_entries SET invoice_line_id = ?, updated_at = ?\n             WHERE id = ? AND company_id = ? AND invoice_line_id IS NULL AND archived_at IS NULL\n               AND tariff_id IS NOT NULL",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "611d180f543c75f0bb26a4064b9f65edbdb952220159f7c4d260821b8851ad39"
+}

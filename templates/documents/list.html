@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Documenten{% endblock %}
+{% block content %}
+<div class="actions page-head">
+  <hgroup><h1>Documenten</h1><p>{{ period_label }}</p></hgroup>
+  <div class="actions">
+    <a href="/documenten/nieuw" role="button">Uploaden</a>
+    <a href="/export/documents.csv?company={{ l.company_id }}" role="button" class="secondary outline">Exporteer CSV</a>
+  </div>
+</div>
+<form method="get" action="/documenten" class="grid filters-form">
+  <label>Jaar <input type="number" name="jaar" value="{{ year }}" min="2000" max="2100"></label>
+  <label>Kwartaal
+    <select name="kwartaal">
+      <option value=""{% if quarter.is_empty() %} selected{% endif %}>Hele jaar</option>
+      {% for qq in ["1", "2", "3", "4"] %}<option value="{{ qq }}"{% if quarter.as_str() == *qq %} selected{% endif %}>Q{{ qq }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Soort
+    <select name="soort">
+      <option value="">Alle soorten</option>
+      {% for (value, label) in kinds %}<option value="{{ value }}"{% if *value == kind.as_str() %} selected{% endif %}>{{ label }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Zoeken <input type="search" name="q" value="{{ q }}" placeholder="Leverancier, omschrijving, bestand"></label>
+  <div>
+    <label><input type="checkbox" name="zonder" value="1"{% if missing_only %} checked{% endif %}> Alleen zonder bedrag</label>
+    <label><input type="checkbox" name="archief" value="1"{% if show_archived %} checked{% endif %}> Ook gearchiveerd</label>
+    <button type="submit" class="secondary">Filter</button>
+  </div>
+</form>
+<div class="grid totals">
+  <article><small class="muted">Inkoop en bonnen {{ period_label }}</small><p class="big">{{ purchase_total|amount }}</p><small>waarvan btw {{ purchase_vat|amount }}</small></article>
+  <article><small class="muted">Zonder bedrag</small><p class="big{% if missing_count > 0 %} bad{% endif %}">{{ missing_count }}</p>{% if missing_count > 0 %}<small><a href="/documenten?jaar={{ year }}&amp;kwartaal={{ quarter }}&amp;zonder=1">aanvullen</a></small>{% endif %}</article>
+</div>
+{% if docs.is_empty() %}<p>Geen documenten gevonden.</p>{% else %}
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Datum</th><th>Soort</th><th>Leverancier</th><th>Omschrijving</th><th class="num">Totaal</th><th class="num">Btw</th></tr></thead>
+  <tbody>
+  {% for d in docs %}
+    <tr{% if d.archived_at.is_some() %} class="archived"{% endif %}>
+      <td><a href="/documenten/{{ d.id }}">{{ d.doc_date|date }}</a></td>
+      <td>{{ d.kind_label() }}</td>
+      <td>{{ d.supplier_label() }}</td>
+      <td>{{ d.description }}{% if d.archived_at.is_some() %} <small>(gearchiveerd)</small>{% endif %}</td>
+      <td class="num">{% if let Some(a) = d.amount_cents %}{{ a|amount }}{% else %}{% if d.missing_amounts() %}<mark>bedrag ontbreekt</mark>{% endif %}{% endif %}</td>
+      <td class="num">{% if let Some(v) = d.vat_cents %}{{ v|amount }}{% endif %}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+{% endblock %}

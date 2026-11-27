@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Mijn account{% endblock %}
+{% block content %}
+<div class="title-row"><h1>Mijn account</h1><a href="/account/wachtwoord" role="button" class="secondary outline">Wachtwoord wijzigen</a></div>
+
+<article>
+  <header><strong>Deze sessie</strong></header>
+  <p>Ingelogd als <strong>{{ l.user_name }}</strong> ({{ email }}) sinds {{ logged_in_at }}.</p>
+  {% if let Some(until) = remember_until %}
+  <p>Je blijft ingelogd tot <strong>{{ until }}</strong>, ook als je de browser sluit.</p>
+  {% else %}
+  <p>Je wordt na 12 uur zonder activiteit uitgelogd, en uiterlijk 7 dagen na het inloggen.
+     Kies bij het inloggen <em>Ingelogd blijven</em> om 7 dagen ingelogd te blijven.</p>
+  {% endif %}
+</article>
+
+<article>
+  <header><strong>Vertrouwde apparaten</strong></header>
+  <p class="muted">Op deze apparaten vragen we bij het inloggen alleen je wachtwoord, geen code uit je
+     authenticator-app. Een apparaat blijft 30 dagen vertrouwd. Bij een nieuw wachtwoord of een nieuwe
+     tweestapsverificatie worden alle apparaten vergeten.</p>
+  {% if devices.is_empty() %}
+  <p class="empty-state">Geen vertrouwde apparaten. Vink bij het invoeren van de code
+     <em>MFA 30 dagen onthouden op dit apparaat</em> aan om er een toe te voegen.</p>
+  {% else %}
+  <table>
+    <thead><tr><th>Apparaat</th><th>Vertrouwd sinds</th><th>Laatst gebruikt</th><th>Verloopt</th><th></th></tr></thead>
+    <tbody>
+      {% for d in devices %}
+      <tr>
+        <td data-label="Apparaat">{{ d.label }}{% if is_current(d.id) %} <small class="muted">(dit apparaat)</small>{% endif %}</td>
+        <td data-label="Vertrouwd sinds">{{ d.created() }}</td>
+        <td data-label="Laatst gebruikt">{{ d.last_used() }}{% if !d.last_place().is_empty() %}<br><small class="muted">{{ d.last_place() }}</small>{% endif %}</td>
+        <td data-label="Verloopt">{{ d.expires() }}</td>
+        <td>
+          <form data-keep method="post" action="/account/apparaten/{{ d.id }}/intrekken">
+            <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+            <button type="submit" class="secondary outline">Vergeten</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <form data-keep method="post" action="/account/apparaten/intrekken">
+    <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+    <button type="submit" class="secondary">Alle apparaten vergeten</button>
+  </form>
+  {% endif %}
+</article>
+{% endblock %}

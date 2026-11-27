@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ d.kind_label() }} {{ d.supplier_label() }}{% endblock %}
+{% block content %}
+<hgroup>
+  <h1>{{ d.kind_label() }}{% if !d.supplier_label().is_empty() %} · {{ d.supplier_label() }}{% endif %}</h1>
+  <p>{{ d.doc_date|date }} · {{ d.original_name }} · {{ d.size_label() }}{% if d.archived_at.is_some() %} · gearchiveerd{% endif %}</p>
+</hgroup>
+<div class="actions">
+  <a href="/documenten/{{ d.id }}/bestand" role="button" class="secondary" target="_blank">Openen</a>
+  {% match intact %}
+    {% when Some(true) %}<span class="ok">Bestand intact ✓</span>
+    {% when Some(false) %}<span class="bad">Let op: het bestand is gewijzigd (controlesom klopt niet). Zet een backup terug.</span>
+    {% when None %}<span class="bad">Let op: het bestand ontbreekt. Zet een backup terug.</span>
+  {% endmatch %}
+  <small class="muted">Bewaren tot {{ d.retain_until() }}</small>
+</div>
+<div class="doc-preview">
+  {% if d.is_image() %}<img src="/documenten/{{ d.id }}/bestand" alt="{{ d.original_name }}">
+  {% else %}<iframe src="/documenten/{{ d.id }}/bestand" title="{{ d.original_name }}"></iframe>{% endif %}
+</div>
+{% if d.kind == "quote" %}
+<p>Deze offerte-PDF is door de app gemaakt bij het definitief maken. Hij kan niet worden gewijzigd of gearchiveerd; de offerte zelf staat onder <a href="/offertes">Offertes</a>.</p>
+{% elif d.is_generated() %}
+<p>Deze verkoopfactuur is door de app gemaakt{% if let Some(n) = invoice_number %}: <a href="/facturen/{% if let Some(i) = d.invoice_id %}{{ i }}{% endif %}">{{ n }}</a>{% endif %}. Hij kan niet worden gewijzigd of gearchiveerd.</p>
+{% else %}
+<form method="post" action="/documenten/{{ d.id }}">
+  <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+  {% include "documents/_fields.html" %}
+  <button type="submit">Gegevens opslaan</button>
+</form>
+<hr>
+{% if d.archived_at.is_some() %}
+<form method="post" action="/documenten/{{ d.id }}/terugzetten"><input type="hidden" name="csrf_token" value="{{ l.csrf }}"><button type="submit" class="secondary">Terugzetten</button></form>
+{% else %}
+<form method="post" action="/documenten/{{ d.id }}/archiveren" data-confirm="Document archiveren? Het bestand blijft bewaard."><input type="hidden" name="csrf_token" value="{{ l.csrf }}"><button type="submit" class="quiet">Archiveren</button></form>
+<small class="muted">Documenten worden nooit verwijderd (bewaarplicht 7 jaar); archiveren verbergt ze alleen.</small>
+{% endif %}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE time_entries SET archived_at = ?, updated_at = ?\n             WHERE id = ? AND company_id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "b78c53fa7d6bd16d907c9ab03c8814ef93e34c7cc7dd52a363094056222e6388"
+}

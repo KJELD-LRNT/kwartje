@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Offertes{% endblock %}
+{% block content %}
+<div class="actions page-head">
+  <h1>Offertes</h1>
+  <a href="/export/quotes.csv?company={{ l.company_id }}" role="button" class="secondary outline">Exporteer CSV</a>
+</div>
+{% if clients.is_empty() %}
+<p>Maak eerst een <a href="/klanten/nieuw">klant</a> aan.</p>
+{% else %}
+<form method="post" action="/offertes" class="grid">
+  <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+  <label>Klant
+    <select name="client_id" required>
+      <option value="">Kies een klant…</option>
+      {% for c in clients %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}
+    </select>
+  </label>
+  <div><label>&nbsp;<button type="submit">Nieuwe offerte</button></label></div>
+</form>
+{% endif %}
+{% if rows.is_empty() %}<p>Nog geen offertes.</p>{% else %}
+<div class="overflow-auto">
+<table>
+  <thead><tr><th>Nummer</th><th>Klant</th><th>Datum</th><th>Geldig tot</th><th>Status</th><th class="num">Totaal</th></tr></thead>
+  <tbody>
+  {% for r in rows %}
+    {% let s = r.q.status() %}
+    <tr>
+      <td><a href="/offertes/{{ r.q.id }}">{% if let Some(n) = r.q.number %}{{ n }}{% else %}concept{% endif %}</a></td>
+      <td>{{ r.client_name }}</td>
+      <td>{% if let Some(d) = r.q.issue_date %}{{ d|date }}{% endif %}</td>
+      <td>{{ r.q.valid_until|date }}</td>
+      <td><span class="status {{ s.css() }}">{{ s.label() }}</span></td>
+      <td class="num">{{ r.q.total_cents|amount }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+{% endblock %}

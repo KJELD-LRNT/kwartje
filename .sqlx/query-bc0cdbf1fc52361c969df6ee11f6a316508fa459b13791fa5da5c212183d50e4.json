@@ -1,0 +1,21 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT COALESCE(SUM(km), 0) AS \"km!: i64\" FROM mileage_entries\n           WHERE company_id = ? AND business = 1 AND archived_at IS NULL AND date BETWEEN ? AND ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "km!: i64",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": "Expression"
+      }
+    ],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "bc0cdbf1fc52361c969df6ee11f6a316508fa459b13791fa5da5c212183d50e4"
+}

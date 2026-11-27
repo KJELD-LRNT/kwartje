@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE quote_sequences SET last_number = ?, updated_at = ? WHERE company_id = ? AND year = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "85b570dee94ed833c31332fc648535f83d0d2335650e0d5ce9650695a9bc7a8e"
+}

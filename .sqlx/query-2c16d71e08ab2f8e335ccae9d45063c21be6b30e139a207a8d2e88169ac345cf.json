@@ -1,0 +1,206 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id AS \"id!\", company_id, lineage_id AS \"lineage_id!\", name, unit, price_cents,\n                  vat_bp, client_id, project_id, is_default AS \"is_default: bool\", valid_from,\n                  valid_to, archived_at, created_at, updated_at, created_by\n           FROM tariffs WHERE id = ? AND company_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "company_id",
+        "ordinal": 1,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "company_id"
+          }
+        }
+      },
+      {
+        "name": "lineage_id!",
+        "ordinal": 2,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "lineage_id"
+          }
+        }
+      },
+      {
+        "name": "name",
+        "ordinal": 3,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "unit",
+        "ordinal": 4,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "unit"
+          }
+        }
+      },
+      {
+        "name": "price_cents",
+        "ordinal": 5,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "price_cents"
+          }
+        }
+      },
+      {
+        "name": "vat_bp",
+        "ordinal": 6,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "vat_bp"
+          }
+        }
+      },
+      {
+        "name": "client_id",
+        "ordinal": 7,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "client_id"
+          }
+        }
+      },
+      {
+        "name": "project_id",
+        "ordinal": 8,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "project_id"
+          }
+        }
+      },
+      {
+        "name": "is_default: bool",
+        "ordinal": 9,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "is_default"
+          }
+        }
+      },
+      {
+        "name": "valid_from",
+        "ordinal": 10,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "valid_from"
+          }
+        }
+      },
+      {
+        "name": "valid_to",
+        "ordinal": 11,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "valid_to"
+          }
+        }
+      },
+      {
+        "name": "archived_at",
+        "ordinal": 12,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "archived_at"
+          }
+        }
+      },
+      {
+        "name": "created_at",
+        "ordinal": 13,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "created_at"
+          }
+        }
+      },
+      {
+        "name": "updated_at",
+        "ordinal": 14,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "updated_at"
+          }
+        }
+      },
+      {
+        "name": "created_by",
+        "ordinal": 15,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "created_by"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      false,
+      true,
+      true,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "2c16d71e08ab2f8e335ccae9d45063c21be6b30e139a207a8d2e88169ac345cf"
+}

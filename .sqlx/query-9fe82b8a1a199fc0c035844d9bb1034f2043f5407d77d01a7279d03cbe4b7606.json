@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE quotes SET sent_at = COALESCE(sent_at, ?), sent_to = ?, updated_at = ? WHERE id = ? AND number IS NOT NULL",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "9fe82b8a1a199fc0c035844d9bb1034f2043f5407d77d01a7279d03cbe4b7606"
+}

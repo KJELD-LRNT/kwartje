@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}{{ inv.title() }}{% endblock %}
+{% block content %}
+<hgroup>
+  <h1>{{ inv.title() }}</h1>
+  <p><a href="/klanten/{{ client.id }}">{{ client.name }}</a> · periode {{ inv.period_label() }}{% if let Some(n) = credit_of %} · credit voor {{ n }}{% endif %}</p>
+</hgroup>
+
+<form method="post" action="/facturen/{{ inv.id }}" id="draft-form">
+  <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+  <label>Inleiding (optioneel)
+    <textarea name="intro_text" rows="2" placeholder="Bijvoorbeeld: Hierbij ontvangt u de factuur voor de werkzaamheden in november.">{{ inv.intro_text }}</textarea>
+  </label>
+</form>
+
+{% include "invoices/_lines.html" %}
+
+<details>
+  <summary>Regel toevoegen</summary>
+  <form method="post" action="/facturen/{{ inv.id }}/regels">
+    <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+    <label>Omschrijving <input type="text" name="description" required placeholder="Reiskosten, korting, …"></label>
+    <div class="grid">
+      <label>Aantal <input type="text" name="quantity" value="1" inputmode="decimal" required></label>
+      <label>Eenheid
+        <select name="unit"><option value="stuk">stuk</option><option value="uur">uur</option><option value="km">km</option></select>
+      </label>
+      <label>Prijs (excl. btw) <input type="text" name="price" inputmode="decimal" required placeholder="0,00"></label>
+      <label>Btw
+        <select name="vat_bp">{% for (value, label) in vat_choices %}<option value="{{ value }}">{{ label }}</option>{% endfor %}</select>
+      </label>
+    </div>
+    <button type="submit" class="secondary">Regel toevoegen</button>
+  </form>
+</details>
+
+<fieldset form="draft-form">
+  <legend>Opties</legend>
+  {% if !inv.is_credit() %}
+  <label>Regels
+    <select name="line_style" form="draft-form">
+      {% for (value, label) in styles %}<option value="{{ value }}"{% if *value == inv.line_style.as_str() %} selected{% endif %}>{{ label }}</option>{% endfor %}
+    </select>
+  </label>
+  <small class="muted">Een andere keuze bouwt de uren- en kilometerregels opnieuw op; aangepaste omschrijvingen gaan dan verloren.</small>
+  {% endif %}
+  <label><input type="checkbox" name="hide_zero_lines" value="1" form="draft-form"{% if inv.hide_zero_lines %} checked{% endif %}> Regels van € 0,00 verbergen</label>
+  <label><input type="checkbox" name="include_hours_spec" value="1" form="draft-form"{% if inv.include_hours_spec %} checked{% endif %}> Urenspecificatie als bijlage</label>
+  <label>Voettekst (optioneel)
+    <textarea name="footer_text" rows="2" form="draft-form">{{ inv.footer_text }}</textarea>
+  </label>
+</fieldset>
+<button type="submit" form="draft-form" class="secondary">Concept opslaan</button>
+
+<hr>
+<form method="post" action="/facturen/{{ inv.id }}/definitief" data-confirm="Factuur definitief maken? Daarna kan hij niet meer worden gewijzigd; corrigeren gaat met een creditfactuur.">
+  <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+  <div class="grid">
+    <label>Factuurdatum <input type="date" name="issue_date" value="{{ today }}" required></label>
+    <div><label>&nbsp;<button type="submit" class="sticky-action">Definitief maken</button></label></div>
+  </div>
+  <small class="muted">Krijgt het volgende factuurnummer, de PDF wordt gemaakt en bewaard.</small>
+</form>
+<div class="danger-zone">
+<form method="post" action="/facturen/{{ inv.id }}/verwijderen" data-confirm="Concept verwijderen? De uren en kilometers komen terug onder Te factureren.">
+  <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+  <button type="submit" class="quiet">Concept verwijderen</button>
+</form>
+</div>
+{% endblock %}

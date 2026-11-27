@@ -1,0 +1,134 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id AS \"id!\", lineage_id AS \"lineage_id!\", name, price_cents, vat_bp, client_id,\n                  project_id, is_default AS \"is_default: bool\", valid_from, valid_to\n           FROM tariffs\n           WHERE company_id = ? AND unit = ? AND archived_at IS NULL\n           ORDER BY valid_from DESC, id DESC",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "lineage_id!",
+        "ordinal": 1,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "lineage_id"
+          }
+        }
+      },
+      {
+        "name": "name",
+        "ordinal": 2,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "price_cents",
+        "ordinal": 3,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "price_cents"
+          }
+        }
+      },
+      {
+        "name": "vat_bp",
+        "ordinal": 4,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "vat_bp"
+          }
+        }
+      },
+      {
+        "name": "client_id",
+        "ordinal": 5,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "client_id"
+          }
+        }
+      },
+      {
+        "name": "project_id",
+        "ordinal": 6,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "project_id"
+          }
+        }
+      },
+      {
+        "name": "is_default: bool",
+        "ordinal": 7,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "is_default"
+          }
+        }
+      },
+      {
+        "name": "valid_from",
+        "ordinal": 8,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "valid_from"
+          }
+        }
+      },
+      {
+        "name": "valid_to",
+        "ordinal": 9,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "valid_to"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "3c937ef2027739a84911c5f80e5ed84f3e137f02b9ccb6338a84d3eaa15ee400"
+}

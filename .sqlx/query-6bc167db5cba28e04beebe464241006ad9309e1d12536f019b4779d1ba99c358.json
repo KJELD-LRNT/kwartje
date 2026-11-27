@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO recurring_invoices (company_id, client_id, name, interval, next_date, end_date,\n                                         intro_text, footer_text, created_at, updated_at, created_by)\n         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 11
+    },
+    "nullable": []
+  },
+  "hash": "6bc167db5cba28e04beebe464241006ad9309e1d12536f019b4779d1ba99c358"
+}

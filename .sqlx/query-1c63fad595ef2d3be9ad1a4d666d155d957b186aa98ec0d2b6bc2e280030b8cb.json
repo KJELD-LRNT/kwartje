@@ -1,0 +1,26 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT file_path FROM documents WHERE id = ? AND company_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "file_path",
+        "ordinal": 0,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "documents",
+            "name": "file_path"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "1c63fad595ef2d3be9ad1a4d666d155d957b186aa98ec0d2b6bc2e280030b8cb"
+}

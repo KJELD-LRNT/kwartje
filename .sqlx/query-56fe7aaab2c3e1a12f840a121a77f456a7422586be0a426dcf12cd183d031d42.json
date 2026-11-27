@@ -1,0 +1,38 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT role, archived_at FROM users WHERE id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "role",
+        "ordinal": 0,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "users",
+            "name": "role"
+          }
+        }
+      },
+      {
+        "name": "archived_at",
+        "ordinal": 1,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "users",
+            "name": "archived_at"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      true
+    ]
+  },
+  "hash": "56fe7aaab2c3e1a12f840a121a77f456a7422586be0a426dcf12cd183d031d42"
+}

@@ -1,0 +1,98 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id AS \"id!\", label, token_hash, created_at, expires_at, last_used_at, last_ip\n           FROM trusted_devices\n           WHERE user_id = ? AND revoked_at IS NULL AND expires_at > ?\n           ORDER BY created_at DESC, id DESC",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "trusted_devices",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "label",
+        "ordinal": 1,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "trusted_devices",
+            "name": "label"
+          }
+        }
+      },
+      {
+        "name": "token_hash",
+        "ordinal": 2,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "trusted_devices",
+            "name": "token_hash"
+          }
+        }
+      },
+      {
+        "name": "created_at",
+        "ordinal": 3,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "trusted_devices",
+            "name": "created_at"
+          }
+        }
+      },
+      {
+        "name": "expires_at",
+        "ordinal": 4,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "trusted_devices",
+            "name": "expires_at"
+          }
+        }
+      },
+      {
+        "name": "last_used_at",
+        "ordinal": 5,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "trusted_devices",
+            "name": "last_used_at"
+          }
+        }
+      },
+      {
+        "name": "last_ip",
+        "ordinal": 6,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "trusted_devices",
+            "name": "last_ip"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true
+    ]
+  },
+  "hash": "17add1f81eb78199ec2da16dbf4789c4e8f620f6e4a5a7061f6be89622f5d36f"
+}

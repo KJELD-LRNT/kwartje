@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}{% if let Some(c) = client %}{{ c.name }} wijzigen{% else %}Nieuwe klant{% endif %}{% endblock %}
+{% block content %}
+{% if let Some(c) = client %}
+<h1>{{ c.name }} wijzigen</h1>
+<form method="post" action="/klanten/{{ c.id }}/bewerken">
+{% else %}
+<h1>Nieuwe klant</h1>
+<form method="post" action="/klanten">
+{% endif %}
+  <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+  <label>Naam *
+    <input type="text" name="name" value="{{ f.name }}" required maxlength="200"{% if !err("name").is_empty() %} aria-invalid="true"{% endif %}>
+  </label>
+  {% if !err("name").is_empty() %}<small class="field-error">{{ err("name") }}</small>{% endif %}
+  <fieldset>
+    <legend>Contact</legend>
+    <div class="grid">
+      <label>Contactpersoon
+        <input type="text" name="contact_name" value="{{ f.contact_name }}">
+      </label>
+      <label>Telefoon
+        <input type="tel" name="phone" value="{{ f.phone }}">
+      </label>
+    </div>
+    <label>E-mailadres (voor facturen)
+      <input type="email" name="email" value="{{ f.email }}"{% if !err("email").is_empty() %} aria-invalid="true"{% endif %}>
+    </label>
+    {% if !err("email").is_empty() %}<small class="field-error">{{ err("email") }}</small>{% endif %}
+  </fieldset>
+  <fieldset>
+    <legend>Adres</legend>
+    <label>Straat en huisnummer
+      <input type="text" name="street" value="{{ f.street }}">
+    </label>
+    <div class="grid">
+      <div>
+        <label>Postcode
+          <input type="text" name="postal_code" value="{{ f.postal_code }}" placeholder="1234 AB"{% if !err("postal_code").is_empty() %} aria-invalid="true"{% endif %}>
+        </label>
+        {% if !err("postal_code").is_empty() %}<small class="field-error">{{ err("postal_code") }}</small>{% endif %}
+      </div>
+      <label>Plaats
+        <input type="text" name="city" value="{{ f.city }}">
+      </label>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Bedrijfsgegevens</legend>
+    <div class="grid">
+      <div>
+        <label>KvK-nummer
+          <input type="text" name="kvk" value="{{ f.kvk }}" inputmode="numeric"{% if !err("kvk").is_empty() %} aria-invalid="true"{% endif %}>
+        </label>
+        {% if !err("kvk").is_empty() %}<small class="field-error">{{ err("kvk") }}</small>{% endif %}
+      </div>
+      <div>
+        <label>Btw-id
+          <input type="text" name="btw_id" value="{{ f.btw_id }}" placeholder="NL123456789B01"{% if !err("btw_id").is_empty() %} aria-invalid="true"{% endif %}>
+        </label>
+        {% if !err("btw_id").is_empty() %}<small class="field-error">{{ err("btw_id") }}</small>{% endif %}
+      </div>
+    </div>
+    <label>Factuurprefix
+      <input type="text" name="invoice_prefix" value="{{ f.invoice_prefix }}" maxlength="10" placeholder="VH" autocapitalize="characters"{% if !err("invoice_prefix").is_empty() %} aria-invalid="true"{% endif %}>
+    </label>
+    {% if !err("invoice_prefix").is_empty() %}<small class="field-error">{{ err("invoice_prefix") }}</small>{% else %}<small class="muted">Facturen en offertes voor deze klant krijgen nummers als {% if f.invoice_prefix.is_empty() %}VH{% else %}{{ f.invoice_prefix }}{% endif %}-2026-0041 (de nummers lopen per bedrijf door). Nodig om een factuur definitief te maken.</small>{% endif %}
+  </fieldset>
+  <label>Notities
+    <textarea name="notes" rows="5"{% if !err("notes").is_empty() %} aria-invalid="true"{% endif %}>{{ f.notes }}</textarea>
+  </label>
+  {% if !err("notes").is_empty() %}<small class="field-error">{{ err("notes") }}</small>{% endif %}
+  <div class="actions">
+    <button type="submit">Opslaan</button>
+    {% if let Some(c) = client %}<a href="/klanten/{{ c.id }}" role="button" class="secondary outline">Annuleren</a>
+    {% else %}<a href="/klanten" role="button" class="secondary outline">Annuleren</a>{% endif %}
+  </div>
+</form>
+{% endblock %}

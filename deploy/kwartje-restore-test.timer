@@ -1,0 +1,9 @@
+[Unit]
+Description=Run the Kwartje restore test every quarter
+
+[Timer]
+OnCalendar=*-01,04,07,10-05 04:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

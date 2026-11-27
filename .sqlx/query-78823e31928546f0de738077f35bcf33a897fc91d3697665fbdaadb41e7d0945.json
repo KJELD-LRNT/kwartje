@@ -1,0 +1,21 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT COALESCE(SUM(minutes), 0) AS \"m!: i64\" FROM time_entries\n           WHERE company_id = ? AND client_id = ? AND archived_at IS NULL AND date BETWEEN ? AND ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "m!: i64",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": "Expression"
+      }
+    ],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "78823e31928546f0de738077f35bcf33a897fc91d3697665fbdaadb41e7d0945"
+}

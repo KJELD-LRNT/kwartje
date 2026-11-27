@@ -1,0 +1,35 @@
+<div id="entry-deps" class="grid">
+  <div>
+    <label>Klant{% if deps.client_fixed %} <small class="muted">(vast bij deze taak)</small>{% endif %}
+      <select name="client_id" hx-get="/uren/voorstel" hx-include="closest form" hx-params="not csrf_token" hx-target="#entry-deps" hx-swap="outerHTML"{% if !deps.client_err.is_empty() %} aria-invalid="true"{% endif %}>
+        {% if !deps.client_fixed %}<option value="">Geen klant (intern)</option>{% endif %}
+        {% for c in deps.clients %}
+        <option value="{{ c.id }}"{% if c.id.to_string() == deps.client_id %} selected{% endif %}>{{ c.name }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    {% if !deps.client_err.is_empty() %}<small class="field-error">{{ deps.client_err }}</small>{% endif %}
+  </div>
+  <div>
+    <label>Project{% if deps.project_fixed %} <small class="muted">(vast bij deze taak)</small>{% endif %}
+      <select name="project_id" hx-get="/uren/voorstel" hx-include="closest form" hx-params="not csrf_token" hx-target="#entry-deps" hx-swap="outerHTML"{% if deps.projects.is_empty() %} disabled{% endif %}>
+        {% if !deps.project_fixed %}<option value="">{% if deps.projects.is_empty() %}Geen projecten{% else %}Geen project{% endif %}</option>{% endif %}
+        {% for p in deps.projects %}
+        <option value="{{ p.id }}"{% if p.id.to_string() == deps.project_id %} selected{% endif %}>{{ p.label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+  </div>
+  <div>
+    <label>Tarief
+      <select name="tariff"{% if !deps.tariff_err.is_empty() %} aria-invalid="true"{% endif %}>
+        <option value="auto"{% if deps.tariff == "auto" %} selected{% endif %}>{{ deps.auto_label }}</option>
+        <option value="none"{% if deps.tariff == "none" %} selected{% endif %}>Geen tarief (niet declarabel)</option>
+        {% for (value, label) in deps.tariffs %}
+        <option value="{{ value }}"{% if *value == deps.tariff %} selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    {% if !deps.tariff_err.is_empty() %}<small class="field-error">{{ deps.tariff_err }}</small>{% endif %}
+  </div>
+</div>

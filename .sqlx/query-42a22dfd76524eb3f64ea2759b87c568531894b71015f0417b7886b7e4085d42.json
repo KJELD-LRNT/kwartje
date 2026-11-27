@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO tariffs (company_id, name, unit, price_cents, vat_bp, client_id, project_id,\n                              is_default, valid_from, valid_to, created_at, updated_at, created_by)\n         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 13
+    },
+    "nullable": []
+  },
+  "hash": "42a22dfd76524eb3f64ea2759b87c568531894b71015f0417b7886b7e4085d42"
+}

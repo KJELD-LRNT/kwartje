@@ -1,0 +1,26 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id AS \"id!\" FROM trusted_devices\n           WHERE user_id = ? AND revoked_at IS NULL AND (? IS NULL OR id = ?)",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "trusted_devices",
+            "name": "id"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "10d3e44940d12cb95ae93d1c52bd09b549ee3cd5bd9a563ef220ad8eaafd87f0"
+}

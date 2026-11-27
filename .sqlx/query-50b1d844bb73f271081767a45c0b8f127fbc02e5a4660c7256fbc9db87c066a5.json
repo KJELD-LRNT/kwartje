@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE quotes SET subtotal_cents = ?, vat_cents = ?, total_cents = ?, updated_at = ?\n         WHERE id = ? AND number IS NULL",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 5
+    },
+    "nullable": []
+  },
+  "hash": "50b1d844bb73f271081767a45c0b8f127fbc02e5a4660c7256fbc9db87c066a5"
+}

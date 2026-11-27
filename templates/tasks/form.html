@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}{% if let Some(t) = task %}{{ t.name }}{% else %}Nieuwe taak{% endif %}{% endblock %}
+{% block content %}
+{% if let Some(t) = task %}
+<h1>{{ t.name }}</h1>
+<form method="post" action="/taken/{{ t.id }}">
+{% else %}
+<h1>Nieuwe taak</h1>
+<form method="post" action="/taken">
+{% endif %}
+  <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+  {% if !err("form").is_empty() %}<p class="flash flash-error" role="alert">{{ err("form") }}</p>{% endif %}
+  <label>Naam *
+    <input type="text" name="name" value="{{ f.name }}" required maxlength="200" placeholder="Scouting"{% if !err("name").is_empty() %} aria-invalid="true"{% endif %}>
+  </label>
+  {% if !err("name").is_empty() %}<small class="field-error">{{ err("name") }}</small>{% endif %}
+  <div class="grid">
+    <label>Klant
+      <select name="client_id">
+        <option value="">Alle klanten (kies bij het uren schrijven)</option>
+        {% for c in clients %}
+        <option value="{{ c.id }}"{% if c.id.to_string() == f.client_id %} selected{% endif %}>{{ c.name }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <div>
+      <label>Project
+        <select name="project_id"{% if !err("project_id").is_empty() %} aria-invalid="true"{% endif %}>
+          <option value="">Geen project</option>
+          {% for p in projects %}
+          <option value="{{ p.id }}"{% if p.id.to_string() == f.project_id %} selected{% endif %}>{{ p.label }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      {% if !err("project_id").is_empty() %}<small class="field-error">{{ err("project_id") }}</small>{% endif %}
+    </div>
+  </div>
+  <fieldset>
+    <legend>Tarief</legend>
+    <label>
+      <input type="checkbox" name="internal" value="1"{% if f.internal_checked() %} checked{% endif %}>
+      Niet declarabel (interne taak, bijv. Administratie): nooit op een factuur
+    </label>
+    <label>Eigen tarief voor deze taak
+      <select name="tariff_id"{% if !err("tariff_id").is_empty() %} aria-invalid="true"{% endif %}>
+        <option value="">Geen eigen tarief: standaardtarief van project, klant of bedrijf</option>
+        {% for t in tariffs %}
+        <option value="{{ t.id }}"{% if t.id.to_string() == f.tariff_id %} selected{% endif %}>{{ t.label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    {% if !err("tariff_id").is_empty() %}<small class="field-error">{{ err("tariff_id") }}</small>{% endif %}
+  </fieldset>
+  <div class="actions">
+    <button type="submit">Opslaan</button>
+    <a href="/taken" role="button" class="secondary outline">Annuleren</a>
+  </div>
+</form>
+{% if let Some(t) = task %}
+<hr>
+{% if t.archived_at.is_some() %}
+<form method="post" action="/taken/{{ t.id }}/terugzetten">
+  <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+  <button type="submit" class="secondary">Taak terugzetten</button>
+</form>
+{% else %}
+<form method="post" action="/taken/{{ t.id }}/archiveren" data-confirm="Taak {{ t.name }} archiveren? Geschreven uren blijven bewaard.">
+  <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+  <button type="submit" class="quiet">Taak archiveren</button>
+</form>
+{% endif %}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,26 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT DISTINCT table_name FROM audit_log ORDER BY table_name",
+  "describe": {
+    "columns": [
+      {
+        "name": "table_name",
+        "ordinal": 0,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "audit_log",
+            "name": "table_name"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "d37c0d1f2d26b317ab87b9a9d962d0ef0dc8d147e18b447a4bff40f39e7f8a98"
+}

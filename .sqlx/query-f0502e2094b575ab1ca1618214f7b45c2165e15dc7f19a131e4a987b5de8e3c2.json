@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO vehicles (name, plate, kind, odometer_mode, created_at, updated_at, created_by)\n         VALUES (?, ?, ?, ?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 7
+    },
+    "nullable": []
+  },
+  "hash": "f0502e2094b575ab1ca1618214f7b45c2165e15dc7f19a131e4a987b5de8e3c2"
+}

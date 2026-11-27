@@ -1,0 +1,33 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT recurring_id AS \"id!: i64\", COUNT(*) AS \"n!: i64\" FROM invoices\n           WHERE company_id = ? AND recurring_id IS NOT NULL AND number IS NULL\n           GROUP BY recurring_id",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!: i64",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "invoices",
+            "name": "recurring_id"
+          }
+        }
+      },
+      {
+        "name": "n!: i64",
+        "ordinal": 1,
+        "type_info": "Integer",
+        "origin": "Expression"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      true,
+      false
+    ]
+  },
+  "hash": "97a21a8e1d878ef2b04de54be62e863c0177825fa1ec4999ea5858c5d87bbfb0"
+}

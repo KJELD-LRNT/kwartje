@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Jaaroverzicht {{ year }}{% endblock %}
+{% block content %}
+<div class="actions page-head">
+  <h1>Jaaroverzicht {{ year }}</h1>
+  <nav class="actions week-nav" aria-label="Jaar">
+    <a href="/uren/jaar?jaar={{ year - 1 }}" role="button" class="secondary outline">‹ {{ year - 1 }}</a>
+    <a href="/uren/jaar?jaar={{ year + 1 }}" role="button" class="secondary outline">{{ year + 1 }} ›</a>
+  </nav>
+</div>
+<p class="muted">Uren van dit bedrijf per maand, per gebruiker; declarabel = uren met een tarief.</p>
+{% for u in users %}
+<article>
+  <header><strong>{{ u.name }}</strong> · {{ u.minutes|duration }} uur bij dit bedrijf, waarvan {{ u.billable_minutes|duration }} declarabel</header>
+  <div class="table-wrap">
+  <table class="months">
+    <thead><tr><th></th>{% for m in month_labels %}<th class="num">{{ m }}</th>{% endfor %}</tr></thead>
+    <tbody>
+      <tr><th>Totaal</th>{% for m in u.months %}<td class="num">{% if m.minutes > 0 %}{{ m.minutes|duration }}{% else %}<span class="muted">–</span>{% endif %}</td>{% endfor %}</tr>
+      <tr><th>Declarabel</th>{% for m in u.months %}<td class="num">{% if m.billable_minutes > 0 %}{{ m.billable_minutes|duration }}{% else %}<span class="muted">–</span>{% endif %}</td>{% endfor %}</tr>
+    </tbody>
+  </table>
+  </div>
+</article>
+{% endfor %}
+{% endblock %}

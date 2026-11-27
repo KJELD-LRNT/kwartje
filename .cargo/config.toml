@@ -1,0 +1,4 @@
+# Compile-time checked queries use the committed offline data in .sqlx/.
+# After changing a query or migration run: scripts/sqlx-prepare.sh
+[env]
+SQLX_OFFLINE = "true"

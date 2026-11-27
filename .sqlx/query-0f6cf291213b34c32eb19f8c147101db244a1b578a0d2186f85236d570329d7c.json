@@ -1,0 +1,26 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT company_id AS \"company_id!\" FROM user_companies WHERE user_id = ?\n           ORDER BY company_id",
+  "describe": {
+    "columns": [
+      {
+        "name": "company_id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "user_companies",
+            "name": "company_id"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "0f6cf291213b34c32eb19f8c147101db244a1b578a0d2186f85236d570329d7c"
+}

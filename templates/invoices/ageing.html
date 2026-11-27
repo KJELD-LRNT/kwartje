@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Ouderdom openstaande facturen{% endblock %}
+{% block content %}
+<h1>Ouderdom openstaande facturen</h1>
+<p class="muted">Openstaande bedragen per klant, naar het aantal dagen na de vervaldatum.</p>
+{% if rows.is_empty() %}<p>Er staan geen facturen open.</p>{% else %}
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Klant</th>{% for lbl in labels %}<th class="num">{{ lbl }}</th>{% endfor %}<th class="num">Totaal</th></tr></thead>
+  <tbody>
+  {% for r in rows %}
+    <tr><td><a href="/klanten/{{ r.client_id }}">{{ r.client_name }}</a></td>
+      {% for b in r.buckets %}<td class="num">{% if *b != 0 %}{{ b|amount }}{% else %}<span class="muted">–</span>{% endif %}</td>{% endfor %}
+      <td class="num"><strong>{{ r.total|amount }}</strong></td></tr>
+  {% endfor %}
+  </tbody>
+  <tfoot><tr><th>Totaal</th>{% for t in totals %}<th class="num">{{ t|amount }}</th>{% endfor %}<th></th></tr></tfoot>
+</table>
+</div>
+{% endif %}
+{% endblock %}

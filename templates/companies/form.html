@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}{% if let Some(c) = company %}{{ c.name }}{% else %}Nieuw bedrijf{% endif %}{% endblock %}
+{% block content %}
+{% if let Some(c) = company %}
+<h1>{{ c.name }}</h1>
+{% if c.archived_at.is_some() %}<p class="flash flash-error">Dit bedrijf is gearchiveerd en kan niet worden gewijzigd.</p>{% endif %}
+<form method="post" action="/bedrijven/{{ c.id }}">
+{% else %}
+<h1>Nieuw bedrijf</h1>
+<form method="post" action="/bedrijven">
+{% endif %}
+  <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+  <fieldset>
+    <label>Naam *
+      <input type="text" name="name" value="{{ f.name }}" required maxlength="200"{% if !err("name").is_empty() %} aria-invalid="true"{% endif %}>
+    </label>
+    {% if !err("name").is_empty() %}<small class="field-error">{{ err("name") }}</small>{% endif %}
+    <div class="grid">
+      <div>
+        <label>KvK-nummer
+          <input type="text" name="kvk" value="{{ f.kvk }}" inputmode="numeric"{% if !err("kvk").is_empty() %} aria-invalid="true"{% endif %}>
+        </label>
+        {% if !err("kvk").is_empty() %}<small class="field-error">{{ err("kvk") }}</small>{% endif %}
+      </div>
+      <div>
+        <label>Btw-id
+          <input type="text" name="btw_id" value="{{ f.btw_id }}" placeholder="NL123456789B01"{% if !err("btw_id").is_empty() %} aria-invalid="true"{% endif %}>
+        </label>
+        {% if !err("btw_id").is_empty() %}<small class="field-error">{{ err("btw_id") }}</small>{% endif %}
+      </div>
+    </div>
+    <label>IBAN
+      <input type="text" name="iban" value="{{ f.iban }}" placeholder="NL00 BANK 0123 4567 89"{% if !err("iban").is_empty() %} aria-invalid="true"{% endif %}>
+    </label>
+    {% if !err("iban").is_empty() %}<small class="field-error">{{ err("iban") }}</small>{% endif %}
+  </fieldset>
+
+  <fieldset>
+    <legend>Adres en contact</legend>
+    <label>Straat en huisnummer
+      <input type="text" name="street" value="{{ f.street }}">
+    </label>
+    <div class="grid">
+      <div>
+        <label>Postcode
+          <input type="text" name="postal_code" value="{{ f.postal_code }}" placeholder="1234 AB"{% if !err("postal_code").is_empty() %} aria-invalid="true"{% endif %}>
+        </label>
+        {% if !err("postal_code").is_empty() %}<small class="field-error">{{ err("postal_code") }}</small>{% endif %}
+      </div>
+      <div>
+        <label>Plaats
+          <input type="text" name="city" value="{{ f.city }}">
+        </label>
+      </div>
+    </div>
+    <div class="grid">
+      <div>
+        <label>E-mailadres
+          <input type="email" name="email" value="{{ f.email }}"{% if !err("email").is_empty() %} aria-invalid="true"{% endif %}>
+        </label>
+        {% if !err("email").is_empty() %}<small class="field-error">{{ err("email") }}</small>{% endif %}
+      </div>
+      <div>
+        <label>Telefoon
+          <input type="tel" name="phone" value="{{ f.phone }}">
+        </label>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Facturen en uren</legend>
+    <div class="grid">
+      <div>
+        <label>Bedrijfscode *
+          <input type="text" name="invoice_prefix" value="{{ f.invoice_prefix }}" required maxlength="10" placeholder="JB"{% if !err("invoice_prefix").is_empty() %} aria-invalid="true"{% endif %}>
+        </label>
+        {% if !err("invoice_prefix").is_empty() %}<small class="field-error">{{ err("invoice_prefix") }}</small>{% else %}<small class="muted">Korte code voor het bedrijf. Factuur- en offertenummers krijgen de prefix van de klant (bij de klantgegevens); de nummers lopen per bedrijf door.</small>{% endif %}
+      </div>
+      <div>
+        <label>Betaaltermijn (dagen) *
+          <input type="number" name="payment_term_days" value="{{ f.payment_term_days }}" min="1" max="365" required{% if !err("payment_term_days").is_empty() %} aria-invalid="true"{% endif %}>
+        </label>
+        {% if !err("payment_term_days").is_empty() %}<small class="field-error">{{ err("payment_term_days") }}</small>{% endif %}
+      </div>
+    </div>
+    <div class="grid">
+      <div>
+        <label>Standaard btw-tarief
+          <select name="default_vat_bp"{% if !err("default_vat_bp").is_empty() %} aria-invalid="true"{% endif %}>
+            {% for (value, label) in vat_choices %}
+            <option value="{{ value }}"{% if value.as_str() == f.default_vat_bp.as_str() %} selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        {% if !err("default_vat_bp").is_empty() %}<small class="field-error">{{ err("default_vat_bp") }}</small>{% endif %}
+      </div>
+      <div>
+        <label>Afronding uren op factuur
+          <select name="rounding_minutes"{% if !err("rounding_minutes").is_empty() %} aria-invalid="true"{% endif %}>
+            {% for (value, label) in rounding_choices %}
+            <option value="{{ value }}"{% if value.as_str() == f.rounding_minutes.as_str() %} selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        {% if !err("rounding_minutes").is_empty() %}<small class="field-error">{{ err("rounding_minutes") }}</small>{% endif %}
+      </div>
+    </div>
+  </fieldset>
+  <div class="actions">
+    <button type="submit">Opslaan</button>
+    <a href="/bedrijven" role="button" class="secondary outline">Annuleren</a>
+  </div>
+</form>
+
+{% if let Some(c) = company %}
+<hr>
+<section>
+  <h2>Logo</h2>
+  {% if c.logo_path.is_some() %}<p><img src="/bedrijven/{{ c.id }}/logo" alt="Logo van {{ c.name }}" class="logo-preview"></p>{% endif %}
+  <form method="post" action="/bedrijven/{{ c.id }}/logo?csrf_token={{ l.csrf }}" enctype="multipart/form-data">
+    <label>PNG, JPG of SVG, maximaal 1 MB
+      <input type="file" name="logo" accept="image/png,image/jpeg,image/svg+xml" required>
+    </label>
+    <button type="submit" class="secondary">Logo uploaden</button>
+  </form>
+</section>
+<hr>
+<section>
+  {% if c.archived_at.is_some() %}
+  <form method="post" action="/bedrijven/{{ c.id }}/terugzetten">
+    <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+    <button type="submit" class="secondary">Bedrijf terugzetten</button>
+  </form>
+  {% else %}
+  <form method="post" action="/bedrijven/{{ c.id }}/archiveren" data-confirm="Weet je zeker dat je {{ c.name }} wilt archiveren?">
+    <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+    <button type="submit" class="quiet">Bedrijf archiveren</button>
+  </form>
+  <small class="muted">Archiveren verbergt het bedrijf; er wordt niets verwijderd.</small>
+  {% endif %}
+</section>
+{% endif %}
+{% endblock %}

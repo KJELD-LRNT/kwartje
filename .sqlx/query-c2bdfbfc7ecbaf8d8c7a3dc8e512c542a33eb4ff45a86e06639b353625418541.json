@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO quote_sequences (company_id, year, last_number, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 5
+    },
+    "nullable": []
+  },
+  "hash": "c2bdfbfc7ecbaf8d8c7a3dc8e512c542a33eb4ff45a86e06639b353625418541"
+}

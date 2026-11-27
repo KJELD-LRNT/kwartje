@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Bedrijven{% endblock %}
+{% block content %}
+<div class="actions page-head">
+  <h1>Bedrijven</h1>
+  <div class="actions">
+    <a href="/bedrijven/nieuw" role="button">Nieuw bedrijf</a>
+    <a href="/export/companies.csv" role="button" class="secondary outline">Exporteer CSV</a>
+  </div>
+</div>
+<p>
+  {% if show_archived %}
+  <a href="/bedrijven">Verberg gearchiveerde bedrijven</a>
+  {% else %}
+  <a href="/bedrijven?archief=1">Toon ook gearchiveerde bedrijven</a>
+  {% endif %}
+</p>
+{% if companies.is_empty() %}
+<p>Nog geen bedrijven.</p>
+{% else %}
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr><th>Naam</th><th>KvK</th><th>Prefix</th><th>Btw</th><th>Betaaltermijn</th><th></th></tr>
+  </thead>
+  <tbody>
+    {% for c in companies %}
+    <tr{% if c.archived_at.is_some() %} class="archived"{% endif %}>
+      <td><a href="/bedrijven/{{ c.id }}">{{ c.name }}</a>{% if c.archived_at.is_some() %} <small>(gearchiveerd)</small>{% endif %}</td>
+      <td>{{ c.kvk }}</td>
+      <td>{{ c.invoice_prefix }}</td>
+      <td>{{ c.default_vat_bp|vat }}</td>
+      <td>{{ c.payment_term_days }} dagen</td>
+      <td>
+        {% if c.archived_at.is_some() %}
+        <form method="post" action="/bedrijven/{{ c.id }}/terugzetten" class="inline-form">
+          <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+          <button type="submit" class="secondary outline">Terugzetten</button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+{% endblock %}

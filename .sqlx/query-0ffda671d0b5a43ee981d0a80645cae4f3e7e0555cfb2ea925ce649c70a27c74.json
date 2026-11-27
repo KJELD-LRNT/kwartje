@@ -1,0 +1,98 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id AS \"id!\", company_id, date, odometer_start, odometer_end, km,\n                  business AS \"business: bool\"\n           FROM mileage_entries WHERE vehicle_id = ? AND archived_at IS NULL\n           ORDER BY odometer_start",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "company_id",
+        "ordinal": 1,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "company_id"
+          }
+        }
+      },
+      {
+        "name": "date",
+        "ordinal": 2,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "date"
+          }
+        }
+      },
+      {
+        "name": "odometer_start",
+        "ordinal": 3,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "odometer_start"
+          }
+        }
+      },
+      {
+        "name": "odometer_end",
+        "ordinal": 4,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "odometer_end"
+          }
+        }
+      },
+      {
+        "name": "km",
+        "ordinal": 5,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "km"
+          }
+        }
+      },
+      {
+        "name": "business: bool",
+        "ordinal": 6,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "business"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "0ffda671d0b5a43ee981d0a80645cae4f3e7e0555cfb2ea925ce649c70a27c74"
+}

@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE invoices SET subtotal_cents = ?, vat_cents = ?, total_cents = ?, updated_at = ?\n         WHERE id = ? AND number IS NULL",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 5
+    },
+    "nullable": []
+  },
+  "hash": "f2fcd5ab774b4cbb148e6cb199aff2bee821be10f87f3834cbafbbd8ca0eaa24"
+}

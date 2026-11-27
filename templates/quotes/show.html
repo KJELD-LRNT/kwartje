@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block title %}{{ q.title() }}{% endblock %}
+{% block content %}
+<div class="actions page-head">
+  <hgroup>
+    <h1>{{ q.title() }}</h1>
+    <p><span class="status {{ status.css() }}">{{ status.label() }}</span> · {{ client_name }}{% if let Some(d) = q.issue_date %} · {{ d|date }}{% endif %} · geldig tot {{ q.valid_until|date }}</p>
+  </hgroup>
+  {% if !q.is_draft() %}<a href="/offertes/{{ q.id }}/pdf" role="button" class="secondary" target="_blank">PDF bekijken</a>{% endif %}
+</div>
+
+{% if q.is_draft() %}
+<form method="post" action="/offertes/{{ q.id }}" id="quote-form">
+  <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+  <label>Geldig tot <input type="date" name="valid_until" value="{{ q.valid_until }}" required></label>
+  <label>Inleiding (optioneel)
+    <textarea name="intro_text" rows="2" placeholder="Naar aanleiding van ons gesprek bieden wij u het volgende aan.">{{ q.intro_text }}</textarea>
+  </label>
+  <label>Voettekst (optioneel)
+    <textarea name="footer_text" rows="2">{{ q.footer_text }}</textarea>
+  </label>
+  <button type="submit" class="secondary">Concept opslaan</button>
+</form>
+{% endif %}
+
+<div class="overflow-auto">
+<table>
+  <thead><tr><th>Omschrijving</th><th class="num">Aantal</th><th class="num">Prijs</th><th class="num">Btw</th><th class="num">Bedrag</th>{% if q.is_draft() %}<th></th>{% endif %}</tr></thead>
+  <tbody>
+  {% for r in lines %}
+    <tr>
+      <td>{{ r.description }}</td>
+      <td class="num">{{ r.quantity_label() }} {{ r.unit }}</td>
+      <td class="num">{{ r.unit_price_cents|amount }}</td>
+      <td class="num">{{ r.vat_bp|vat }}</td>
+      <td class="num">{{ r.line_total_cents|amount }}</td>
+      {% if q.is_draft() %}<td><form method="post" action="/offertes/{{ q.id }}/regels/{{ r.id }}/verwijderen" class="inline-form">
+        <input type="hidden" name="csrf_token" value="{{ l.csrf }}"><button type="submit" class="icon-btn" aria-label="Regel verwijderen">✕</button></form></td>{% endif %}
+    </tr>
+  {% else %}
+    <tr><td colspan="6" class="muted">Nog geen regels.</td></tr>
+  {% endfor %}
+  </tbody>
+  <tfoot>
+    <tr><td colspan="4">Subtotaal</td><td class="num">{{ totals.subtotal_cents|amount }}</td>{% if q.is_draft() %}<td></td>{% endif %}</tr>
+    {% for (bp, g) in totals.per_rate %}
+    <tr><td colspan="4">Btw {{ bp|vat }} over {{ g.base_cents|amount }}</td><td class="num">{{ g.vat_cents|amount }}</td>{% if q.is_draft() %}<td></td>{% endif %}</tr>
+    {% endfor %}
+    <tr><th colspan="4">Totaal</th><th class="num">{{ totals.total_cents|amount }}</th>{% if q.is_draft() %}<th></th>{% endif %}</tr>
+  </tfoot>
+</table>
+</div>
+
+{% if q.is_draft() %}
+<details{% if lines.is_empty() %} open{% endif %}>
+  <summary>Regel toevoegen</summary>
+  <form method="post" action="/offertes/{{ q.id }}/regels">
+    <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+    <label>Omschrijving <input type="text" name="description" required placeholder="Ontwerp, implementatie, …"></label>
+    <div class="grid">
+      <label>Aantal <input type="text" name="quantity" value="1" inputmode="decimal" required></label>
+      <label>Eenheid
+        <select name="unit"><option value="uur">uur</option><option value="stuk">stuk</option><option value="km">km</option></select>
+      </label>
+      <label>Prijs (excl. btw) <input type="text" name="price" inputmode="decimal" required placeholder="0,00"></label>
+      <label>Btw
+        <select name="vat_bp">{% for (value, label) in vat_choices %}<option value="{{ value }}">{{ label }}</option>{% endfor %}</select>
+      </label>
+    </div>
+    <button type="submit" class="secondary">Regel toevoegen</button>
+  </form>
+</details>
+<hr>
+<div class="actions">
+  <form method="post" action="/offertes/{{ q.id }}/definitief" class="inline-form" data-confirm="Offerte definitief maken? Daarna kan hij niet meer worden gewijzigd.">
+    <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+    <button type="submit">Definitief maken</button>
+  </form>
+  <form method="post" action="/offertes/{{ q.id }}/verwijderen" class="inline-form" data-confirm="Concept-offerte verwijderen?">
+    <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+    <button type="submit" class="quiet">Concept verwijderen</button>
+  </form>
+</div>
+<small class="muted">Definitief maken geeft het volgende offertenummer; de factuurnummers blijven ongemoeid.</small>
+{% else %}
+
+<section>
+  <h2>Versturen</h2>
+  <p>{% if let Some(s) = q.sent_at %}Verzonden: {{ s|datetime }}{% if let Some(t) = q.sent_to %} aan {{ t }}{% endif %}{% else %}Nog niet verzonden.{% endif %}</p>
+  {% if can_email %}
+  <details{% if q.sent_at.is_none() %} open{% endif %}>
+    <summary>Versturen per e-mail</summary>
+    <form method="post" action="/offertes/{{ q.id }}/versturen">
+      <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+      <label>Aan <input type="email" name="to" value="{{ client_email }}" required></label>
+      <label>Onderwerp <input type="text" name="subject" value="{{ subject }}" required></label>
+      <label>Bericht <textarea name="body" rows="10" required>{{ body }}</textarea></label>
+      <small class="muted">De PDF wordt als bijlage meegestuurd.</small>
+      <button type="submit">Versturen</button>
+    </form>
+  </details>
+  {% else %}
+  <small class="muted">E-mail is nog niet ingesteld. Download de PDF, verstuur hem zelf en markeer de offerte als verzonden.</small>
+  <details>
+    <summary>Tekst voor je e-mail</summary>
+    <label>Onderwerp <input type="text" value="{{ subject }}" readonly></label>
+    <label>Bericht <textarea rows="10" readonly>{{ body }}</textarea></label>
+  </details>
+  {% endif %}
+  {% if q.sent_at.is_none() %}
+  <form method="post" action="/offertes/{{ q.id }}/verzonden" class="inline-form">
+    <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+    <button type="submit" class="secondary outline">Markeer als verzonden</button>
+  </form>
+  {% endif %}
+</section>
+
+<section>
+  <h2>Reactie van de klant</h2>
+  {% if let Some(label) = invoice_label %}
+  <p>Omgezet naar <a href="/facturen/{{ q.invoice_id.unwrap_or_default() }}">{{ label }}</a>.</p>
+  {% else %}
+  <div class="actions">
+    {% if q.accepted_at.is_none() %}
+    <form method="post" action="/offertes/{{ q.id }}/geaccepteerd" class="inline-form">
+      <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+      <button type="submit" class="secondary">Geaccepteerd</button>
+    </form>
+    {% endif %}
+    {% if q.rejected_at.is_none() %}
+    <form method="post" action="/offertes/{{ q.id }}/afgewezen" class="inline-form">
+      <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+      <button type="submit" class="secondary outline">Afgewezen</button>
+    </form>
+    {% endif %}
+    {% if q.rejected_at.is_none() %}
+    <form method="post" action="/offertes/{{ q.id }}/factuur" class="inline-form" data-confirm="Een conceptfactuur maken met de regels van deze offerte?">
+      <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+      <button type="submit">Omzetten naar factuur</button>
+    </form>
+    {% endif %}
+  </div>
+  {% endif %}
+</section>
+{% endif %}
+{% endblock %}

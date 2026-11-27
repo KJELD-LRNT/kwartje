@@ -1,0 +1,43 @@
+[package]
+name = "kwartje"
+version = "0.1.2"
+edition = "2021"
+rust-version = "1.89"
+description = "Self-hosted hours, trips and invoices for small Dutch businesses"
+license = "AGPL-3.0-or-later"
+repository = "https://github.com/KJELD-LRNT/kwartje"
+publish = false
+
+[dependencies]
+anyhow = "1"
+argon2 = "0.5"
+askama = "0.14"
+askama_web = { version = "0.14", features = ["axum-0.8"] }
+axum = { version = "0.8", features = ["multipart"] }
+clap = { version = "4", features = ["derive", "env"] }
+csv = "1"
+lettre = { version = "0.11", default-features = false, features = ["builder", "smtp-transport", "tokio1", "tokio1-rustls-tls", "hostname"] }
+qrcode = { version = "0.14", default-features = false, features = ["svg"] }
+rand = "0.8"
+rpassword = "7"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_urlencoded = "0.7"
+sha2 = "0.10"
+sqlx = { version = "0.9", default-features = false, features = ["sqlite", "runtime-tokio", "macros", "migrate"] }
+tempfile = "3"
+thiserror = "2"
+time = { version = "0.3", features = ["formatting", "parsing", "macros", "local-offset", "serde"] }
+tokio = { version = "1", features = ["full"] }
+toml = "0.8"
+totp-rs = { version = "5", features = ["gen_secret", "otpauth"] }
+tower = "0.5"
+tower-http = { version = "0.6", features = ["trace", "limit", "set-header"] }
+tower-sessions = { version = "0.15", features = ["signed"] }
+tower-sessions-sqlx-store = { version = "0.16", features = ["sqlite"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+zip = { version = "9", default-features = false, features = ["deflate"] }
+
+[dev-dependencies]
+http-body-util = "0.1"

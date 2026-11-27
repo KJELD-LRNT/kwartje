@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Logboek{% endblock %}
+{% block content %}
+<div class="actions page-head">
+  <h1>Logboek</h1>
+  <a href="/export/audit_log.csv" role="button" class="secondary outline">Exporteer CSV</a>
+</div>
+<form method="get" action="/logboek" class="actions">
+  <select name="tabel" aria-label="Tabel">
+    <option value="">Alle tabellen</option>
+    {% for (t, label) in tables %}
+    <option value="{{ t }}"{% if t.as_str() == table.as_str() %} selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit" class="secondary">Filter</button>
+</form>
+<p class="muted">De laatste {{ limit }} wijzigingen, nieuwste eerst.</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Tijdstip</th><th>Gebruiker</th><th>Tabel</th><th>Rij</th><th>Actie</th><th>Wijzigingen</th></tr></thead>
+  <tbody>
+    {% for e in entries %}
+    <tr>
+      <td>{{ e.at|datetime }}</td>
+      <td>{% if let Some(n) = e.user_name %}{{ n }}{% else %}<span class="muted">systeem</span>{% endif %}</td>
+      <td>{{ e.table_label() }}</td>
+      <td class="num">{{ e.row_id }}</td>
+      <td>{{ e.action_label() }}</td>
+      <td><pre class="diff">{{ e.diff_pretty() }}</pre></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

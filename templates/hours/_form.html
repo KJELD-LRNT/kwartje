@@ -1,0 +1,62 @@
+<form method="post" action="{{ form_action() }}" class="entry-form" hx-sync="this:replace">
+  <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+  {% if !f.entry.is_empty() %}<input type="hidden" name="entry" value="{{ f.entry }}">{% endif %}
+  <div class="grid">
+    <div>
+      <label>Datum
+        <input type="date" name="date" value="{{ f.date }}" required hx-get="/uren/voorstel" hx-include="closest form" hx-params="not csrf_token" hx-target="#entry-deps" hx-swap="outerHTML"{% if !err("date").is_empty() %} aria-invalid="true"{% endif %}>
+      </label>
+      {% if !err("date").is_empty() %}<small class="field-error">{{ err("date") }}</small>{% endif %}
+    </div>
+    <div>
+      <label>Wie
+        <select name="user_id"{% if !err("user_id").is_empty() %} aria-invalid="true"{% endif %}>
+          {% for u in users %}
+          <option value="{{ u.id }}"{% if u.id.to_string() == f.user_id %} selected{% endif %}>{{ u.name }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      {% if !err("user_id").is_empty() %}<small class="field-error">{{ err("user_id") }}</small>{% endif %}
+    </div>
+    <div>
+      <label>Taak *
+        <select name="task_id" required hx-get="/uren/voorstel" hx-include="closest form" hx-params="not csrf_token" hx-target="#entry-deps" hx-swap="outerHTML"{% if !err("task_id").is_empty() %} aria-invalid="true"{% endif %}>
+          <option value="">Kies een taak…</option>
+          {% for t in tasks %}
+          <option value="{{ t.id }}"{% if t.id.to_string() == f.task_id %} selected{% endif %}>{{ t.label() }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      {% if !err("task_id").is_empty() %}<small class="field-error">{{ err("task_id") }}</small>{% endif %}
+    </div>
+  </div>
+  {% if f.entry.is_empty() %}
+  <div class="multiday" data-multiday>
+    <input type="hidden" name="dates" value="{{ f.dates }}">
+    <div class="actions">
+      <button type="button" class="secondary outline multiday-toggle" aria-expanded="false">Op meerdere dagen…</button>
+      <span class="multiday-summary muted" aria-live="polite"></span>
+    </div>
+    <div class="multiday-panel" hidden></div>
+  </div>
+  {% endif %}
+  {% include "hours/_deps.html" %}
+  <div class="grid duration-row">
+    <div>
+      <label>Duur *
+        <input type="text" name="duration" value="{{ f.duration }}" required inputmode="decimal" placeholder="1:30 of 1,5" autocomplete="off"{% if !err("duration").is_empty() %} aria-invalid="true"{% endif %}>
+      </label>
+      {% if !err("duration").is_empty() %}<small class="field-error">{{ err("duration") }}</small>{% endif %}
+    </div>
+    <div class="grow">
+      <label>Omschrijving
+        <input type="text" name="description" value="{{ f.description }}" maxlength="2000" placeholder="Wat heb je gedaan?"{% if !err("description").is_empty() %} aria-invalid="true"{% endif %}>
+      </label>
+      {% if !err("description").is_empty() %}<small class="field-error">{{ err("description") }}</small>{% endif %}
+    </div>
+  </div>
+  <div class="form-actions">
+    {% if f.entry.is_empty() %}<button type="button" class="secondary js-only" data-dialog-close>Annuleren</button>{% endif %}
+    <button type="submit">Opslaan</button>
+  </div>
+</form>

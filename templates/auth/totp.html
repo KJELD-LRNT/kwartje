@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Verificatiecode{% endblock %}
+{% block content %}
+<article class="narrow">
+  <h1>Verificatiecode</h1>
+  <p>Voer de 6-cijferige code uit je authenticator-app in.</p>
+  {% if let Some(e) = error %}<p class="flash flash-error" role="alert">{{ e }}</p>{% endif %}
+  <form method="post" action="/2fa">
+    <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+    <label>Code
+      <input type="text" name="code" inputmode="numeric" pattern="[0-9 ]{6,7}" autocomplete="one-time-code" required autofocus>
+    </label>
+    {% include "auth/_trust.html" %}
+    <button type="submit">Bevestigen</button>
+  </form>
+  <p><a href="/inloggen">Opnieuw inloggen</a></p>
+</article>
+{% endblock %}

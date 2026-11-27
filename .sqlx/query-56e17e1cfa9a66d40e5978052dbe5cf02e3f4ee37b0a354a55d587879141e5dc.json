@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE documents SET kind = ?, doc_date = ?, supplier = ?, description = ?, amount_cents = ?,\n                vat_cents = ?, client_id = ?, updated_at = ?\n         WHERE id = ? AND company_id = ? AND kind NOT IN ('sales_invoice', 'quote')",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 10
+    },
+    "nullable": []
+  },
+  "hash": "56e17e1cfa9a66d40e5978052dbe5cf02e3f4ee37b0a354a55d587879141e5dc"
+}

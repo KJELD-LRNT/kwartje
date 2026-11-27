@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO user_companies (user_id, company_id, created_at, created_by)\n             VALUES (?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "6a9594f63e6c5ae65626da2d2d0feecfc2d5033c64f75b44309da66765a62e34"
+}

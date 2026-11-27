@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "DELETE FROM user_companies WHERE user_id = ? AND company_id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "41624efa45dc74237bf8658092423b43f3f6c2365ba8ee5fbf983ba1d8114fa8"
+}

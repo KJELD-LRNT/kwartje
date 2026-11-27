@@ -1,0 +1,22 @@
+[Unit]
+Description=kwartje nightly backup (VACUUM INTO + CSV + documents)
+After=kwartje.service
+OnFailure=kwartje-notify@%n.service
+
+[Service]
+Type=oneshot
+User=kwartje
+Group=kwartje
+ExecStart=/usr/local/bin/kwartje --config /etc/kwartje/config.toml backup
+# Only runs when the backup succeeded (Uptime Kuma heartbeat, optional).
+ExecStartPost=/usr/local/lib/kwartje/notify.sh success kwartje-backup
+UMask=0027
+Nice=10
+IOSchedulingClass=idle
+
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/kwartje /var/backups/kwartje
+ReadOnlyPaths=/etc/kwartje

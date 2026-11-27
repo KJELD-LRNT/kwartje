@@ -1,0 +1,6 @@
+[Unit]
+Description=Notify about failed unit %i
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/lib/kwartje/notify.sh failure %i

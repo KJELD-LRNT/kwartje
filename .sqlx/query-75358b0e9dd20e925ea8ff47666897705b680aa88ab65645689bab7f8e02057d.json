@@ -1,0 +1,98 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT m.id AS \"id!\", m.date, m.tariff_id AS \"tariff_id!\", t.name AS tariff_name,\n                  m.price_cents AS \"price_cents!\", m.vat_bp AS \"vat_bp!\", m.km\n           FROM mileage_entries m JOIN tariffs t ON t.id = m.tariff_id\n           WHERE m.company_id = ? AND m.client_id = ? AND m.tariff_id IS NOT NULL\n             AND m.invoice_line_id IS NULL AND m.archived_at IS NULL\n             AND (? IS NULL OR m.date >= ?) AND (? IS NULL OR m.date <= ?)\n           ORDER BY m.date, m.id",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "date",
+        "ordinal": 1,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "date"
+          }
+        }
+      },
+      {
+        "name": "tariff_id!",
+        "ordinal": 2,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "tariff_id"
+          }
+        }
+      },
+      {
+        "name": "tariff_name",
+        "ordinal": 3,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tariffs",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "price_cents!",
+        "ordinal": 4,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "price_cents"
+          }
+        }
+      },
+      {
+        "name": "vat_bp!",
+        "ordinal": 5,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "vat_bp"
+          }
+        }
+      },
+      {
+        "name": "km",
+        "ordinal": 6,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "km"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 6
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+      false
+    ]
+  },
+  "hash": "75358b0e9dd20e925ea8ff47666897705b680aa88ab65645689bab7f8e02057d"
+}

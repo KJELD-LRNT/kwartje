@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE invoices SET number = ?, issue_date = ?, due_date = ?, subtotal_cents = ?,\n                    vat_cents = ?, total_cents = ?, company_snapshot_json = ?, client_snapshot_json = ?,\n                    issued_at = ?, pdf_document_id = ?, updated_at = ?\n             WHERE id = ? AND company_id = ? AND number IS NULL",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 13
+    },
+    "nullable": []
+  },
+  "hash": "77a3c81270edf272dfe63eb6c48a8f11f5633c7b9c08e718498ae3a4f9330e1c"
+}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Terugkerende facturen{% endblock %}
+{% block content %}
+<div class="actions page-head">
+  <h1>Terugkerende facturen</h1>
+  <a href="/export/recurring_invoices.csv?company={{ l.company_id }}" role="button" class="secondary outline">Exporteer CSV</a>
+</div>
+<p class="muted">Op de startdatum van elke periode maakt Kwartje een conceptfactuur. Die controleer je en maak je zelf definitief.</p>
+{% if rows.is_empty() %}<p>Nog geen terugkerende facturen.</p>{% else %}
+<div class="overflow-auto">
+<table>
+  <thead><tr><th>Naam</th><th>Klant</th><th>Interval</th><th>Volgende</th><th class="num">Concepten</th></tr></thead>
+  <tbody>
+  {% for row in rows %}
+    <tr{% if row.r.archived_at.is_some() %} class="muted"{% endif %}>
+      <td><a href="/terugkerend/{{ row.r.id }}">{{ row.r.name }}</a>{% if row.r.archived_at.is_some() %} <small>(gearchiveerd)</small>{% endif %}</td>
+      <td>{{ row.client_name }}</td>
+      <td>{{ row.r.interval_label() }}</td>
+      <td>{% if row.r.finished() %}afgelopen{% else %}{{ row.r.next_date|date }} ({{ row.r.next_label() }}){% endif %}</td>
+      <td class="num">{% if row.drafts > 0 %}<a href="/facturen?status=concept">{{ row.drafts }}</a>{% else %}0{% endif %}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+
+<details{% if rows.is_empty() %} open{% endif %}>
+  <summary>Nieuwe terugkerende factuur</summary>
+  {% if clients.is_empty() %}<p>Maak eerst een <a href="/klanten/nieuw">klant</a> aan.</p>{% else %}
+  <form method="post" action="/terugkerend">
+    <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+    <div class="grid">
+      <label>Naam <input type="text" name="name" required placeholder="Hosting en onderhoud"></label>
+      <label>Klant
+        <select name="client_id" required>
+          <option value="">Kies een klant…</option>
+          {% for c in clients %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}
+        </select>
+      </label>
+    </div>
+    <div class="grid">
+      <label>Interval
+        <select name="interval">{% for (value, label) in intervals %}<option value="{{ value }}">{{ label }}</option>{% endfor %}</select>
+      </label>
+      <label>Eerste periode begint op <input type="date" name="next_date" value="{{ today }}" required></label>
+      <label>Einddatum (optioneel) <input type="date" name="end_date"></label>
+    </div>
+    <label>Inleiding <textarea name="intro_text" rows="2" placeholder="Hierbij ontvangt u de factuur voor {periode}."></textarea></label>
+    <small class="muted"><code>{periode}</code> wordt vervangen door bijvoorbeeld „november 2026”, „Q4 2026” of „2026”.</small>
+    <label>Voettekst (optioneel) <textarea name="footer_text" rows="2"></textarea></label>
+    <button type="submit">Aanmaken</button>
+  </form>
+  {% endif %}
+</details>
+{% endblock %}

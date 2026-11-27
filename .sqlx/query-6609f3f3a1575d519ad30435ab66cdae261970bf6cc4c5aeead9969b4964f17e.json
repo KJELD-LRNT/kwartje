@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE tariffs SET name = ?, unit = ?, price_cents = ?, vat_bp = ?, client_id = ?,\n                project_id = ?, is_default = ?, valid_from = ?, valid_to = ?, updated_at = ?\n         WHERE id = ? AND company_id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 12
+    },
+    "nullable": []
+  },
+  "hash": "6609f3f3a1575d519ad30435ab66cdae261970bf6cc4c5aeead9969b4964f17e"
+}

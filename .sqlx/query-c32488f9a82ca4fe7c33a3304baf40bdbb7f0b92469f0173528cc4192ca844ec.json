@@ -1,0 +1,74 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT e.date, k.name AS task, e.description, e.minutes, u.name AS user\n           FROM time_entries e\n           JOIN invoice_lines l ON l.id = e.invoice_line_id\n           JOIN tasks k ON k.id = e.task_id\n           JOIN users u ON u.id = e.user_id\n           WHERE l.invoice_id = ? AND e.company_id = ?\n           ORDER BY e.date, e.id",
+  "describe": {
+    "columns": [
+      {
+        "name": "date",
+        "ordinal": 0,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "time_entries",
+            "name": "date"
+          }
+        }
+      },
+      {
+        "name": "task",
+        "ordinal": 1,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tasks",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "description",
+        "ordinal": 2,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "time_entries",
+            "name": "description"
+          }
+        }
+      },
+      {
+        "name": "minutes",
+        "ordinal": 3,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "time_entries",
+            "name": "minutes"
+          }
+        }
+      },
+      {
+        "name": "user",
+        "ordinal": 4,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "users",
+            "name": "name"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "c32488f9a82ca4fe7c33a3304baf40bdbb7f0b92469f0173528cc4192ca844ec"
+}

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Ritten{% endblock %}
+{% block content %}
+{% let v = l.version %}
+<div class="title-row">
+  <h1><svg class="icon" aria-hidden="true"><use href="/static/icons.svg?v={{ v }}#car"/></svg>Ritten – {{ title }}</h1>
+  <div class="actions">
+    {% if is_day_view() %}
+    <nav class="date-nav" aria-label="Datum kiezen">
+      <a href="/kilometers?dag={{ prev_week }}&amp;voertuig={{ vehicle_filter }}" class="nav-btn" title="Week terug" aria-label="Week terug"><svg class="icon"><use href="/static/icons.svg?v={{ v }}#prev2"/></svg></a>
+      <a href="/kilometers?dag={{ prev_day }}&amp;voertuig={{ vehicle_filter }}" class="nav-btn" title="Vorige dag" aria-label="Vorige dag"><svg class="icon"><use href="/static/icons.svg?v={{ v }}#prev"/></svg></a>
+      <a href="/kilometers?dag={{ today }}&amp;voertuig={{ vehicle_filter }}" class="nav-today">vandaag</a>
+      <a href="/kilometers?dag={{ next_day }}&amp;voertuig={{ vehicle_filter }}" class="nav-btn" title="Volgende dag" aria-label="Volgende dag"><svg class="icon"><use href="/static/icons.svg?v={{ v }}#next"/></svg></a>
+      <a href="/kilometers?dag={{ next_week }}&amp;voertuig={{ vehicle_filter }}" class="nav-btn" title="Week verder" aria-label="Week verder"><svg class="icon"><use href="/static/icons.svg?v={{ v }}#next2"/></svg></a>
+    </nav>
+    {% else %}
+    <nav class="date-nav" aria-label="Maand kiezen">
+      <a href="/kilometers?maand={{ prev }}&amp;voertuig={{ vehicle_filter }}" class="nav-btn" title="Vorige maand" aria-label="Vorige maand"><svg class="icon"><use href="/static/icons.svg?v={{ v }}#prev"/></svg></a>
+      <a href="/kilometers?maand={{ today[..7] }}&amp;voertuig={{ vehicle_filter }}" class="nav-today">deze maand</a>
+      <a href="/kilometers?maand={{ next }}&amp;voertuig={{ vehicle_filter }}" class="nav-btn" title="Volgende maand" aria-label="Volgende maand"><svg class="icon"><use href="/static/icons.svg?v={{ v }}#next"/></svg></a>
+    </nav>
+    {% endif %}
+    <nav class="segmented" aria-label="Weergave">
+      <a href="/kilometers?dag={% if is_day_view() %}{{ selected }}{% else %}{{ today }}{% endif %}&amp;voertuig={{ vehicle_filter }}"{% if is_day_view() %} aria-current="page"{% endif %}>Per dag</a>
+      <a href="/kilometers?maand={{ month }}&amp;voertuig={{ vehicle_filter }}"{% if !is_day_view() %} aria-current="page"{% endif %}>Lijst</a>
+    </nav>
+  </div>
+</div>
+
+{% if vehicles.is_empty() %}
+<article><p>Voeg eerst een voertuig toe.</p><a href="/voertuigen/nieuw" role="button">Voertuig toevoegen</a></article>
+{% else %}
+<div class="toolbar">
+  <form method="get" action="/kilometers" class="toolbar-filter">
+    {% if is_day_view() %}<input type="hidden" name="dag" value="{{ selected }}">{% else %}<input type="hidden" name="maand" value="{{ month }}">{% endif %}
+    <select name="voertuig" aria-label="Voertuig" data-autosubmit>
+      <option value="">Alle voertuigen</option>
+      {% for veh in vehicles %}<option value="{{ veh.id }}"{% if veh.id.to_string() == vehicle_filter %} selected{% endif %}>{{ veh.label() }}</option>{% endfor %}
+    </select>
+    <noscript><button type="submit" class="secondary">Toon</button></noscript>
+  </form>
+  <div class="actions">
+    <a href="/kilometers/jaar?jaar={{ year }}" role="button" class="secondary">Jaaroverzicht</a>
+    <a href="/kilometers?{% if is_day_view() %}dag={{ selected }}{% else %}maand={{ month }}{% endif %}&amp;voertuig={{ vehicle_filter }}&amp;nieuw=1" role="button" data-dialog-open="trip-dialog"><svg class="icon" aria-hidden="true"><use href="/static/icons.svg?v={{ v }}#plus"/></svg> Rit toevoegen…</a>
+  </div>
+</div>
+
+{% if is_day_view() %}
+<div class="day-tabs" aria-label="{{ week_label }}">
+  <span class="day-tab week-tab"><span class="dt-name">{{ week_label }}</span><span class="dt-total">{{ week_km }} km</span></span>
+  {% for d in days %}
+  <a href="/kilometers?dag={{ d.iso }}&amp;voertuig={{ vehicle_filter }}" class="day-tab{% if d.is_today %} is-today{% endif %}{% if d.km == 0 %} is-empty{% endif %}"{% if d.iso == selected %} aria-current="page"{% endif %}>
+    <span class="dt-name">{{ d.short }}</span><span class="dt-num">{{ d.num }}</span>
+    <span class="dt-total">{{ d.km }} km</span>
+  </a>
+  {% endfor %}
+</div>
+{% endif %}
+
+<section class="{% if is_day_view() %}day-panel{% else %}list-panel{% endif %}">
+  {% if !is_day_view() %}
+  <div class="grid totals">
+    <article><small class="muted">Zakelijk deze maand</small><p class="big">{{ business_km }} km</p></article>
+    <article><small class="muted">Privé (ingevoerd)</small><p class="big">{{ private_km }} km</p></article>
+    <article><small class="muted">Door te belasten</small><p class="big">{{ billable_cents|amount }}</p></article>
+  </div>
+  {% endif %}
+  {% let shown = shown() %}
+  {% if shown.is_empty() %}
+  <div class="empty-state">
+    <svg class="icon" aria-hidden="true"><use href="/static/icons.svg?v={{ v }}#car"/></svg>
+    <p><strong>{% if is_day_view() %}Nog geen rit op deze dag.{% else %}Nog geen ritten in deze maand.{% endif %}</strong></p>
+    <a href="/kilometers?{% if is_day_view() %}dag={{ selected }}{% else %}maand={{ month }}{% endif %}&amp;voertuig={{ vehicle_filter }}&amp;nieuw=1" role="button" data-dialog-open="trip-dialog"><svg class="icon" aria-hidden="true"><use href="/static/icons.svg?v={{ v }}#plus"/></svg> Rit toevoegen…</a>
+  </div>
+  {% else %}
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Datum</th><th>Rit</th><th class="num">Stand</th><th class="num">Km</th><th></th></tr></thead>
+    <tbody>
+    {% for t in shown %}
+      {% if t.gap > 0 %}<tr class="gap"><td></td><td colspan="4"><small class="muted">{{ t.gap }} km niet geregistreerd (privé)</small></td></tr>{% endif %}
+      <tr>
+        <td>{{ t.row.date|date }}<br><small class="muted">{{ t.row.plate }}</small></td>
+        <td>{{ t.row.from_address }} → {{ t.row.to_address }}<br>
+          <small>{% if t.row.business %}{{ t.row.purpose }}{% if let Some(c) = t.row.client_name %} · {{ c }}{% endif %}{% else %}privé{% endif %}{% if t.row.price_cents.is_some() %} · {{ t.row.billing_label() }}{% endif %} · {{ t.row.user_name }}</small></td>
+        <td class="num"><small>{{ t.row.readings() }}</small></td>
+        <td class="num">{{ t.row.km }}</td>
+        <td>{% if t.row.invoice_line_id.is_some() %}<small class="muted">gefactureerd</small>{% else %}<a href="/kilometers/{{ t.row.id }}">Wijzigen</a>{% endif %}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% endif %}
+</section>
+
+<dialog id="trip-dialog" class="modal" aria-labelledby="trip-dialog-title"{% if open_form %} open data-open-modal{% endif %}>
+  <article>
+    <header>
+      <h2 id="trip-dialog-title">Rit toevoegen</h2>
+      <a href="/kilometers?{% if is_day_view() %}dag={{ selected }}{% else %}maand={{ month }}{% endif %}" class="modal-close" data-dialog-close aria-label="Sluiten"><svg class="icon"><use href="/static/icons.svg?v={{ v }}#close"/></svg></a>
+    </header>
+    {% include "trips/_form.html" %}
+  </article>
+</dialog>
+{% endif %}
+{% endblock %}

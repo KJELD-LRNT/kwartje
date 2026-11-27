@@ -1,0 +1,86 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT k.id AS \"id!\", k.name, k.client_id, c.name AS \"client_name?\", k.project_id,\n                  k.billable AS \"billable: bool\"\n           FROM tasks k LEFT JOIN clients c ON c.id = k.client_id\n           WHERE k.company_id = ? AND k.archived_at IS NULL\n             AND (c.id IS NULL OR c.archived_at IS NULL)\n           ORDER BY k.client_id IS NOT NULL, k.name COLLATE NOCASE",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tasks",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "name",
+        "ordinal": 1,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "tasks",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "client_id",
+        "ordinal": 2,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tasks",
+            "name": "client_id"
+          }
+        }
+      },
+      {
+        "name": "client_name?",
+        "ordinal": 3,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "clients",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "project_id",
+        "ordinal": 4,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tasks",
+            "name": "project_id"
+          }
+        }
+      },
+      {
+        "name": "billable: bool",
+        "ordinal": 5,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "tasks",
+            "name": "billable"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      null,
+      false,
+      true,
+      false,
+      true,
+      false
+    ]
+  },
+  "hash": "d6078ffdbab0aee63d98dee07a9fa823af85d56664d76b2f1ce342046f37cd9d"
+}

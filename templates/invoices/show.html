@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}{{ inv.title() }}{% endblock %}
+{% block content %}
+<div class="actions page-head">
+  <hgroup>
+    <h1>{{ inv.title() }}</h1>
+    <p><span class="status {{ status_class() }}">{{ status.label() }}</span> · {{ client.name }} · periode {{ inv.period_label() }}</p>
+  </hgroup>
+  <a href="/facturen/{{ inv.id }}/pdf" role="button" class="secondary" target="_blank">PDF bekijken</a>
+</div>
+
+<div class="grid">
+  <article>
+    <header>Factuur</header>
+    <p>
+      Factuurdatum: {% if let Some(d) = inv.issue_date %}{{ d|date }}{% endif %}<br>
+      Vervaldatum: {% if let Some(d) = inv.due_date %}{{ d|date }}{% endif %}<br>
+      {% if let Some((id, n)) = credit_of %}Creditnota voor <a href="/facturen/{{ id }}">{{ n }}</a><br>{% endif %}
+      {% for (id, n) in credits %}Gecrediteerd met <a href="/facturen/{{ id }}">{{ n }}</a><br>{% endfor %}
+      {% if let Some(s) = inv.sent_at %}Verzonden: {{ s|datetime }}{% if let Some(t) = inv.sent_to %} aan {{ t }}{% endif %}{% else %}Nog niet verzonden{% endif %}
+    </p>
+  </article>
+  <article>
+    <header>Klant</header>
+    <p>{{ client.name }}<br>{% if !client.contact_name.is_empty() %}t.a.v. {{ client.contact_name }}<br>{% endif %}{{ client.street }}<br>{{ client.postal_code }} {{ client.city }}</p>
+  </article>
+  <article>
+    <header>Bedragen</header>
+    <p>Totaal: <strong>{{ inv.total_cents|amount }}</strong><br>
+       Betaald: {{ paid_cents|amount }}<br>
+       Openstaand: <strong>{{ open_cents|amount }}</strong></p>
+  </article>
+</div>
+
+{% include "invoices/_lines.html" %}
+
+<section>
+  <h2>Versturen</h2>
+  <div class="actions">
+    <a href="/facturen/{{ inv.id }}/versturen" role="button"{% if inv.sent_at.is_some() %} class="secondary"{% endif %}>{% if can_email %}Versturen per e-mail{% else %}E-mail opstellen{% endif %}</a>
+    {% if inv.sent_at.is_none() %}
+    <form method="post" action="/facturen/{{ inv.id }}/verzonden" class="inline-form">
+      <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+      <button type="submit" class="secondary outline">Markeer als verzonden</button>
+    </form>
+    {% endif %}
+  </div>
+  {% if !can_email %}<small class="muted">E-mail is nog niet ingesteld (zie [smtp] in config.toml). Download de PDF, verstuur hem zelf en markeer de factuur als verzonden.</small>{% endif %}
+</section>
+
+<section>
+  <h2>{% if inv.is_credit() %}Terugbetalingen{% else %}Betalingen{% endif %}</h2>
+  {% if payments.is_empty() %}<p class="muted">Nog geen betalingen.</p>{% else %}
+  <table>
+    <thead><tr><th>Datum</th><th>Wijze</th><th>Notitie</th><th class="num">Bedrag</th><th></th></tr></thead>
+    <tbody>
+    {% for p in payments %}
+      <tr>
+        <td>{{ p.date|date }}</td><td>{{ p.method_label() }}</td><td>{{ p.note }}</td><td class="num">{{ p.amount_cents|amount }}</td>
+        <td><form method="post" action="/facturen/{{ inv.id }}/betalingen/{{ p.id }}/archiveren" class="inline-form" data-confirm="Deze betaling verwijderen?">
+          <input type="hidden" name="csrf_token" value="{{ l.csrf }}"><button type="submit" class="icon-btn" aria-label="Betaling verwijderen">✕</button></form></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+  {% if open_cents != 0 %}
+  <form method="post" action="/facturen/{{ inv.id }}/betalingen" class="grid">
+    <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+    <label>Datum <input type="date" name="date" value="{{ today }}" required></label>
+    <label>Bedrag <input type="text" name="amount" value="{{ open_cents.abs()|decimal_amount }}" inputmode="decimal" required></label>
+    <label>Wijze
+      <select name="method">{% for (value, label) in methods %}<option value="{{ value }}">{{ label }}</option>{% endfor %}</select>
+    </label>
+    <label>Notitie <input type="text" name="note" placeholder="bijv. bankafschrift"></label>
+    <div><label>&nbsp;<button type="submit">Betaling registreren</button></label></div>
+  </form>
+  {% endif %}
+</section>
+
+{% if !inv.is_credit() %}
+<section>
+  <h2>Herinneringen</h2>
+  {% if reminders.is_empty() %}<p class="muted">Nog geen herinneringen verstuurd.</p>{% else %}
+  <ul>{% for r in reminders %}<li>{{ r.label() }}: {{ r.sent_at|datetime }}{% if r.via_email %} per e-mail aan {{ r.sent_to }}{% else %} (handmatig){% endif %}</li>{% endfor %}</ul>
+  {% endif %}
+  {% if let Some((_, label)) = next_reminder %}<a href="/facturen/{{ inv.id }}/herinnering" role="button" class="secondary">{{ label }} versturen</a>{% endif %}
+</section>
+
+{% if credits.is_empty() %}
+<section>
+  <h2>Corrigeren</h2>
+  <p class="muted">Een definitieve factuur wordt niet gewijzigd. Klopt er iets niet, maak dan een creditfactuur (en daarna zo nodig een nieuwe factuur).</p>
+  <form method="post" action="/facturen/{{ inv.id }}/crediteren" data-confirm="Creditfactuur maken voor {{ inv.title() }}?">
+    <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+    <label><input type="checkbox" name="release_entries" value="1" checked> Uren en kilometers weer vrijgeven (komen terug onder Te factureren als de creditfactuur definitief is)</label>
+    <button type="submit" class="secondary outline">Creditfactuur maken</button>
+  </form>
+</section>
+{% endif %}
+{% endif %}
+{% endblock %}

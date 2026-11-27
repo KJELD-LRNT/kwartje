@@ -1,0 +1,18 @@
+<div class="side-group">Instellingen</div>
+<a href="/bedrijven{% if l.company_id > 0 %}/{{ l.company_id }}{% endif %}"{% if l.under("/bedrijven") && l.path != "/bedrijven" %} aria-current="page"{% endif %}>Bedrijfsgegevens</a>
+<a href="/bedrijven"{% if l.path == "/bedrijven" %} aria-current="page"{% endif %}>Alle bedrijven</a>
+<div class="side-group">Uren</div>
+<a href="/taken"{% if l.under("/taken") %} aria-current="page"{% endif %}>Taken</a>
+<a href="/tarieven"{% if l.under("/tarieven") %} aria-current="page"{% endif %}>Tarieven</a>
+<div class="side-group">Ritten</div>
+<a href="/voertuigen"{% if l.under("/voertuigen") %} aria-current="page"{% endif %}>Voertuigen</a>
+<a href="/routes"{% if l.under("/routes") %} aria-current="page"{% endif %}>Vaste ritten</a>
+<a href="/kilometervergoeding"{% if l.under("/kilometervergoeding") %} aria-current="page"{% endif %}>Kilometervergoeding</a>
+<div class="side-group">Gegevens</div>
+<a href="/export"{% if l.under("/export") %} aria-current="page"{% endif %}>Export</a>
+{% if l.can_edit() %}<a href="/logboek"{% if l.under("/logboek") %} aria-current="page"{% endif %}>Logboek</a>{% endif %}
+{% if l.is_admin() %}
+<div class="side-group">Beheer</div>
+<a href="/gebruikers"{% if l.under("/gebruikers") %} aria-current="page"{% endif %}>Gebruikers</a>
+<a href="/beveiliging"{% if l.under("/beveiliging") %} aria-current="page"{% endif %}>Beveiliging</a>
+{% endif %}

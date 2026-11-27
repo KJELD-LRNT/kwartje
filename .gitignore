@@ -1,0 +1,11 @@
+/target
+/config.toml
+/data/
+/backups/
+*.db
+# fake-data fixtures for the migration test (see tests/fixtures/README.md)
+!/tests/fixtures/*.db
+*.db-wal
+*.db-shm
+/deploy/*.env
+!/deploy/*.env.example

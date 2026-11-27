@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}{% if let Some(r) = route %}{{ r.name }}{% else %}Nieuwe vaste rit{% endif %}{% endblock %}
+{% block content %}
+{% if let Some(r) = route %}
+<h1>{{ r.name }}</h1>
+<form method="post" action="/routes/{{ r.id }}">
+{% else %}
+<h1>Nieuwe vaste rit</h1>
+<form method="post" action="/routes">
+{% endif %}
+  <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+  <label>Naam *
+    <input type="text" name="name" value="{{ f.name }}" required placeholder="Kantoor → stadion"{% if !err("name").is_empty() %} aria-invalid="true"{% endif %}>
+  </label>
+  {% if !err("name").is_empty() %}<small class="field-error">{{ err("name") }}</small>{% endif %}
+  <div class="grid">
+    <div>
+      <label>Van *
+        <input type="text" name="from_address" value="{{ f.from_address }}" required placeholder="Straat 1, Plaats"{% if !err("from_address").is_empty() %} aria-invalid="true"{% endif %}>
+      </label>
+      {% if !err("from_address").is_empty() %}<small class="field-error">{{ err("from_address") }}</small>{% endif %}
+    </div>
+    <div>
+      <label>Naar *
+        <input type="text" name="to_address" value="{{ f.to_address }}" required{% if !err("to_address").is_empty() %} aria-invalid="true"{% endif %}>
+      </label>
+      {% if !err("to_address").is_empty() %}<small class="field-error">{{ err("to_address") }}</small>{% endif %}
+    </div>
+    <div>
+      <label>Kilometers (enkele reis) *
+        <input type="number" name="km" value="{{ f.km }}" min="1" max="2000" required inputmode="numeric"{% if !err("km").is_empty() %} aria-invalid="true"{% endif %}>
+      </label>
+      {% if !err("km").is_empty() %}<small class="field-error">{{ err("km") }}</small>{% endif %}
+    </div>
+  </div>
+  <div class="actions">
+    <button type="submit">Opslaan</button>
+    <a href="/routes" role="button" class="secondary outline">Annuleren</a>
+  </div>
+</form>
+{% if let Some(r) = route %}
+<hr>
+{% if r.archived_at.is_some() %}
+<form method="post" action="/routes/{{ r.id }}/terugzetten"><input type="hidden" name="csrf_token" value="{{ l.csrf }}"><button type="submit" class="secondary">Terugzetten</button></form>
+{% else %}
+<form method="post" action="/routes/{{ r.id }}/archiveren"><input type="hidden" name="csrf_token" value="{{ l.csrf }}"><button type="submit" class="quiet">Archiveren</button></form>
+{% endif %}
+{% endif %}
+{% endblock %}

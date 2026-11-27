@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Btw {{ r.label }}{% endblock %}
+{% block content %}
+<div class="actions page-head">
+  <hgroup><h1>Btw-overzicht {{ r.label }}</h1><p>Hulpmiddel voor de aangifte (factuurstelsel)</p></hgroup>
+  <nav class="actions week-nav" aria-label="Kwartaal">
+    <a href="/btw?jaar={{ prev.0 }}&amp;kwartaal={{ prev.1 }}" role="button" class="secondary outline">‹ Q{{ prev.1 }} {{ prev.0 }}</a>
+    <a href="/btw?jaar={{ next.0 }}&amp;kwartaal={{ next.1 }}" role="button" class="secondary outline">Q{{ next.1 }} {{ next.0 }} ›</a>
+  </nav>
+</div>
+<p class="muted">Dit is geen aangifte. De omzet en btw komen uit {{ r.invoice_count }} definitieve factuur/facturen en creditfacturen met een factuurdatum in dit kwartaal; de voorbelasting uit {{ r.purchase_count }} inkoopfactuur/facturen en bonnen met een documentdatum in dit kwartaal. Controleer het met je boekhouder.</p>
+
+{% if r.missing_vat > 0 || r.drafts > 0 || !r.odd_rates.is_empty() %}
+<article class="warnings">
+  <header><strong>Let op</strong></header>
+  <ul>
+    {% if r.missing_vat > 0 %}<li>{{ r.missing_vat }} inkoopdocument(en) zonder btw-bedrag: <a href="/documenten?jaar={{ r.year }}&amp;kwartaal={{ r.quarter }}&amp;zonder=1">aanvullen</a>.</li>{% endif %}
+    {% if r.drafts > 0 %}<li>{{ r.drafts }} conceptfactuur/facturen over deze periode zijn nog niet definitief en tellen niet mee: <a href="/facturen?status=concept">bekijken</a>.</li>{% endif %}
+    {% for o in r.odd_rates %}<li>Factuur {{ o }} heeft een afwijkend btw-tarief.</li>{% endfor %}
+  </ul>
+</article>
+{% endif %}
+
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Rubriek</th><th></th><th class="num">Omzet</th><th class="num">Btw</th><th class="num">Afgerond omzet</th><th class="num">Afgerond btw</th></tr></thead>
+  <tbody>
+  {% for b in r.rows %}
+    <tr><td><strong>{{ b.code }}</strong></td><td>{{ b.label }}</td><td class="num">{{ b.base_cents|amount }}</td><td class="num">{{ b.vat_cents|amount }}</td><td class="num">€ {{ b.base_euros() }}</td><td class="num">€ {{ b.vat_euros() }}</td></tr>
+  {% endfor %}
+    <tr><td><strong>5a</strong></td><td>Verschuldigde omzetbelasting</td><td></td><td class="num">{{ r.summary.sales_vat_cents()|amount }}</td><td></td><td></td></tr>
+    <tr><td><strong>5b</strong></td><td>Voorbelasting</td><td></td><td class="num">{{ r.summary.input_vat_cents|amount }}</td><td></td><td class="num">€ {{ r.input_euros() }}</td></tr>
+  </tbody>
+  <tfoot>
+    <tr><th>5c</th><th>{% if r.summary.balance_cents() >= 0 %}Te betalen{% else %}Terug te vragen{% endif %}</th><th></th><th class="num">{{ r.summary.balance_cents().abs()|amount }}</th><th></th><th class="num">€ {{ r.summary.balance_euros().abs() }}</th></tr>
+  </tfoot>
+</table>
+</div>
+<p class="muted">Afgerond = hele euro's in je voordeel (omzet en verschuldigde btw naar beneden, voorbelasting naar boven), zoals de Belastingdienst toestaat.</p>
+<a href="/btw.csv?jaar={{ r.year }}&amp;kwartaal={{ r.quarter }}" role="button" class="secondary outline">Exporteer CSV</a>
+{% endblock %}

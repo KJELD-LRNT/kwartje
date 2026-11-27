@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO payments (invoice_id, date, amount_cents, method, note, created_at, updated_at, created_by)\n         VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 8
+    },
+    "nullable": []
+  },
+  "hash": "9257d166aebe5b42a1e27d9d106bbab346f7f894f22c185a7defd036d63c19a2"
+}

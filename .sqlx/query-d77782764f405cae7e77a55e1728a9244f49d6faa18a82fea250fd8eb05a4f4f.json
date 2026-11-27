@@ -1,0 +1,122 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id AS \"id!\", quote_id, position, description, quantity_milli, unit,\n                  unit_price_cents, vat_bp, line_total_cents\n           FROM quote_lines WHERE quote_id = ? ORDER BY position, id",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "quote_lines",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "quote_id",
+        "ordinal": 1,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "quote_lines",
+            "name": "quote_id"
+          }
+        }
+      },
+      {
+        "name": "position",
+        "ordinal": 2,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "quote_lines",
+            "name": "position"
+          }
+        }
+      },
+      {
+        "name": "description",
+        "ordinal": 3,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "quote_lines",
+            "name": "description"
+          }
+        }
+      },
+      {
+        "name": "quantity_milli",
+        "ordinal": 4,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "quote_lines",
+            "name": "quantity_milli"
+          }
+        }
+      },
+      {
+        "name": "unit",
+        "ordinal": 5,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "quote_lines",
+            "name": "unit"
+          }
+        }
+      },
+      {
+        "name": "unit_price_cents",
+        "ordinal": 6,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "quote_lines",
+            "name": "unit_price_cents"
+          }
+        }
+      },
+      {
+        "name": "vat_bp",
+        "ordinal": 7,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "quote_lines",
+            "name": "vat_bp"
+          }
+        }
+      },
+      {
+        "name": "line_total_cents",
+        "ordinal": 8,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "quote_lines",
+            "name": "line_total_cents"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "d77782764f405cae7e77a55e1728a9244f49d6faa18a82fea250fd8eb05a4f4f"
+}

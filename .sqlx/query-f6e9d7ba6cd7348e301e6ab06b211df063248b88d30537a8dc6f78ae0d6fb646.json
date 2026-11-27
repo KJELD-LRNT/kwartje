@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE quotes SET accepted_at = ?, rejected_at = ?, updated_at = ? WHERE id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "f6e9d7ba6cd7348e301e6ab06b211df063248b88d30537a8dc6f78ae0d6fb646"
+}

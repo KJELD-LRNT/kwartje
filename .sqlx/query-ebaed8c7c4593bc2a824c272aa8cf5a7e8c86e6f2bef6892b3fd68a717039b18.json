@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE companies SET archived_at = ?, updated_at = ? WHERE id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "ebaed8c7c4593bc2a824c272aa8cf5a7e8c86e6f2bef6892b3fd68a717039b18"
+}

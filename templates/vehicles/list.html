@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Voertuigen{% endblock %}
+{% block content %}
+<div class="actions page-head">
+  <h1>Voertuigen</h1>
+  <a href="/voertuigen/nieuw" role="button">Nieuw voertuig</a>
+</div>
+<p class="muted">Voertuigen worden gedeeld door alle bedrijven: één auto kan voor meerdere bv's rijden. De kilometerstand wordt per auto over alle bedrijven bijgehouden; elk bedrijf ziet alleen zijn eigen ritten.</p>
+<p>{% if show_archived %}<a href="/voertuigen">Verberg gearchiveerde voertuigen</a>{% else %}<a href="/voertuigen?archief=1">Toon ook gearchiveerde voertuigen</a>{% endif %}</p>
+{% if vehicles.is_empty() %}<p>Nog geen voertuigen.</p>{% else %}
+<table>
+  <thead><tr><th>Naam</th><th>Kenteken</th><th>Soort</th><th>Ritten</th></tr></thead>
+  <tbody>
+  {% for v in vehicles %}
+    <tr{% if v.archived_at.is_some() %} class="archived"{% endif %}>
+      <td><a href="/voertuigen/{{ v.id }}">{{ v.name }}</a>{% if v.archived_at.is_some() %} <small>(gearchiveerd)</small>{% endif %}</td>
+      <td>{{ v.plate }}</td>
+      <td>{{ v.kind_label() }}</td>
+      <td>{{ v.mode_label() }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+{% endblock %}

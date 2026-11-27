@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO quote_lines (quote_id, position, description, quantity_milli, unit, unit_price_cents,\n                                  vat_bp, line_total_cents, created_at, updated_at, created_by)\n         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 11
+    },
+    "nullable": []
+  },
+  "hash": "97a3396ea4663b815805241699ea8e752a373abc01c92d33e04e5d06b26d02ef"
+}

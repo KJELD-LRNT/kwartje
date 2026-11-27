@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO invoice_sequences (company_id, year, last_number, created_at, updated_at)\n                 VALUES (?, ?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 5
+    },
+    "nullable": []
+  },
+  "hash": "60bc5f4d7ba7502d41d461522bace1417bbd40bd70d6acae1517063aa0b0bd24"
+}

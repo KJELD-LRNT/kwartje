@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{{ level_label }}: {{ inv.title() }}{% endblock %}
+{% block content %}
+<h1>{{ level_label }} voor {{ inv.title() }}</h1>
+{% if let Some(e) = error %}<p class="flash flash-error" role="alert">{{ e }}</p>{% endif %}
+<form method="post" action="/facturen/{{ inv.id }}/herinnering">
+  <input type="hidden" name="csrf_token" value="{{ l.csrf }}">
+  <input type="hidden" name="level" value="{{ level }}">
+  <label>Aan <input type="email" name="to" value="{{ to }}"></label>
+  <label>Onderwerp <input type="text" name="subject" value="{{ subject }}" required></label>
+  <label>Bericht <textarea name="body" rows="14" required>{{ body }}</textarea></label>
+  <p class="muted">De factuur-PDF wordt als bijlage meegestuurd.</p>
+  <div class="actions">
+    {% if can_email %}<button type="submit" name="how" value="email">Versturen per e-mail</button>{% endif %}
+    <button type="submit" name="how" value="manual" class="secondary">{% if can_email %}Alleen vastleggen (zelf verstuurd){% else %}Vastleggen als verstuurd{% endif %}</button>
+    <a href="/facturen/{{ inv.id }}" role="button" class="secondary outline">Annuleren</a>
+  </div>
+  {% if !can_email %}<small class="muted">E-mail is nog niet ingesteld: kopieer de tekst, verstuur hem zelf en leg hem hier vast.</small>{% endif %}
+</form>
+{% endblock %}

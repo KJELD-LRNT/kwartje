@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE invoice_sequences SET last_number = ?, updated_at = ? WHERE company_id = ? AND year = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "d1f40b5b3ec2623f217ad5a7cf5df6153a769d10cad42028024b7d57456eb3b8"
+}

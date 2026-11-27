@@ -1,0 +1,146 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id AS \"id!\", invoice_id, position, description, quantity_milli, unit,\n                  unit_price_cents, vat_bp, line_total_cents, source, is_zero AS \"is_zero: bool\"\n           FROM invoice_lines WHERE invoice_id = ? ORDER BY position, id",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "invoice_lines",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "invoice_id",
+        "ordinal": 1,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "invoice_lines",
+            "name": "invoice_id"
+          }
+        }
+      },
+      {
+        "name": "position",
+        "ordinal": 2,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "invoice_lines",
+            "name": "position"
+          }
+        }
+      },
+      {
+        "name": "description",
+        "ordinal": 3,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "invoice_lines",
+            "name": "description"
+          }
+        }
+      },
+      {
+        "name": "quantity_milli",
+        "ordinal": 4,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "invoice_lines",
+            "name": "quantity_milli"
+          }
+        }
+      },
+      {
+        "name": "unit",
+        "ordinal": 5,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "invoice_lines",
+            "name": "unit"
+          }
+        }
+      },
+      {
+        "name": "unit_price_cents",
+        "ordinal": 6,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "invoice_lines",
+            "name": "unit_price_cents"
+          }
+        }
+      },
+      {
+        "name": "vat_bp",
+        "ordinal": 7,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "invoice_lines",
+            "name": "vat_bp"
+          }
+        }
+      },
+      {
+        "name": "line_total_cents",
+        "ordinal": 8,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "invoice_lines",
+            "name": "line_total_cents"
+          }
+        }
+      },
+      {
+        "name": "source",
+        "ordinal": 9,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "invoice_lines",
+            "name": "source"
+          }
+        }
+      },
+      {
+        "name": "is_zero: bool",
+        "ordinal": 10,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "invoice_lines",
+            "name": "is_zero"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "a657d251750fe5ac4a8b3b69a3f585aff9fa244d17fb0c865cea60fb7a90ff8f"
+}

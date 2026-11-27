@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO mileage_entries (company_id, vehicle_id, user_id, date, from_address,\n                 to_address, purpose, client_id, odometer_start, odometer_end, km, business,\n                 tariff_id, price_cents, vat_bp, route_id, created_at, updated_at, created_by)\n         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 19
+    },
+    "nullable": []
+  },
+  "hash": "6d9c17469b74758579c1c95b8e68956b1e57bf478fded098c5418c21978973fa"
+}

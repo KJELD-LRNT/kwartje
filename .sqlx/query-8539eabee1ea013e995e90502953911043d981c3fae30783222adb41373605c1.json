@@ -1,0 +1,26 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT m.id AS \"id!\" FROM mileage_entries m JOIN invoice_lines l ON l.id = m.invoice_line_id\n           WHERE l.invoice_id = ? AND m.company_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "mileage_entries",
+            "name": "id"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "8539eabee1ea013e995e90502953911043d981c3fae30783222adb41373605c1"
+}

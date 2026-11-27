@@ -1,0 +1,17 @@
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Nummer</th><th>Datum</th><th>Klant</th><th class="num">Totaal</th><th class="num">Open</th><th>Status</th></tr></thead>
+  <tbody>
+  {% for r in rows %}
+    <tr>
+      <td><a href="/facturen/{{ r.id }}">{{ r.label() }}</a>{% if r.is_credit() %} <small class="muted">credit</small>{% endif %}</td>
+      <td>{% if let Some(d) = r.issue_date %}{{ d|date }}{% else %}<span class="muted">–</span>{% endif %}</td>
+      <td><a href="/klanten/{{ r.client_id }}">{{ r.client_name }}</a></td>
+      <td class="num">{{ r.total_cents|amount }}</td>
+      <td class="num">{% if r.open_cents() != 0 %}{{ r.open_cents()|amount }}{% else %}<span class="muted">–</span>{% endif %}</td>
+      <td><span class="status {{ r.status_class() }}">{{ r.status.label() }}</span></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>

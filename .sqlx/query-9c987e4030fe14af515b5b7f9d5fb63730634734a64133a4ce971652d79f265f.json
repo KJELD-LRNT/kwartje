@@ -1,0 +1,21 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT MAX(issue_date) AS \"d: String\" FROM invoices WHERE company_id = ? AND number IS NOT NULL",
+  "describe": {
+    "columns": [
+      {
+        "name": "d: String",
+        "ordinal": 0,
+        "type_info": "Text",
+        "origin": "Expression"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      true
+    ]
+  },
+  "hash": "9c987e4030fe14af515b5b7f9d5fb63730634734a64133a4ce971652d79f265f"
+}

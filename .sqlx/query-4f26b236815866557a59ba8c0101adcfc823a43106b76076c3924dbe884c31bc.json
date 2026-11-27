@@ -1,0 +1,290 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id AS \"id!\", company_id, client_id, number, issue_date, valid_until, intro_text,\n                  footer_text, subtotal_cents, vat_cents, total_cents, company_snapshot_json,\n                  client_snapshot_json, issued_at, sent_at, sent_to, accepted_at, rejected_at,\n                  invoice_id, pdf_document_id, created_at, updated_at, created_by\n           FROM quotes WHERE id = ? AND company_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "quotes",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "company_id",
+        "ordinal": 1,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "quotes",
+            "name": "company_id"
+          }
+        }
+      },
+      {
+        "name": "client_id",
+        "ordinal": 2,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "quotes",
+            "name": "client_id"
+          }
+        }
+      },
+      {
+        "name": "number",
+        "ordinal": 3,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "quotes",
+            "name": "number"
+          }
+        }
+      },
+      {
+        "name": "issue_date",
+        "ordinal": 4,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "quotes",
+            "name": "issue_date"
+          }
+        }
+      },
+      {
+        "name": "valid_until",
+        "ordinal": 5,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "quotes",
+            "name": "valid_until"
+          }
+        }
+      },
+      {
+        "name": "intro_text",
+        "ordinal": 6,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "quotes",
+            "name": "intro_text"
+          }
+        }
+      },
+      {
+        "name": "footer_text",
+        "ordinal": 7,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "quotes",
+            "name": "footer_text"
+          }
+        }
+      },
+      {
+        "name": "subtotal_cents",
+        "ordinal": 8,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "quotes",
+            "name": "subtotal_cents"
+          }
+        }
+      },
+      {
+        "name": "vat_cents",
+        "ordinal": 9,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "quotes",
+            "name": "vat_cents"
+          }
+        }
+      },
+      {
+        "name": "total_cents",
+        "ordinal": 10,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "quotes",
+            "name": "total_cents"
+          }
+        }
+      },
+      {
+        "name": "company_snapshot_json",
+        "ordinal": 11,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "quotes",
+            "name": "company_snapshot_json"
+          }
+        }
+      },
+      {
+        "name": "client_snapshot_json",
+        "ordinal": 12,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "quotes",
+            "name": "client_snapshot_json"
+          }
+        }
+      },
+      {
+        "name": "issued_at",
+        "ordinal": 13,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "quotes",
+            "name": "issued_at"
+          }
+        }
+      },
+      {
+        "name": "sent_at",
+        "ordinal": 14,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "quotes",
+            "name": "sent_at"
+          }
+        }
+      },
+      {
+        "name": "sent_to",
+        "ordinal": 15,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "quotes",
+            "name": "sent_to"
+          }
+        }
+      },
+      {
+        "name": "accepted_at",
+        "ordinal": 16,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "quotes",
+            "name": "accepted_at"
+          }
+        }
+      },
+      {
+        "name": "rejected_at",
+        "ordinal": 17,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "quotes",
+            "name": "rejected_at"
+          }
+        }
+      },
+      {
+        "name": "invoice_id",
+        "ordinal": 18,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "quotes",
+            "name": "invoice_id"
+          }
+        }
+      },
+      {
+        "name": "pdf_document_id",
+        "ordinal": 19,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "quotes",
+            "name": "pdf_document_id"
+          }
+        }
+      },
+      {
+        "name": "created_at",
+        "ordinal": 20,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "quotes",
+            "name": "created_at"
+          }
+        }
+      },
+      {
+        "name": "updated_at",
+        "ordinal": 21,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "quotes",
+            "name": "updated_at"
+          }
+        }
+      },
+      {
+        "name": "created_by",
+        "ordinal": 22,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "quotes",
+            "name": "created_by"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "4f26b236815866557a59ba8c0101adcfc823a43106b76076c3924dbe884c31bc"
+}

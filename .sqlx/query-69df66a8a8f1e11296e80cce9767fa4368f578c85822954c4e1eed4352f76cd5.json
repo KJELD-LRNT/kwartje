@@ -1,0 +1,86 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT a.at, u.name AS \"user_name?\", a.table_name, a.row_id, a.action, a.diff_json\n           FROM audit_log a LEFT JOIN users u ON u.id = a.user_id\n           WHERE ? OR a.table_name = ?\n           ORDER BY a.id DESC LIMIT ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "at",
+        "ordinal": 0,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "audit_log",
+            "name": "at"
+          }
+        }
+      },
+      {
+        "name": "user_name?",
+        "ordinal": 1,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "users",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "name": "table_name",
+        "ordinal": 2,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "audit_log",
+            "name": "table_name"
+          }
+        }
+      },
+      {
+        "name": "row_id",
+        "ordinal": 3,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "audit_log",
+            "name": "row_id"
+          }
+        }
+      },
+      {
+        "name": "action",
+        "ordinal": 4,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "audit_log",
+            "name": "action"
+          }
+        }
+      },
+      {
+        "name": "diff_json",
+        "ordinal": 5,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "audit_log",
+            "name": "diff_json"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "69df66a8a8f1e11296e80cce9767fa4368f578c85822954c4e1eed4352f76cd5"
+}

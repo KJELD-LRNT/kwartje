@@ -1,0 +1,23 @@
+[Unit]
+Description=Push kwartje backups offsite with restic
+After=kwartje-backup.service network-online.target
+Wants=network-online.target
+OnFailure=kwartje-notify@%n.service
+
+[Service]
+Type=oneshot
+User=kwartje
+Group=kwartje
+EnvironmentFile=/etc/kwartje/restic.env
+Environment=RESTIC_CACHE_DIR=/var/cache/kwartje-restic
+CacheDirectory=kwartje-restic
+ExecStart=/usr/local/lib/kwartje/restic-backup.sh
+ExecStartPost=/usr/local/lib/kwartje/notify.sh success kwartje-restic
+Nice=10
+IOSchedulingClass=idle
+
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadOnlyPaths=/var/backups/kwartje /etc/kwartje

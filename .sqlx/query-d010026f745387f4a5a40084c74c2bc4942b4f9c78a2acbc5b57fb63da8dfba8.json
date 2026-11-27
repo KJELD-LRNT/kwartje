@@ -1,0 +1,74 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id AS \"id!\", number, period_from, period_to, total_cents FROM invoices\n           WHERE recurring_id = ? AND company_id = ? ORDER BY period_from DESC, id DESC",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "invoices",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "number",
+        "ordinal": 1,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "invoices",
+            "name": "number"
+          }
+        }
+      },
+      {
+        "name": "period_from",
+        "ordinal": 2,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "invoices",
+            "name": "period_from"
+          }
+        }
+      },
+      {
+        "name": "period_to",
+        "ordinal": 3,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "invoices",
+            "name": "period_to"
+          }
+        }
+      },
+      {
+        "name": "total_cents",
+        "ordinal": 4,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "invoices",
+            "name": "total_cents"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false,
+      true,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "d010026f745387f4a5a40084c74c2bc4942b4f9c78a2acbc5b57fb63da8dfba8"
+}

@@ -1,0 +1,79 @@
+name: 🐞 Bug report
+description: Something in Kwartje doesn't work as it should.
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this! A few things first:
+        - **Security problem?** Don't file it here. See [SECURITY.md](https://github.com/KJELD-LRNT/kwartje/blob/main/SECURITY.md).
+        - **No real data, please.** Remove client names, amounts, IBANs and e-mail addresses from screenshots and logs. The demo data (`kwartje seed`) is perfect for showing a problem.
+        - Issues may be written in English or Dutch.
+  - type: input
+    id: version
+    attributes:
+      label: Kwartje version
+      description: Shown at the bottom of every page, or `kwartje --version`.
+      placeholder: "0.1.2"
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How do you run it?
+      options:
+        - Release binary on Debian (LXC / VM / bare metal)
+        - Built from source
+        - Something else (describe below)
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Uren (hours)
+        - Ritten (trips)
+        - Facturen / offertes (invoices, quotes, PDFs, e-mail)
+        - Documenten / btw-overzicht
+        - Klanten, taken, tarieven
+        - Login, gebruikers, beveiliging
+        - Installation, updates, backups
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you do, what did you see, and what did you expect instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Go to …
+        2. Click …
+        3. See …
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: For example `journalctl -u kwartje.service -n 50`. Check them for personal data first.
+      render: shell
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and device
+      placeholder: "Firefox 133 on Windows, Safari on iPhone, …"
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before you submit
+      options:
+        - label: I searched the existing issues and this hasn't been reported yet.
+          required: true
+        - label: My screenshots and logs contain no real client or personal data.
+          required: true
